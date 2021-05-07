@@ -1,0 +1,11 @@
+server:
+  port: 7000
+spring:
+  application:
+    name: hoshi-gateway
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.int[1,100]}
+  client:
+    service-url:
+      defaultZone: http://hoshi-peer1:7001/eureka/,http://hoshi-peer2:7002

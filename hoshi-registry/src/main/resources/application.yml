@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: hoshi-registry
+eureka:
+  server:
+    enable-self-preservation: false
+  instance:
+    instance-id: ${spring.application.name}:${random.int[1,100]}
