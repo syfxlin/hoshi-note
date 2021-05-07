@@ -15,6 +15,4 @@ import org.springframework.stereotype.Service;
  * @since 2021-05-05
  */
 @Service
-public class UserTestServiceImpl extends ServiceImpl< UserTestMapper, UserTest > implements UserTestService {
-
-}
+public class UserTestServiceImpl extends ServiceImpl<UserTestMapper, UserTest> implements UserTestService {}

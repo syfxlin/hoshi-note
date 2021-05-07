@@ -31,11 +31,9 @@ public class UserTest implements Serializable {
 
     private String password;
 
-
     public static final String ID = "id";
 
     public static final String USERNAME = "username";
 
     public static final String PASSWORD = "password";
-
 }

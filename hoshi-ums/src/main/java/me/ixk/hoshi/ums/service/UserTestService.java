@@ -11,6 +11,4 @@ import me.ixk.hoshi.ums.entity.UserTest;
  * @author syfxlin
  * @since 2021-05-05
  */
-public interface UserTestService extends IService< UserTest > {
-
-}
+public interface UserTestService extends IService<UserTest> {}
