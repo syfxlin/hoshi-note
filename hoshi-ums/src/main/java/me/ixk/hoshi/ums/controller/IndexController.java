@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.ixk.hoshi.ums.service.UserTestService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api("测试控制器")
 @RequiredArgsConstructor
+@Slf4j
 public class IndexController {
 
     private final UserTestService userTestService;
@@ -29,6 +31,7 @@ public class IndexController {
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "管理员权限测试", authorizations = @Authorization("admin"))
     public String admin() {
+        log.info("Request Admin");
         return "admin";
     }
 
@@ -36,6 +39,7 @@ public class IndexController {
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "用户权限测试", authorizations = @Authorization("user"))
     public String user() {
+        log.info("Request User");
         return "user";
     }
 

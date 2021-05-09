@@ -8,7 +8,7 @@ spring:
     config:
       server:
         git:
-          uri: file:///F:/workspace/project/hoshi-note/static/config
+          uri: file:///${user.dir}/static/config
 server:
   port: 0
 eureka:

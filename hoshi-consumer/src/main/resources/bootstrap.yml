@@ -1,0 +1,16 @@
+server:
+  port: 0
+spring:
+  application:
+    name: hoshi-consumer
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: hoshi-config
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.int[1,100]}
+  client:
+    service-url:
+      defaultZone: http://hoshi-peer1:7001/eureka/,http://hoshi-peer2:7002
