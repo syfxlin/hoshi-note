@@ -29,6 +29,8 @@
     <module>hoshi-gateway</module>
     <module>hoshi-registry</module>
     <module>hoshi-ums</module>
+    <module>hoshi-admin</module>
+    <module>hoshi-consumer</module>
   </modules>
 
   <properties>
