@@ -3,6 +3,13 @@ server:
 spring:
   application:
     name: hoshi-gateway
+  cloud:
+    config:
+      username: hoshi-config
+      password: 123456
+      discovery:
+        enabled: true
+        service-id: hoshi-config
 eureka:
   instance:
     instance-id: ${spring.application.name}:${random.int[1,100]}

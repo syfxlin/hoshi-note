@@ -5,6 +5,8 @@ spring:
     name: hoshi-admin
   cloud:
     config:
+      username: hoshi-config
+      password: 123456
       discovery:
         enabled: true
         service-id: hoshi-config

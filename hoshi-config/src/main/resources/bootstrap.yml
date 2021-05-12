@@ -1,0 +1,25 @@
+#
+# Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+#
+spring:
+  application:
+    name: hoshi-config
+  cloud:
+    config:
+      server:
+        git:
+          uri: file:///${user.dir}/static/config
+server:
+  port: 0
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.int[1,100]}
+  client:
+    service-url:
+      defaultZone: http://hoshi-peer1:7001/eureka/,http://hoshi-peer2:7002/eureka/
+encrypt:
+  key-store:
+    location: classpath:/key.jks
+    alias: hoshi-key
+    password: kudgJi8jj5adWu
+    secret: kudgJi8jj5adWu
