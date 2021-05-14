@@ -4,6 +4,7 @@
 
 package me.ixk.hoshi.common.config;
 
+import me.ixk.hoshi.common.util.RequestUtil;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -16,9 +17,9 @@ import org.springframework.web.client.RestTemplate;
  * @date 2021/5/6 下午 2:32
  */
 @Configuration
-@EnableFeignClients(defaultConfiguration = { FeignConfig.class }, basePackages = { "me.ixk.hoshi" })
+@EnableFeignClients(defaultConfiguration = { CommonFeignConfig.class }, basePackages = { "me.ixk.hoshi" })
 @EnableDiscoveryClient
-public class ClientConfig {
+public class CommonClientConfig {
 
     /**
      * 负载均衡 RestTemplate
@@ -28,6 +29,6 @@ public class ClientConfig {
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
-        return new RestTemplate();
+        return RequestUtil.wrapperHeaders(new RestTemplate());
     }
 }

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.security.config.Roles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -67,11 +68,11 @@ public class SwaggerConfig {
 
     private List<SecurityScheme> securitySchemes() {
         return Arrays
-            .stream(SecurityConfig.ROLES)
+            .stream(Roles.values())
             .map(
                 role ->
                     new HttpAuthenticationBuilder()
-                        .name(role.toLowerCase())
+                        .name(role.name().toLowerCase())
                         .scheme("bearer")
                         .description("Authorization [" + role + "]")
                         .build()

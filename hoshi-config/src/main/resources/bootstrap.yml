@@ -1,6 +1,8 @@
 #
 # Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
 #
+server:
+  port: 0
 spring:
   application:
     name: hoshi-config
@@ -9,8 +11,10 @@ spring:
       server:
         git:
           uri: file:///${user.dir}/static/config
-server:
-  port: 0
+  security:
+    user:
+      name: hoshi-config
+      password: 123456
 eureka:
   instance:
     instance-id: ${spring.application.name}:${random.int[1,100]}
