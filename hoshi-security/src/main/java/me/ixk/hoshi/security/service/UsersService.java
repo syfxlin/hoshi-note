@@ -11,6 +11,4 @@ import me.ixk.hoshi.security.entity.Users;
  * @author syfxlin
  * @since 2021-05-15
  */
-public interface UsersService extends IService< Users > {
-
-}
+public interface UsersService extends IService<Users> {}

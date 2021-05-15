@@ -1,6 +1,5 @@
 package me.ixk.hoshi.security.controller;
 
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,7 +13,4 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/users")
-public class UsersController {
-
-}
-
+public class UsersController {}
