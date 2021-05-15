@@ -14,7 +14,11 @@ public enum Roles {
      */
     ADMIN,
     /**
-     * Spring Actuator 和 Spring Boot Admin 访问权限
+     * Spring Actuator 访问权限
      */
-    ACTUATOR_ADMIN,
+    ACTUATOR,
+    /**
+     * Spring Boot Admin 访问权限
+     */
+    BOOT_ADMIN,
 }

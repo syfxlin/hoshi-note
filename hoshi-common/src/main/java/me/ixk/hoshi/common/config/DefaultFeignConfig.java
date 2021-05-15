@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/5/9 下午 2:52
  */
 @Configuration
-public class CommonFeignConfig {
+public class DefaultFeignConfig {
 
     @Bean
     public RequestInterceptor sessionRequestInterceptor() {

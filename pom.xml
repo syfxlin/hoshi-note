@@ -30,6 +30,7 @@
     <module>hoshi-registry</module>
     <module>hoshi-ums</module>
     <module>hoshi-consumer</module>
+    <module>hoshi-admin</module>
   </modules>
 
   <properties>

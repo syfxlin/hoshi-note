@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+  <parent>
+    <artifactId>hoshi</artifactId>
+    <groupId>me.ixk</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>me.ixk.hoshi</groupId>
+  <artifactId>hoshi-admin</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>de.codecentric</groupId>
+      <artifactId>spring-boot-admin-starter-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>me.ixk.hoshi</groupId>
+      <artifactId>hoshi-security</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>de.codecentric</groupId>
+          <artifactId>spring-boot-admin-client</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+</project>

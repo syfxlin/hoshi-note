@@ -1,0 +1,11 @@
+package me.ixk.hoshi.admin;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class HoshiAdminApplicationTests {
+
+    @Test
+    void contextLoads() {}
+}

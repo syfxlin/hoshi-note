@@ -17,9 +17,9 @@ import org.springframework.web.client.RestTemplate;
  * @date 2021/5/6 下午 2:32
  */
 @Configuration
-@EnableFeignClients(defaultConfiguration = { CommonFeignConfig.class }, basePackages = { "me.ixk.hoshi" })
+@EnableFeignClients(defaultConfiguration = { DefaultFeignConfig.class }, basePackages = { "me.ixk.hoshi" })
 @EnableDiscoveryClient
-public class CommonClientConfig {
+public class DefaultClientConfig {
 
     /**
      * 负载均衡 RestTemplate

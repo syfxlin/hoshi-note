@@ -15,7 +15,7 @@ import org.springframework.session.web.http.HttpSessionIdResolver;
  * @date 2021/5/3 下午 9:48
  */
 @Configuration
-public class SessionConfig {
+public class DefaultSessionConfig {
 
     @Bean
     public HttpSessionIdResolver sessionIdResolver() {
