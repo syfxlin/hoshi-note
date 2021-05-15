@@ -6,3 +6,8 @@ eureka:
     enable-self-preservation: false
   instance:
     instance-id: ${spring.application.name}:${random.int[1,100]}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

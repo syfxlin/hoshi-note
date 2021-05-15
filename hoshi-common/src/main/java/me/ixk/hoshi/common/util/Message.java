@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @date 2021/5/15 下午 3:12
  */
 @Component
-public class MessageUtil implements MessageSourceAware {
+public class Message implements MessageSourceAware {
 
     private static MessageSource messageSource;
 

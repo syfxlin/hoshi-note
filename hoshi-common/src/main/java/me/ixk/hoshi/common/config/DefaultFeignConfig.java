@@ -1,7 +1,7 @@
 package me.ixk.hoshi.common.config;
 
 import feign.RequestInterceptor;
-import me.ixk.hoshi.common.util.RequestUtil;
+import me.ixk.hoshi.common.util.Request;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,6 +14,6 @@ public class DefaultFeignConfig {
 
     @Bean
     public RequestInterceptor sessionRequestInterceptor() {
-        return RequestUtil::wrapperHeaders;
+        return Request::wrapperHeaders;
     }
 }

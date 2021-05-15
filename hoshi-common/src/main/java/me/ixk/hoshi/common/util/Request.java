@@ -15,10 +15,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * @author Otstar Lin
  * @date 2021/5/9 下午 3:38
  */
-public final class RequestUtil {
+public final class Request {
 
-    private RequestUtil() throws UnsupportedInstantiationException {
-        throw new UnsupportedInstantiationException(RequestUtil.class);
+    private Request() throws UnsupportedInstantiationException {
+        throw new UnsupportedInstantiationException(Request.class);
     }
 
     public static ServletRequestAttributes attributes() {

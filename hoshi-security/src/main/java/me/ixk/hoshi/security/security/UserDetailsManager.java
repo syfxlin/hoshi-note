@@ -1,6 +1,6 @@
 package me.ixk.hoshi.security.security;
 
-import me.ixk.hoshi.common.util.MessageUtil;
+import me.ixk.hoshi.common.util.Message;
 import me.ixk.hoshi.security.entity.Users;
 import me.ixk.hoshi.security.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class UserDetailsManager implements UserDetailsService {
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         final Users user = this.usersService.queryUserByName(username);
         if (user == null) {
-            throw new UsernameNotFoundException(MessageUtil.message("security.username-not-found"));
+            throw new UsernameNotFoundException(Message.message("security.username-not-found"));
         }
         return new me.ixk.hoshi.security.security.UserDetails(user);
     }

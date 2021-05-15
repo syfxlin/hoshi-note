@@ -18,6 +18,9 @@ spring:
 eureka:
   instance:
     instance-id: ${spring.application.name}:${random.int[1,100]}
+    metadata-map:
+      user.name: ${spring.security.user.name}
+      user.password: ${spring.security.user.password}
   client:
     service-url:
       defaultZone: http://hoshi-peer1:7001/eureka/,http://hoshi-peer2:7002/eureka/

@@ -4,7 +4,7 @@
 
 package me.ixk.hoshi.common.config;
 
-import me.ixk.hoshi.common.util.RequestUtil;
+import me.ixk.hoshi.common.util.Request;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -29,6 +29,6 @@ public class DefaultClientConfig {
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
-        return RequestUtil.wrapperHeaders(new RestTemplate());
+        return Request.wrapperHeaders(new RestTemplate());
     }
 }
