@@ -4,8 +4,7 @@
 
 package me.ixk.hoshi.security.config;
 
-import java.util.function.Function;
-import org.springframework.beans.factory.annotation.Autowired;
+import me.ixk.hoshi.security.security.Roles;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +12,8 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
  * 安全配置
@@ -28,38 +24,9 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration
 public class DefaultSecurityConfig {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    /**
-     * TODO: 后期更改为通过数据库读取
-     *
-     * @return 用户授权
-     */
-    @Bean
-    public UserDetailsService userDetailsService() {
-        final Function<String, String> encode = passwordEncoder::encode;
-        return new InMemoryUserDetailsManager(
-            User
-                .builder()
-                .passwordEncoder(encode)
-                .username("admin")
-                .password("password")
-                .roles(Roles.ADMIN.name(), Roles.ACTUATOR.name())
-                .build(),
-            User
-                .builder()
-                .passwordEncoder(encode)
-                .username("hoshi-admin")
-                .password("123456")
-                .roles(Roles.ACTUATOR.name(), Roles.BOOT_ADMIN.name())
-                .build()
-        );
     }
 
     @Configuration

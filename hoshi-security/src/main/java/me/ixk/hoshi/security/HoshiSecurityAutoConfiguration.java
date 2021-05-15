@@ -17,6 +17,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
  */
 @Configuration
 @ComponentScan("me.ixk.hoshi.security")
-@MapperScan("me.ixk.hoshi.security")
+@MapperScan("me.ixk.hoshi.security.mapper")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class HoshiSecurityAutoConfiguration {}

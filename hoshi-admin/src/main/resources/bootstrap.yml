@@ -12,13 +12,10 @@ spring:
         service-id: hoshi-config
   boot:
     admin:
-      instance-proxy:
-        ignored-headers:
-          - "Set-Cookie"
       instance-auth:
         # TODO: update
-        default-user-name: hoshi-admin
-        default-password: 123456
+        default-user-name: actuator
+        default-password: password
 eureka:
   instance:
     instance-id: ${spring.application.name}:${random.int[1,100]}

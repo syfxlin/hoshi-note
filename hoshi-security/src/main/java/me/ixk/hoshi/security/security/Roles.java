@@ -1,4 +1,4 @@
-package me.ixk.hoshi.security.config;
+package me.ixk.hoshi.security.security;
 
 /**
  * @author Otstar Lin

@@ -15,4 +15,10 @@ import org.springframework.stereotype.Service;
  * @since 2021-05-15
  */
 @Service
-public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements UsersService {}
+public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements UsersService {
+
+    @Override
+    public Users queryUserByName(final String username) {
+        return this.query().eq(Users.USERNAME, username).one();
+    }
+}

@@ -11,4 +11,12 @@ import me.ixk.hoshi.security.entity.Users;
  * @author syfxlin
  * @since 2021-05-15
  */
-public interface UsersService extends IService<Users> {}
+public interface UsersService extends IService<Users> {
+    /**
+     * 查询指定用户名的用户
+     *
+     * @param username 用户名
+     * @return 用户
+     */
+    Users queryUserByName(final String username);
+}

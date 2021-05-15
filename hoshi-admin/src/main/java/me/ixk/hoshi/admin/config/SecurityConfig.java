@@ -1,6 +1,6 @@
 package me.ixk.hoshi.admin.config;
 
-import me.ixk.hoshi.security.config.Roles;
+import me.ixk.hoshi.security.security.Roles;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
