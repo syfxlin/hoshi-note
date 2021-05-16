@@ -4,6 +4,9 @@
 
 package me.ixk.hoshi.security.config;
 
+import java.io.PrintWriter;
+import me.ixk.hoshi.common.result.Result;
+import me.ixk.hoshi.common.util.Json;
 import me.ixk.hoshi.security.security.Roles;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -58,6 +61,15 @@ public class DefaultSecurityConfig {
         protected void configure(final HttpSecurity http) throws Exception {
             http.csrf().disable();
             http.cors();
+            http
+                .exceptionHandling()
+                .authenticationEntryPoint(
+                    (request, response, authException) -> {
+                        response.setContentType("application/json;charset=utf-8");
+                        final PrintWriter writer = response.getWriter();
+                        writer.write(Json.stringify(Result.error(4001, "尚未登录，请先登录")));
+                    }
+                );
         }
     }
 }

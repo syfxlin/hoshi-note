@@ -4,7 +4,6 @@
 
 package me.ixk.hoshi.ums.config;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.PrintWriter;
 import me.ixk.hoshi.common.result.Result;
 import me.ixk.hoshi.common.util.Json;
@@ -12,7 +11,6 @@ import me.ixk.hoshi.security.config.DefaultSecurityConfig.SecurityConfigAdapter;
 import me.ixk.hoshi.security.security.UserDetails;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * Spring Security 配置
@@ -34,9 +32,7 @@ public class SecurityConfig extends SecurityConfigAdapter {
                     final UserDetails principal = (UserDetails) authentication.getPrincipal();
                     response.setContentType("application/json;charset=utf-8");
                     final PrintWriter writer = response.getWriter();
-                    final ObjectNode result = Json.convertToObjectNode(principal.getUser());
-                    result.put("token", RequestContextHolder.currentRequestAttributes().getSessionId());
-                    writer.write(result.toString());
+                    writer.write(Json.stringify(Result.data(principal)));
                 }
             )
             .failureHandler(
@@ -44,15 +40,6 @@ public class SecurityConfig extends SecurityConfigAdapter {
                     response.setContentType("application/json;charset=utf-8");
                     final PrintWriter writer = response.getWriter();
                     writer.write(Json.stringify(Result.error(4001, exception.getMessage())));
-                }
-            );
-        http
-            .exceptionHandling()
-            .authenticationEntryPoint(
-                (request, response, authException) -> {
-                    response.setContentType("application/json;charset=utf-8");
-                    final PrintWriter writer = response.getWriter();
-                    writer.write(Json.stringify(Result.error(4001, "尚未登录，请先登录")));
                 }
             );
         http

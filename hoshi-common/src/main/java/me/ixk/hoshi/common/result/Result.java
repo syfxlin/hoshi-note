@@ -20,16 +20,20 @@ public class Result<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
+    public static <T> Result<T> data(final ResultCode code, final T data) {
+        return data(code.getCode(), code.getMessage(), data);
+    }
+
     public static <T> Result<T> data(final T data) {
-        return data(2000, "操作成功", data);
+        return data(ResultCode.OK, data);
     }
 
     public static <T> Result<T> data(final int code, final T data) {
-        return data(code, "操作成功", data);
+        return data(code, ResultCode.OK.getMessage(), data);
     }
 
     public static <T> Result<T> data(final String message, final T data) {
-        return data(2000, message, data);
+        return data(ResultCode.OK.getCode(), message, data);
     }
 
     public static <T> Result<T> data(final int code, final String message, final T data) {
@@ -37,6 +41,18 @@ public class Result<T> {
     }
 
     public static <T> Result<T> error(final int code, final String message) {
-        return data(code, message, null);
+        return error(code, message, null);
+    }
+
+    public static <T> Result<T> error(final ResultCode code) {
+        return error(code.getCode(), code.getMessage());
+    }
+
+    public static <T> Result<T> error(final ResultCode code, final T data) {
+        return error(code.getCode(), code.getMessage(), data);
+    }
+
+    public static <T> Result<T> error(final int code, final String message, final T data) {
+        return data(code, message, data);
     }
 }

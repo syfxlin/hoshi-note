@@ -14,7 +14,6 @@ public class SecurityConfig extends SecurityConfigAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        super.configure(http);
         http.authorizeRequests().anyRequest().hasRole(Roles.BOOT_ADMIN.name());
         http.formLogin();
     }
