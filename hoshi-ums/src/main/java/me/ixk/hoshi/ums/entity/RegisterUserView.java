@@ -1,12 +1,17 @@
 package me.ixk.hoshi.ums.entity;
 
+import java.time.LocalDateTime;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import me.ixk.hoshi.common.util.App;
-import me.ixk.hoshi.security.service.impl.UsersServiceImpl;
+import me.ixk.hoshi.security.entity.Users;
+import me.ixk.hoshi.security.security.Roles;
+import me.ixk.hoshi.security.security.Status;
+import me.ixk.hoshi.security.service.UsersService;
 
 /**
  * @author Otstar Lin
@@ -14,7 +19,8 @@ import me.ixk.hoshi.security.service.impl.UsersServiceImpl;
  */
 @Data
 @AllArgsConstructor
-public class RegisterVO {
+@NoArgsConstructor
+public class RegisterUserView {
 
     @Size(min = 3, max = 50, message = "用户名长度应在（3-50）之间")
     @NotNull(message = "用户名不能为空")
@@ -36,10 +42,20 @@ public class RegisterVO {
     private String avatar;
 
     @AssertTrue(message = "用户名已存在")
-    private boolean isUnique() {
-        if (this.username == null) {
-            return false;
-        }
-        return App.getBean(UsersServiceImpl.class).queryUserByName(username) == null;
+    protected boolean isUnique() {
+        return App.getBean(UsersService.class).queryUserByName(username) == null;
+    }
+
+    public Users toUsers() {
+        final Users user = new Users();
+        user.setUsername(this.getUsername());
+        user.setPassword(this.getPassword());
+        user.setRoles(Roles.USER.name());
+        user.setNickname(this.getNickname());
+        user.setEmail(this.getEmail());
+        user.setAvatar(this.getAvatar());
+        user.setStatus(Status.ENABLE.ordinal());
+        user.setCreatedTime(LocalDateTime.now());
+        return user;
     }
 }

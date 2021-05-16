@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import java.util.Map;
 import me.ixk.hoshi.common.util.Json;
 import me.ixk.hoshi.security.service.UsersService;
-import me.ixk.hoshi.ums.entity.RegisterVO;
+import me.ixk.hoshi.ums.entity.RegisterUserView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ class AuthControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
 
-    ResultActions registerUtil(final RegisterVO vo) throws Exception {
+    ResultActions registerUtil(final RegisterUserView vo) throws Exception {
         final MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
             .post("/register")
             .contentType(MediaType.APPLICATION_JSON)
@@ -49,13 +49,13 @@ class AuthControllerTest {
 
     @Test
     void register() throws Exception {
-        final RegisterVO v1 = new RegisterVO("test", "password", "nickname", "email@ixk.me", "avatar");
+        final RegisterUserView v1 = new RegisterUserView("test", "password", "nickname", "email@ixk.me", "avatar");
         registerUtil(v1).andExpect(MockMvcResultMatchers.status().isOk());
-        final RegisterVO v2 = new RegisterVO("te", "password", "nickname", "email@ixk.me", "avatar");
+        final RegisterUserView v2 = new RegisterUserView("te", "password", "nickname", "email@ixk.me", "avatar");
         registerUtil(v2).andExpect(MockMvcResultMatchers.status().is4xxClientError());
-        final RegisterVO v3 = new RegisterVO("test", null, "nickname", "email@ixk.me", "avatar");
+        final RegisterUserView v3 = new RegisterUserView("test", null, "nickname", "email@ixk.me", "avatar");
         registerUtil(v3).andExpect(MockMvcResultMatchers.status().is4xxClientError());
-        final RegisterVO v4 = new RegisterVO("test", "password", "nickname", "email@ixk.me", "avatar");
+        final RegisterUserView v4 = new RegisterUserView("test", "password", "nickname", "email@ixk.me", "avatar");
         registerUtil(v4).andExpect(MockMvcResultMatchers.status().is4xxClientError());
         usersService.removeByMap(Map.of("username", "test"));
     }

@@ -66,6 +66,7 @@ public class DefaultSecurityConfig {
                 .authenticationEntryPoint(
                     (request, response, authException) -> {
                         response.setContentType("application/json;charset=utf-8");
+                        response.setStatus(401);
                         final PrintWriter writer = response.getWriter();
                         writer.write(Json.stringify(Result.error(4001, "尚未登录，请先登录")));
                     }
