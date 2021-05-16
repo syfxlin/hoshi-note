@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.session.web.http.CookieHttpSessionIdResolver;
 import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
 import org.springframework.session.web.http.HttpSessionIdResolver;
 
@@ -23,7 +22,6 @@ public class CompositeSessionIdResolver implements HttpSessionIdResolver {
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
     public static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
-    private final CookieHttpSessionIdResolver cookieResolver = new CookieHttpSessionIdResolver();
     private final HeaderHttpSessionIdResolver headerResolver = new HeaderHttpSessionIdResolver(X_AUTH_TOKEN);
 
     @Override
@@ -34,7 +32,6 @@ public class CompositeSessionIdResolver implements HttpSessionIdResolver {
             ids.add(authorization.replace(BEARER, ""));
         }
         ids.addAll(headerResolver.resolveSessionIds(request));
-        ids.addAll(cookieResolver.resolveSessionIds(request));
         return ids;
     }
 
@@ -45,13 +42,11 @@ public class CompositeSessionIdResolver implements HttpSessionIdResolver {
         final String sessionId
     ) {
         headerResolver.setSessionId(request, response, sessionId);
-        cookieResolver.setSessionId(request, response, sessionId);
     }
 
     @Override
     public void expireSession(final HttpServletRequest request, final HttpServletResponse response) {
         response.setHeader(AUTHORIZATION, "");
         headerResolver.expireSession(request, response);
-        cookieResolver.expireSession(request, response);
     }
 }

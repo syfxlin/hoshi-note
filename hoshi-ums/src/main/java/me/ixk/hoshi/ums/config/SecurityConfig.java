@@ -4,12 +4,15 @@
 
 package me.ixk.hoshi.ums.config;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.PrintWriter;
 import me.ixk.hoshi.common.result.Result;
 import me.ixk.hoshi.common.util.Json;
 import me.ixk.hoshi.security.config.DefaultSecurityConfig.SecurityConfigAdapter;
+import me.ixk.hoshi.security.security.UserDetails;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * Spring Security 配置
@@ -28,10 +31,12 @@ public class SecurityConfig extends SecurityConfigAdapter {
             .formLogin()
             .successHandler(
                 (request, response, authentication) -> {
-                    final Object principal = authentication.getPrincipal();
+                    final UserDetails principal = (UserDetails) authentication.getPrincipal();
                     response.setContentType("application/json;charset=utf-8");
                     final PrintWriter writer = response.getWriter();
-                    writer.write(Json.stringify(principal));
+                    final ObjectNode result = Json.convertToObjectNode(principal.getUser());
+                    result.put("token", RequestContextHolder.currentRequestAttributes().getSessionId());
+                    writer.write(result.toString());
                 }
             )
             .failureHandler(
@@ -59,6 +64,5 @@ public class SecurityConfig extends SecurityConfigAdapter {
                     writer.write(Json.stringify(Result.data("注销成功")));
                 }
             );
-        http.csrf().ignoringAntMatchers("/login", "/logout");
     }
 }

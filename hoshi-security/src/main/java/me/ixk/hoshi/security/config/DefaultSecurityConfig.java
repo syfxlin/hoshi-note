@@ -6,6 +6,7 @@ package me.ixk.hoshi.security.config;
 
 import me.ixk.hoshi.security.security.Roles;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -14,7 +15,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 /**
  * 安全配置
@@ -28,6 +28,12 @@ public class DefaultSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(SecurityConfigAdapter.class)
+    public SecurityConfigAdapter securityConfigAdapter() {
+        return new SecurityConfigAdapter();
     }
 
     @Configuration
@@ -50,7 +56,8 @@ public class DefaultSecurityConfig {
 
         @Override
         protected void configure(final HttpSecurity http) throws Exception {
-            http.csrf().csrfTokenRepository(new CookieCsrfTokenRepository());
+            http.csrf().disable();
+            http.cors();
         }
     }
 }
