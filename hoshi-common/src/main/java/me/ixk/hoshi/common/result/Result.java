@@ -1,6 +1,7 @@
 package me.ixk.hoshi.common.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -19,6 +20,8 @@ public class Result<T> {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
+
+    private final LocalDateTime time = LocalDateTime.now();
 
     public static <T> Result<T> data(final ResultCode code, final T data) {
         return data(code.getCode(), code.getMessage(), data);

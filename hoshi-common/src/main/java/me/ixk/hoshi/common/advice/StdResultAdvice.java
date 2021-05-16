@@ -2,7 +2,7 @@ package me.ixk.hoshi.common.advice;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import me.ixk.hoshi.common.annotation.NoStdResult;
+import me.ixk.hoshi.common.annotation.IgnoreResultAdvice;
 import me.ixk.hoshi.common.result.Result;
 import me.ixk.hoshi.common.result.ResultCode;
 import me.ixk.hoshi.common.util.Json;
@@ -14,7 +14,6 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
@@ -24,13 +23,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * @author Otstar Lin
  * @date 2021/5/16 下午 2:52
  */
-@RestControllerAdvice(annotations = RestController.class)
+@RestControllerAdvice(basePackages = "me.ixk.hoshi")
 public class StdResultAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(final MethodParameter returnType, final Class converterType) {
         return (
-            !returnType.getParameterType().equals(Result.class) && !returnType.hasMethodAnnotation(NoStdResult.class)
+            !returnType.getParameterType().equals(Result.class) &&
+            !returnType.hasMethodAnnotation(IgnoreResultAdvice.class)
         );
     }
 
@@ -43,11 +43,9 @@ public class StdResultAdvice implements ResponseBodyAdvice<Object> {
         final ServerHttpRequest request,
         final ServerHttpResponse response
     ) {
-        if (MediaType.APPLICATION_JSON.equals(selectedContentType)) {
-            body = Result.data(ResultCode.OK, body);
-            if (returnType.getGenericParameterType().equals(String.class)) {
-                body = Json.stringify(body);
-            }
+        body = Result.data(ResultCode.OK, body);
+        if (returnType.getGenericParameterType().equals(String.class)) {
+            body = Json.stringify(body);
         }
         return body;
     }
