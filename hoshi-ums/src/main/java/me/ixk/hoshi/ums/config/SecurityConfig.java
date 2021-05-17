@@ -4,9 +4,7 @@
 
 package me.ixk.hoshi.ums.config;
 
-import java.io.PrintWriter;
-import me.ixk.hoshi.common.result.Result;
-import me.ixk.hoshi.common.util.Json;
+import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.security.config.DefaultSecurityConfig.SecurityConfigAdapter;
 import me.ixk.hoshi.security.security.UserDetails;
 import org.springframework.context.annotation.Configuration;
@@ -28,29 +26,17 @@ public class SecurityConfig extends SecurityConfigAdapter {
         http
             .formLogin()
             .successHandler(
-                (request, response, authentication) -> {
-                    final UserDetails principal = (UserDetails) authentication.getPrincipal();
-                    response.setContentType("application/json;charset=utf-8");
-                    final PrintWriter writer = response.getWriter();
-                    writer.write(Json.stringify(Result.data(principal)));
-                }
+                (request, response, authentication) ->
+                    ApiResult.ok((UserDetails) authentication.getPrincipal()).toResponse(response)
             )
             .failureHandler(
-                (request, response, exception) -> {
-                    response.setContentType("application/json;charset=utf-8");
-                    response.setStatus(401);
-                    final PrintWriter writer = response.getWriter();
-                    writer.write(Json.stringify(Result.error(4001, exception.getMessage())));
-                }
+                (request, response, exception) ->
+                    ApiResult.badRequest(exception.getMessage()).build().toResponse(response)
             );
         http
             .logout()
             .logoutSuccessHandler(
-                (request, response, authentication) -> {
-                    response.setContentType("application/json;charset=utf-8");
-                    final PrintWriter writer = response.getWriter();
-                    writer.write(Json.stringify(Result.data("注销成功")));
-                }
+                (request, response, authentication) -> ApiResult.ok("注销成功").build().toResponse(response)
             );
     }
 }

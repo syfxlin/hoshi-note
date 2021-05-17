@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.security.entity.Users;
 import me.ixk.hoshi.security.service.UsersService;
 import me.ixk.hoshi.ums.entity.RegisterUserView;
@@ -32,10 +33,10 @@ public class AuthController {
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public Users register(@Valid @RequestBody final RegisterUserView vo) {
+    public ApiResult<Users> register(@Valid @RequestBody final RegisterUserView vo) {
         final Users user = vo.toUsers();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         usersService.save(user);
-        return usersService.queryUserByName(vo.getUsername());
+        return ApiResult.ok(usersService.queryUserByName(vo.getUsername()));
     }
 }

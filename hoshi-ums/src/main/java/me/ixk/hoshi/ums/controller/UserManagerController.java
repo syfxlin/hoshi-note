@@ -5,6 +5,7 @@ import io.swagger.annotations.Authorization;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.security.entity.Users;
 import me.ixk.hoshi.security.service.UsersService;
 import me.ixk.hoshi.ums.entity.AddUserView;
@@ -31,34 +32,34 @@ public class UserManagerController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("")
-    public List<Users> list() {
-        return usersService.query().list();
+    public ApiResult<List<Users>> list() {
+        return ApiResult.ok(usersService.query().list());
     }
 
     @PostMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public Users add(@Valid @RequestBody final AddUserView vo) {
+    public ApiResult<Users> add(@Valid @RequestBody final AddUserView vo) {
         final Users user = vo.toUsers();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         usersService.save(user);
-        return usersService.queryUserByName(vo.getUsername());
+        return ApiResult.ok(usersService.queryUserByName(vo.getUsername()));
     }
 
     @DeleteMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public boolean remove(@RequestParam("id") final int id) {
-        return usersService.removeById(id);
+    public ApiResult<Boolean> remove(@RequestParam("id") final int id) {
+        return ApiResult.ok(usersService.removeById(id));
     }
 
     @PutMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public Users update(@Valid @RequestBody final UpdateUserView vo) {
+    public ApiResult<Users> update(@Valid @RequestBody final UpdateUserView vo) {
         final Users user = vo.toUsers();
         final String password = user.getPassword();
         if (password != null) {
             user.setPassword(passwordEncoder.encode(password));
         }
         usersService.updateById(user);
-        return usersService.getById(vo.getId());
+        return ApiResult.ok(usersService.getById(vo.getId()));
     }
 }

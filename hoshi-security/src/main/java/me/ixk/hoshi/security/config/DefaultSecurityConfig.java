@@ -4,9 +4,7 @@
 
 package me.ixk.hoshi.security.config;
 
-import java.io.PrintWriter;
-import me.ixk.hoshi.common.result.Result;
-import me.ixk.hoshi.common.util.Json;
+import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.security.security.Roles;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -64,12 +62,8 @@ public class DefaultSecurityConfig {
             http
                 .exceptionHandling()
                 .authenticationEntryPoint(
-                    (request, response, authException) -> {
-                        response.setContentType("application/json;charset=utf-8");
-                        response.setStatus(401);
-                        final PrintWriter writer = response.getWriter();
-                        writer.write(Json.stringify(Result.error(4001, "尚未登录，请先登录")));
-                    }
+                    (request, response, authException) ->
+                        ApiResult.badRequest("尚未登录，请先登录").build().toResponse(response)
                 );
         }
     }
