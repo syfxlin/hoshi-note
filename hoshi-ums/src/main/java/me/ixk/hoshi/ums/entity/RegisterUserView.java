@@ -2,6 +2,7 @@ package me.ixk.hoshi.ums.entity;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import me.ixk.hoshi.security.entity.Users;
 import me.ixk.hoshi.security.security.Roles;
 import me.ixk.hoshi.security.security.Status;
 import me.ixk.hoshi.security.service.UsersService;
+import org.hibernate.validator.constraints.URL;
 
 /**
  * @author Otstar Lin
@@ -36,9 +38,11 @@ public class RegisterUserView {
 
     @Size(max = 75, message = "邮箱的长度不能超过 75")
     @NotNull(message = "邮箱不能为空")
+    @Email
     private String email;
 
     @Size(max = 255, message = "头像链接长度不能超过 255")
+    @URL
     private String avatar;
 
     @AssertTrue(message = "用户名已存在")

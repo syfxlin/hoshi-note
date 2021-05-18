@@ -1,14 +1,17 @@
 package me.ixk.hoshi.ums.controller;
 
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.Authorization;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
+import me.ixk.hoshi.common.result.PageView;
 import me.ixk.hoshi.security.entity.Users;
 import me.ixk.hoshi.security.service.UsersService;
 import me.ixk.hoshi.ums.entity.AddUserView;
+import me.ixk.hoshi.ums.entity.FilterUserView;
 import me.ixk.hoshi.ums.entity.UpdateUserView;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,8 +35,35 @@ public class UserManagerController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("")
-    public ApiResult<List<Users>> list() {
-        return ApiResult.ok(usersService.query().list());
+    public ApiResult<ApiPage<Users>> list(final PageView<Users> page, final FilterUserView user) {
+        final QueryChainWrapper<Users> query = usersService.query();
+        final String username = user.getUsername();
+        final String nickname = user.getNickname();
+        final String email = user.getEmail();
+        final Integer status = user.getStatus();
+        final String role = user.getRole();
+        if (username != null) {
+            query.eq(Users.USERNAME, username);
+        }
+        if (nickname != null) {
+            query.eq(Users.NICKNAME, nickname);
+        }
+        if (email != null) {
+            query.eq(Users.EMAIL, email);
+        }
+        if (status != null) {
+            query.eq(Users.STATUS, status);
+        }
+        if (role != null) {
+            query.like(Users.ROLES, role);
+        }
+        final ApiResult<ApiPage<Users>> users;
+        if (page.getPage() != null) {
+            users = ApiResult.page(query.page(page.toPage()));
+        } else {
+            users = ApiResult.page(query.list());
+        }
+        return users;
     }
 
     @PostMapping("")

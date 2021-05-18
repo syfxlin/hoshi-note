@@ -2,12 +2,11 @@
  * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
  */
 
-package me.ixk.hoshi.ums.config;
+package me.ixk.hoshi.common.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,8 +17,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/5/5 下午 12:13
  */
 @Configuration
-@MapperScan("me.ixk.hoshi.ums.mapper")
-public class DatabaseConfig {
+public class DefaultDatabaseConfig {
 
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {

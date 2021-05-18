@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import me.ixk.hoshi.common.util.App;
 import me.ixk.hoshi.security.entity.Users;
 import me.ixk.hoshi.security.service.UsersService;
+import org.hibernate.validator.constraints.URL;
 
 /**
  * @author Otstar Lin
@@ -30,16 +31,18 @@ public class UpdateUserView {
     private String nickname;
 
     @Size(max = 75, message = "邮箱的长度不能超过 75")
+    @Email
     private String email;
 
     @Size(max = 255, message = "头像链接长度不能超过 255")
+    @URL
     private String avatar;
 
     @Size(max = 100, message = "权限的长度不能超过 100")
     private String roles;
 
     @Min(value = 0, message = "状态值最小不能小于 0")
-    @Max(value = 127, message = "状态值最大不能操作 127")
+    @Max(value = 127, message = "状态值最大不能超过 127")
     private Integer status;
 
     public Users toUsers() {

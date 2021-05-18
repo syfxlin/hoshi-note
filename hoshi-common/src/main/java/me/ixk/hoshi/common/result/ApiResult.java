@@ -1,5 +1,6 @@
 package me.ixk.hoshi.common.result;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.net.URI;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import javax.servlet.http.HttpServletResponse;
@@ -229,6 +231,30 @@ public class ApiResult<T> {
         return ok(message).data(data);
     }
 
+    public static <T> ApiResult<ApiPage<T>> page(final List<T> records) {
+        return page(records, null);
+    }
+
+    public static <T> ApiResult<ApiPage<T>> page(final List<T> records, @Nullable final String message) {
+        return page(new ApiPage<>(records), message);
+    }
+
+    public static <T> ApiResult<ApiPage<T>> page(final IPage<T> page) {
+        return page(page, null);
+    }
+
+    public static <T> ApiResult<ApiPage<T>> page(final IPage<T> page, @Nullable final String message) {
+        return ok(message).page(page);
+    }
+
+    public static <T> ApiResult<ApiPage<T>> page(final ApiPage<T> page) {
+        return page(page, null);
+    }
+
+    public static <T> ApiResult<ApiPage<T>> page(final ApiPage<T> page, @Nullable final String message) {
+        return ok(message).page(page);
+    }
+
     public static DataBuilder error(final String message) {
         Assert.notNull(message, "Message must be null");
         return status(ApiMessage.INTERNAL_SERVER_ERROR, message);
@@ -429,6 +455,14 @@ public class ApiResult<T> {
         <T> ApiResult<T> data(@Nullable T data);
 
         DataBuilder message(@Nullable final String message);
+
+        default <T> ApiResult<ApiPage<T>> page(final IPage<T> page) {
+            return page(new ApiPage<>(page));
+        }
+
+        default <T> ApiResult<ApiPage<T>> page(final ApiPage<T> page) {
+            return data(page);
+        }
     }
 
     private static class DefaultBuilder implements DataBuilder {

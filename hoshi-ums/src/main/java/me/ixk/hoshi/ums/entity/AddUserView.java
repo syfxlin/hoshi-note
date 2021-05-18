@@ -23,7 +23,7 @@ public class AddUserView extends RegisterUserView {
     private String roles;
 
     @Min(value = 0, message = "状态值最小不能小于 0")
-    @Max(value = 127, message = "状态值最大不能操作 127")
+    @Max(value = 127, message = "状态值最大不能超过 127")
     @NotNull(message = "状态值不能为空")
     private Integer status;
 
