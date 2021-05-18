@@ -21,7 +21,7 @@ public final class MyBatisGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public static void generator(final String moduleName, final String packageName) {
+    public static void generator(final String moduleName, final String packageName, final boolean overwrite) {
         // 根目录
         final String rootPath = System.getProperty("user.dir");
         // 代码生成器
@@ -37,7 +37,7 @@ public final class MyBatisGenerator {
         gc.setAuthor("syfxlin");
         gc.setOpen(false);
         // 是否覆盖
-        gc.setFileOverride(true);
+        gc.setFileOverride(overwrite);
         // Swagger
         gc.setSwagger2(true);
         gc.setServiceName("%sService");

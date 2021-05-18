@@ -9,6 +9,6 @@ import me.ixk.hoshi.security.entity.Users;
  * </p>
  *
  * @author syfxlin
- * @since 2021-05-15
+ * @since 2021-05-18
  */
 public interface UsersMapper extends BaseMapper<Users> {}

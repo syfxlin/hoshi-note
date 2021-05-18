@@ -2,7 +2,6 @@ package me.ixk.hoshi.security.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
@@ -17,7 +16,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author syfxlin
- * @since 2021-05-15
+ * @since 2021-05-18
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -34,12 +33,8 @@ public class Users implements Serializable {
     @ApiModelProperty(value = "用户名")
     private String username;
 
-    @JsonIgnore
     @ApiModelProperty(value = "密码")
     private String password;
-
-    @ApiModelProperty(value = "规则（权限）")
-    private String roles;
 
     @ApiModelProperty(value = "昵称")
     private String nickname;
@@ -56,13 +51,12 @@ public class Users implements Serializable {
     @ApiModelProperty(value = "用户头像的地址")
     private String avatar;
 
+
     public static final String ID = "id";
 
     public static final String USERNAME = "username";
 
     public static final String PASSWORD = "password";
-
-    public static final String ROLES = "roles";
 
     public static final String NICKNAME = "nickname";
 
@@ -73,4 +67,5 @@ public class Users implements Serializable {
     public static final String CREATED_TIME = "created_time";
 
     public static final String AVATAR = "avatar";
+
 }

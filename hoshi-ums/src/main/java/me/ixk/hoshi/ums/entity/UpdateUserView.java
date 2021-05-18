@@ -1,14 +1,11 @@
 package me.ixk.hoshi.ums.entity;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.ixk.hoshi.common.util.App;
 import me.ixk.hoshi.security.entity.Users;
-import me.ixk.hoshi.security.security.Roles;
 import me.ixk.hoshi.security.service.UsersService;
 import org.hibernate.validator.constraints.URL;
 
@@ -41,17 +38,9 @@ public class UpdateUserView {
     @URL
     private String avatar;
 
-    @Size(max = 100, message = "权限的长度不能超过 100")
-    private List<String> roles;
-
     @Min(value = 0, message = "状态值最小不能小于 0")
     @Max(value = 127, message = "状态值最大不能超过 127")
     private Integer status;
-
-    @Null(message = "权限 [${value}] 不存在")
-    protected String isRoleExists() {
-        return this.roles.stream().filter(r -> !Roles.contains(r)).collect(Collectors.joining(","));
-    }
 
     public Users toUsers() {
         final Users user = new Users();
@@ -61,7 +50,6 @@ public class UpdateUserView {
         user.setNickname(this.getNickname());
         user.setEmail(this.getEmail());
         user.setAvatar(this.getAvatar());
-        user.setRoles(String.join(",", this.roles));
         user.setStatus(this.getStatus());
         return user;
     }
@@ -73,7 +61,7 @@ public class UpdateUserView {
 
     @AssertTrue(message = "用户名已存在")
     protected boolean isUnique() {
-        final Users user = App.getBean(UsersService.class).queryUserByName(this.getUsername());
+        final Users user = App.getBean(UsersService.class).queryByName(this.getUsername());
         return user == null || user.getId().equals(this.getId());
     }
 }

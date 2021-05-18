@@ -6,6 +6,8 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.security.entity.Users;
+import me.ixk.hoshi.security.security.Roles;
+import me.ixk.hoshi.security.service.UserRoleRelationService;
 import me.ixk.hoshi.security.service.UsersService;
 import me.ixk.hoshi.ums.entity.RegisterUserView;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final UsersService usersService;
+    private final UserRoleRelationService userRoleRelationService;
     private final PasswordEncoder passwordEncoder;
 
     @ApiOperation(value = "注册")
@@ -37,6 +40,8 @@ public class AuthController {
         final Users user = vo.toUsers();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         usersService.save(user);
-        return ApiResult.ok(usersService.queryUserByName(vo.getUsername()));
+        final Users data = usersService.queryByName(vo.getUsername());
+        userRoleRelationService.save(data.getId(), Roles.USER.name());
+        return ApiResult.ok(data);
     }
 }

@@ -1,6 +1,9 @@
 package me.ixk.hoshi.ums.entity;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,12 +30,4 @@ public class FilterUserView {
     @Min(value = 0, message = "状态值最小不能小于 0")
     @Max(value = 127, message = "状态值最大不能超过 127")
     private Integer status;
-
-    @Size(max = 100, message = "权限的长度不能超过 100")
-    private String role;
-
-    @AssertTrue(message = "只能过滤一种权限")
-    protected boolean isSingleRole() {
-        return this.role == null || !this.role.contains(",");
-    }
 }

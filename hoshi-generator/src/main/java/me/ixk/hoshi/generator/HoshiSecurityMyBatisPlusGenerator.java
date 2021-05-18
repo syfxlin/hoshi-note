@@ -9,6 +9,6 @@ import me.ixk.hoshi.generator.util.MyBatisGenerator;
 public class HoshiSecurityMyBatisPlusGenerator {
 
     public static void main(final String[] args) {
-        MyBatisGenerator.generator("hoshi-security", "me.ixk.hoshi.security");
+        MyBatisGenerator.generator("hoshi-security", "me.ixk.hoshi.security", true);
     }
 }

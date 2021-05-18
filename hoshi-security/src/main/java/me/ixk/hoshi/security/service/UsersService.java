@@ -9,7 +9,7 @@ import me.ixk.hoshi.security.entity.Users;
  * </p>
  *
  * @author syfxlin
- * @since 2021-05-15
+ * @since 2021-05-18
  */
 public interface UsersService extends IService<Users> {
     /**
@@ -18,5 +18,5 @@ public interface UsersService extends IService<Users> {
      * @param username 用户名
      * @return 用户
      */
-    Users queryUserByName(final String username);
+    Users queryByName(final String username);
 }

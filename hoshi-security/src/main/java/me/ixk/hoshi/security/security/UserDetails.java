@@ -1,13 +1,13 @@
 package me.ixk.hoshi.security.security;
 
-import java.util.Arrays;
+import java.util.List;
+import me.ixk.hoshi.security.entity.Roles;
 import me.ixk.hoshi.security.entity.Users;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Otstar Lin
@@ -19,15 +19,12 @@ public class UserDetails extends User {
     private static final String ANONYMOUS_USER = "anonymousUser";
     private final Users user;
 
-    public UserDetails(final Users user) {
+    public UserDetails(final Users user, final List<Roles> roles) {
         super(
             user.getUsername(),
             user.getPassword(),
             AuthorityUtils.createAuthorityList(
-                Arrays
-                    .stream(StringUtils.tokenizeToStringArray(user.getRoles(), ","))
-                    .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
-                    .toArray(String[]::new)
+                roles.stream().map(Roles::getName).map(r -> "ROLE_" + r).toArray(String[]::new)
             )
         );
         this.user = user;

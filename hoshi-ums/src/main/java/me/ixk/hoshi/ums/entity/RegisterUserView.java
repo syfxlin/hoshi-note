@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.ixk.hoshi.common.util.App;
 import me.ixk.hoshi.security.entity.Users;
-import me.ixk.hoshi.security.security.Roles;
 import me.ixk.hoshi.security.security.Status;
 import me.ixk.hoshi.security.service.UsersService;
 import org.hibernate.validator.constraints.URL;
@@ -47,14 +46,13 @@ public class RegisterUserView {
 
     @AssertTrue(message = "用户名已存在")
     protected boolean isUnique() {
-        return App.getBean(UsersService.class).queryUserByName(username) == null;
+        return App.getBean(UsersService.class).queryByName(username) == null;
     }
 
     public Users toUsers() {
         final Users user = new Users();
         user.setUsername(this.getUsername());
         user.setPassword(this.getPassword());
-        user.setRoles(Roles.USER.name());
         user.setNickname(this.getNickname());
         user.setEmail(this.getEmail());
         user.setAvatar(this.getAvatar());

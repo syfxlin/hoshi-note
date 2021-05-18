@@ -9,6 +9,8 @@ import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.common.result.PageView;
 import me.ixk.hoshi.security.entity.Users;
+import me.ixk.hoshi.security.security.Roles;
+import me.ixk.hoshi.security.service.UserRoleRelationService;
 import me.ixk.hoshi.security.service.UsersService;
 import me.ixk.hoshi.ums.entity.AddUserView;
 import me.ixk.hoshi.ums.entity.FilterUserView;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserManagerController {
 
     private final UsersService usersService;
+    private final UserRoleRelationService userRoleRelationService;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("")
@@ -41,7 +44,6 @@ public class UserManagerController {
         final String nickname = user.getNickname();
         final String email = user.getEmail();
         final Integer status = user.getStatus();
-        final String role = user.getRole();
         if (username != null) {
             query.eq(Users.USERNAME, username);
         }
@@ -53,9 +55,6 @@ public class UserManagerController {
         }
         if (status != null) {
             query.eq(Users.STATUS, status);
-        }
-        if (role != null) {
-            query.like(Users.ROLES, role);
         }
         final ApiResult<ApiPage<Users>> users;
         if (page.getPage() != null) {
@@ -72,7 +71,9 @@ public class UserManagerController {
         final Users user = vo.toUsers();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         usersService.save(user);
-        return ApiResult.ok(usersService.queryUserByName(vo.getUsername()));
+        final Users data = usersService.queryByName(vo.getUsername());
+        userRoleRelationService.save(data.getId(), Roles.USER.name());
+        return ApiResult.ok(data);
     }
 
     @DeleteMapping("")

@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author syfxlin
- * @since 2021-05-15
+ * @since 2021-05-18
  */
 @Service
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements UsersService {
 
     @Override
-    public Users queryUserByName(final String username) {
+    public Users queryByName(final String username) {
         return this.query().eq(Users.USERNAME, username).one();
     }
 }
