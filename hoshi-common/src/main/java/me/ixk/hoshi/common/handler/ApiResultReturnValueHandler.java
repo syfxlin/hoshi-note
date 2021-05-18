@@ -5,14 +5,15 @@ import java.util.List;
 import java.util.Optional;
 import me.ixk.hoshi.common.annotation.ApiResultBody;
 import me.ixk.hoshi.common.result.ApiResult;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
@@ -28,9 +29,6 @@ public class ApiResultReturnValueHandler implements HandlerMethodReturnValueHand
     @Autowired
     private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
-    @Autowired
-    HandlerExceptionResolver handlerExceptionResolver;
-
     private HandlerMethodReturnValueHandler handler;
 
     @Override
@@ -43,7 +41,7 @@ public class ApiResultReturnValueHandler implements HandlerMethodReturnValueHand
 
     @Override
     public void handleReturnValue(
-        Object returnValue,
+        @Nullable Object returnValue,
         final MethodParameter returnType,
         final ModelAndViewContainer mavContainer,
         final NativeWebRequest webRequest
@@ -69,9 +67,7 @@ public class ApiResultReturnValueHandler implements HandlerMethodReturnValueHand
     @Override
     public void afterPropertiesSet() throws Exception {
         final List<HandlerMethodReturnValueHandler> handlers = requestMappingHandlerAdapter.getReturnValueHandlers();
-        if (handlers == null) {
-            return;
-        }
+        Assert.notNull(handlers, "HandlerMethodReturnValueHandler 还未初始化");
         final Optional<HandlerMethodReturnValueHandler> handler = handlers
             .stream()
             .filter(h -> h instanceof HttpEntityMethodProcessor)

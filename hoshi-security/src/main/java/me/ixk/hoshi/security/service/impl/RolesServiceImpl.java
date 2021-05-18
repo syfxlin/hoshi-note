@@ -6,7 +6,9 @@ import java.util.List;
 import me.ixk.hoshi.security.entity.Roles;
 import me.ixk.hoshi.security.mapper.RolesMapper;
 import me.ixk.hoshi.security.service.RolesService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 /**
  * <p>
@@ -20,7 +22,8 @@ import org.springframework.stereotype.Service;
 public class RolesServiceImpl extends ServiceImpl<RolesMapper, Roles> implements RolesService {
 
     @Override
-    public List<Roles> queriesByUser(final Long userId) {
+    public List<Roles> queriesByUser(@NotNull final Long userId) {
+        Assert.notNull(userId, "用户 ID 不能为空");
         final List<Roles> roles = getBaseMapper().listByUserId(userId);
         return roles == null ? Collections.emptyList() : roles;
     }

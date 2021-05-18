@@ -5,6 +5,7 @@ import java.util.List;
 import me.ixk.hoshi.security.entity.Roles;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * <p>
@@ -24,5 +25,5 @@ public interface RolesMapper extends BaseMapper<Roles> {
     @Select(
         "SELECT roles.* FROM roles, user_role_relation WHERE roles.id = user_role_relation.role_id AND user_role_relation.user_id = #{userId}"
     )
-    List<Roles> listByUserId(@Param("userId") Long userId);
+    List<Roles> listByUserId(@Param("userId") @NotNull Long userId);
 }

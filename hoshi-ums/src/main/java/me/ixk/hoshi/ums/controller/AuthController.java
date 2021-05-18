@@ -39,8 +39,7 @@ public class AuthController {
     public ApiResult<Users> register(@Valid @RequestBody final RegisterUserView vo) {
         final Users user = vo.toUsers();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        usersService.save(user);
-        final Users data = usersService.queryByName(vo.getUsername());
+        final Users data = usersService.insert(user);
         userRoleRelationService.save(data.getId(), Roles.USER.name());
         return ApiResult.ok(data);
     }

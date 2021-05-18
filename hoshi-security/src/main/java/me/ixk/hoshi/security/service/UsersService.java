@@ -2,6 +2,7 @@ package me.ixk.hoshi.security.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import me.ixk.hoshi.security.entity.Users;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -18,5 +19,31 @@ public interface UsersService extends IService<Users> {
      * @param username 用户名
      * @return 用户
      */
-    Users queryByName(final String username);
+    default Users queryByName(final String username) {
+        return query().eq(Users.USERNAME, username).one();
+    }
+
+    /**
+     * 添加用户
+     *
+     * @param user 用户
+     * @return 添加后的用户，包含 id
+     */
+    @Transactional(rollbackFor = { Exception.class, Error.class })
+    default Users insert(final Users user) {
+        save(user);
+        return queryByName(user.getUsername());
+    }
+
+    /**
+     * 更新用户
+     *
+     * @param user 用户
+     * @return 用户
+     */
+    @Transactional(rollbackFor = { Exception.class, Error.class })
+    default Users update(final Users user) {
+        updateById(user);
+        return getById(user.getId());
+    }
 }

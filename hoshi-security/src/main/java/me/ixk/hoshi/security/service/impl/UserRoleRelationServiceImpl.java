@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import me.ixk.hoshi.security.entity.UserRoleRelation;
 import me.ixk.hoshi.security.mapper.UserRoleRelationMapper;
 import me.ixk.hoshi.security.service.UserRoleRelationService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 /**
  * <p>
@@ -20,7 +22,9 @@ public class UserRoleRelationServiceImpl
     implements UserRoleRelationService {
 
     @Override
-    public boolean save(final Long userId, final String roleName) {
+    public boolean save(@NotNull final Long userId, @NotNull final String roleName) {
+        Assert.notNull(userId, "用户 ID 不能为空");
+        Assert.notNull(roleName, "权限名称不能为空");
         return getBaseMapper().insertByRoleName(userId, roleName) > 0;
     }
 }

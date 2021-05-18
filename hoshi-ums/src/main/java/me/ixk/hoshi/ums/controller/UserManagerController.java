@@ -2,6 +2,7 @@ package me.ixk.hoshi.ums.controller;
 
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class UserManagerController {
     private final UserRoleRelationService userRoleRelationService;
     private final PasswordEncoder passwordEncoder;
 
+    @ApiOperation("列出用户（查询用户）")
     @GetMapping("")
     public ApiResult<ApiPage<Users>> list(final PageView<Users> page, final FilterUserView user) {
         final QueryChainWrapper<Users> query = usersService.query();
@@ -65,23 +67,25 @@ public class UserManagerController {
         return users;
     }
 
+    @ApiOperation("添加用户")
     @PostMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Users> add(@Valid @RequestBody final AddUserView vo) {
         final Users user = vo.toUsers();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        usersService.save(user);
-        final Users data = usersService.queryByName(vo.getUsername());
+        final Users data = usersService.insert(user);
         userRoleRelationService.save(data.getId(), Roles.USER.name());
         return ApiResult.ok(data);
     }
 
+    @ApiOperation("删除用户")
     @DeleteMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Boolean> remove(@RequestParam("id") final int id) {
         return ApiResult.ok(usersService.removeById(id));
     }
 
+    @ApiOperation("更新用户")
     @PutMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Users> update(@Valid @RequestBody final UpdateUserView vo) {
@@ -90,7 +94,6 @@ public class UserManagerController {
         if (password != null) {
             user.setPassword(passwordEncoder.encode(password));
         }
-        usersService.updateById(user);
-        return ApiResult.ok(usersService.getById(vo.getId()));
+        return ApiResult.ok(usersService.update(user));
     }
 }

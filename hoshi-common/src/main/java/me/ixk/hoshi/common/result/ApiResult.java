@@ -13,8 +13,9 @@ import java.util.Set;
 import java.util.function.Consumer;
 import javax.servlet.http.HttpServletResponse;
 import me.ixk.hoshi.common.util.Json;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.http.*;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.ObjectUtils;
@@ -27,23 +28,26 @@ import org.springframework.util.ObjectUtils;
  */
 public class ApiResult<T> {
 
+    @NotNull
     private final Object status;
 
     @Nullable
     private final String message;
 
     private final HttpHeaders headers;
+
+    @Nullable
     private final T data;
 
-    public ApiResult(final ApiMessage status) {
+    public ApiResult(@NotNull final ApiMessage status) {
         this(status, null);
     }
 
-    public ApiResult(final ApiMessage status, @Nullable final String message) {
+    public ApiResult(@NotNull final ApiMessage status, @Nullable final String message) {
         this(null, null, status, message);
     }
 
-    public ApiResult(@Nullable final T data, final ApiMessage status, @Nullable final String message) {
+    public ApiResult(@Nullable final T data, @NotNull final ApiMessage status, @Nullable final String message) {
         this(data, null, status, message);
     }
 
@@ -76,10 +80,10 @@ public class ApiResult<T> {
     private ApiResult(
         @Nullable final T data,
         @Nullable final MultiValueMap<String, String> headers,
-        final Object status,
+        @NotNull final Object status,
         @Nullable final String message
     ) {
-        Assert.notNull(status, "Status must not be null");
+        Assert.notNull(status, "Status 必须不为空");
         this.status = status;
         this.message = message;
         this.data = data;
@@ -186,12 +190,12 @@ public class ApiResult<T> {
 
     // Static builder methods
 
-    public static DataBuilder status(final ApiMessage status) {
-        Assert.notNull(status, "Status must not be null");
+    public static DataBuilder status(@NotNull final ApiMessage status) {
+        Assert.notNull(status, "Status 必须不为空");
         return new DefaultBuilder(status);
     }
 
-    public static DataBuilder status(final ApiMessage status, @Nullable final String message) {
+    public static DataBuilder status(@NotNull final ApiMessage status, @Nullable final String message) {
         return status(status).message(message);
     }
 
@@ -203,12 +207,12 @@ public class ApiResult<T> {
         return status(status).message(message);
     }
 
-    public static DataBuilder status(final HttpStatus status) {
-        Assert.notNull(status, "Status must not be null");
+    public static DataBuilder status(@NotNull final HttpStatus status) {
+        Assert.notNull(status, "Status 必须不为空");
         return status(status.value());
     }
 
-    public static DataBuilder status(final HttpStatus status, @Nullable final String message) {
+    public static DataBuilder status(@NotNull final HttpStatus status, @Nullable final String message) {
         return status(status).message(message);
     }
 
@@ -228,37 +232,37 @@ public class ApiResult<T> {
         return ok(message).data(data);
     }
 
-    public static <T> ApiResult<ApiPage<T>> page(final List<T> records) {
+    public static <T> ApiResult<ApiPage<T>> page(@NotNull final List<T> records) {
         return page(records, null);
     }
 
-    public static <T> ApiResult<ApiPage<T>> page(final List<T> records, @Nullable final String message) {
+    public static <T> ApiResult<ApiPage<T>> page(@NotNull final List<T> records, @Nullable final String message) {
         return page(new ApiPage<>(records), message);
     }
 
-    public static <T> ApiResult<ApiPage<T>> page(final IPage<T> page) {
+    public static <T> ApiResult<ApiPage<T>> page(@NotNull final IPage<T> page) {
         return page(page, null);
     }
 
-    public static <T> ApiResult<ApiPage<T>> page(final IPage<T> page, @Nullable final String message) {
+    public static <T> ApiResult<ApiPage<T>> page(@NotNull final IPage<T> page, @Nullable final String message) {
         return ok(message).page(page);
     }
 
-    public static <T> ApiResult<ApiPage<T>> page(final ApiPage<T> page) {
+    public static <T> ApiResult<ApiPage<T>> page(@NotNull final ApiPage<T> page) {
         return page(page, null);
     }
 
-    public static <T> ApiResult<ApiPage<T>> page(final ApiPage<T> page, @Nullable final String message) {
+    public static <T> ApiResult<ApiPage<T>> page(@NotNull final ApiPage<T> page, @Nullable final String message) {
         return ok(message).page(page);
     }
 
-    public static DataBuilder error(final String message) {
-        Assert.notNull(message, "Message must be null");
+    public static DataBuilder error(@NotNull final String message) {
+        Assert.notNull(message, "错误信息必须不为空（规范）");
         return status(ApiMessage.INTERNAL_SERVER_ERROR, message);
     }
 
-    public static <T> ApiResult<T> error(final T error) {
-        Assert.notNull(error, "Error must not be null");
+    public static <T> ApiResult<T> error(@NotNull final T error) {
+        Assert.notNull(error, "错误对象必须不为空");
         return error(error, null);
     }
 
@@ -266,11 +270,11 @@ public class ApiResult<T> {
         return status(ApiMessage.INTERNAL_SERVER_ERROR, message).data(error);
     }
 
-    public static DataBuilder created(final URI location) {
+    public static DataBuilder created(@NotNull final URI location) {
         return created(location, null);
     }
 
-    public static DataBuilder created(final URI location, @Nullable final String message) {
+    public static DataBuilder created(@NotNull final URI location, @Nullable final String message) {
         return status(ApiMessage.CREATED, message).location(location);
     }
 

@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Otstar Lin
@@ -22,11 +23,11 @@ public class ApiPage<T> {
     private long offset;
     private List<T> records;
 
-    public ApiPage(final IPage<T> page) {
+    public ApiPage(@NotNull final IPage<T> page) {
         this(page.getCurrent(), page.getSize(), page.getPages(), page.getTotal(), page.offset(), page.getRecords());
     }
 
-    public ApiPage(final List<T> records) {
+    public ApiPage(@NotNull final List<T> records) {
         this(1, records.size(), 1, records.size(), 0, records);
     }
 }

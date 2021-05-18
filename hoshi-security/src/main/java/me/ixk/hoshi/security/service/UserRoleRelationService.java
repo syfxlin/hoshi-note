@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import me.ixk.hoshi.security.entity.Roles;
 import me.ixk.hoshi.security.entity.UserRoleRelation;
 import me.ixk.hoshi.security.entity.Users;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.util.Assert;
 
 /**
  * <p>
@@ -21,7 +23,9 @@ public interface UserRoleRelationService extends IService<UserRoleRelation> {
      * @param role 权限
      * @return 是否成功
      */
-    default boolean save(final Users user, final Roles role) {
+    default boolean save(@NotNull final Users user, @NotNull final Roles role) {
+        Assert.notNull(user, "用户对象不能为空");
+        Assert.notNull(role, "规则对象不能为空");
         return save(user.getId(), role.getName());
     }
 
@@ -32,5 +36,5 @@ public interface UserRoleRelationService extends IService<UserRoleRelation> {
      * @param roleName 权限名
      * @return 是否成功
      */
-    boolean save(Long userId, String roleName);
+    boolean save(@NotNull Long userId, @NotNull String roleName);
 }
