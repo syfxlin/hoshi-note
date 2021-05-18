@@ -51,7 +51,6 @@ public class Users implements Serializable {
     @ApiModelProperty(value = "用户头像的地址")
     private String avatar;
 
-
     public static final String ID = "id";
 
     public static final String USERNAME = "username";
@@ -67,5 +66,4 @@ public class Users implements Serializable {
     public static final String CREATED_TIME = "created_time";
 
     public static final String AVATAR = "avatar";
-
 }
