@@ -61,7 +61,7 @@ public class ApiResultReturnValueHandler implements HandlerMethodReturnValueHand
             returnValue = ApiResult.status(status, message).data(returnValue);
         }
         if (returnValue instanceof ApiResult) {
-            returnValue = ((ApiResult<?>) returnValue).toEntity();
+            returnValue = ((ApiResult<?>) returnValue).toResponseEntity();
         }
         handler.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
     }

@@ -1,11 +1,10 @@
 package me.ixk.hoshi.common.result;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -165,18 +164,16 @@ public class ApiResult<T> {
         return builder.toString();
     }
 
-    public ObjectNode toJsonNode() {
-        final ObjectNode object = Json.createObject();
-        final int code = this.getStatusCodeValue();
-        object.put("code", code);
-        object.put("msg", this.getMessage());
-        object.put("time", LocalDateTime.now().toString());
-        object.set("data", Json.convertToNode(this.getData()));
-        return object;
+    public ApiEntity<T> toEntity() {
+        return new ApiEntity<>(this.getStatusCodeValue(), this.getMessage(), this.getData());
     }
 
-    public ResponseEntity<ObjectNode> toEntity() {
-        return ResponseEntity.status(this.getStatusCodeValue()).headers(this.getHeaders()).body(this.toJsonNode());
+    public JsonNode toJsonNode() {
+        return Json.convertToNode(this.toEntity());
+    }
+
+    public ResponseEntity<ApiEntity<T>> toResponseEntity() {
+        return ResponseEntity.status(this.getStatusCodeValue()).headers(this.getHeaders()).body(this.toEntity());
     }
 
     public HttpServletResponse toResponse(final HttpServletResponse response) throws IOException {

@@ -19,7 +19,7 @@ public class ApiResultAdvice {
 
     @ExceptionHandler(Exception.class)
     public Object beforeBodyWriteException(final Exception e) {
-        return ApiResult.error(e.getMessage()).build().toEntity();
+        return ApiResult.error(e.getMessage()).build().toResponseEntity();
     }
 
     @ExceptionHandler(BindException.class)
@@ -30,6 +30,6 @@ public class ApiResultAdvice {
             .stream()
             .map(DefaultMessageSourceResolvable::getDefaultMessage)
             .collect(Collectors.toList());
-        return ApiResult.badRequest().data(errors).toEntity();
+        return ApiResult.badRequest().data(errors).toResponseEntity();
     }
 }
