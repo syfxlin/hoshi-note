@@ -8,7 +8,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.security.entity.Roles;
-import me.ixk.hoshi.security.service.RolesService;
+import me.ixk.hoshi.security.repository.RolesRepository;
 import me.ixk.hoshi.ums.entity.AddRoleView;
 import me.ixk.hoshi.ums.entity.UpdateRoleView;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,32 +26,33 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "权限管理控制器", authorizations = { @Authorization("admin") })
 public class RoleManagerController {
 
-    private final RolesService rolesService;
+    private final RolesRepository rolesRepository;
 
     @ApiOperation("列出所有权限")
     @GetMapping("")
     public ApiResult<List<Roles>> list() {
-        return ApiResult.ok(rolesService.query().list());
+        return ApiResult.ok(rolesRepository.findAll(null));
     }
 
     @ApiOperation("添加权限")
     @PostMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Roles> add(@Valid @RequestBody final AddRoleView vo) {
-        return ApiResult.ok(rolesService.insert(vo.toRole()));
+        return ApiResult.ok(rolesRepository.save(vo.toRole()));
     }
 
     @ApiOperation("更新权限")
     @PutMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Roles> update(@Valid @RequestBody final UpdateRoleView vo) {
-        return ApiResult.ok(rolesService.update(vo.toRole()));
+        return ApiResult.ok(rolesRepository.update(vo.toRole()));
     }
 
     @ApiOperation("删除权限")
     @DeleteMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Boolean> remove(@RequestParam("id") final Integer id) {
-        return ApiResult.ok(rolesService.removeById(id));
+    public ApiResult<Void> remove(@RequestParam("id") final String id) {
+        rolesRepository.deleteById(id);
+        return ApiResult.ok().build();
     }
 }

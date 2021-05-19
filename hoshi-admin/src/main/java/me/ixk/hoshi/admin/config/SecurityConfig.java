@@ -1,7 +1,7 @@
 package me.ixk.hoshi.admin.config;
 
 import me.ixk.hoshi.security.config.DefaultSecurityConfig.SecurityConfigAdapter;
-import me.ixk.hoshi.security.security.Roles;
+import me.ixk.hoshi.security.security.RoleNames;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
@@ -14,7 +14,7 @@ public class SecurityConfig extends SecurityConfigAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().hasRole(Roles.BOOT_ADMIN.name());
+        http.authorizeRequests().anyRequest().hasRole(RoleNames.BOOT_ADMIN.name());
         http.formLogin();
     }
 }

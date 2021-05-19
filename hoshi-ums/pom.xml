@@ -21,16 +21,6 @@
       <groupId>me.ixk.hoshi</groupId>
       <artifactId>hoshi-security</artifactId>
     </dependency>
-    <!-- MySQL -->
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.baomidou</groupId>
-      <artifactId>mybatis-plus-boot-starter</artifactId>
-      <version>3.4.2</version>
-    </dependency>
     <!-- Tool & Test -->
     <dependency>
       <groupId>io.springfox</groupId>

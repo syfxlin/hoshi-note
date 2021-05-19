@@ -1,12 +1,16 @@
 package me.ixk.hoshi.ums.entity;
 
-import javax.validation.constraints.*;
+import java.util.Optional;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.ixk.hoshi.common.util.App;
 import me.ixk.hoshi.security.entity.Users;
-import me.ixk.hoshi.security.service.UsersService;
+import me.ixk.hoshi.security.repository.UsersRepository;
 import org.hibernate.validator.constraints.URL;
 
 /**
@@ -38,9 +42,7 @@ public class UpdateUserView {
     @URL
     private String avatar;
 
-    @Min(value = 0, message = "状态值最小不能小于 0")
-    @Max(value = 127, message = "状态值最大不能超过 127")
-    private Integer status;
+    private Boolean status;
 
     public Users toUsers() {
         final Users user = new Users();
@@ -56,12 +58,12 @@ public class UpdateUserView {
 
     @AssertTrue(message = "用户 ID 不存在")
     protected boolean isExist() {
-        return App.getBean(UsersService.class).getById(this.getId()) != null;
+        return App.getBean(UsersRepository.class).findById(this.getId()).isPresent();
     }
 
     @AssertTrue(message = "用户名已存在")
     protected boolean isUnique() {
-        final Users user = App.getBean(UsersService.class).queryByName(this.getUsername());
-        return user == null || user.getId().equals(this.getId());
+        final Optional<Users> user = App.getBean(UsersRepository.class).findByUsername(this.getUsername());
+        return user.isEmpty() || user.get().getId().equals(this.getId());
     }
 }

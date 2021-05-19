@@ -1,7 +1,9 @@
 package me.ixk.hoshi.ums.entity;
 
 import java.time.LocalDateTime;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,10 +25,8 @@ public class AddRoleView {
 
     private String description;
 
-    @Min(value = 0, message = "状态值最小不能小于 0")
-    @Max(value = 127, message = "状态值最大不能超过 127")
     @NotNull(message = "状态值不能为空")
-    private Integer status;
+    private Boolean status;
 
     public Roles toRole() {
         final Roles role = new Roles();

@@ -4,9 +4,10 @@
 
 package me.ixk.hoshi.security;
 
-import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 /**
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
  */
 @Configuration
 @ComponentScan("me.ixk.hoshi.security")
-@MapperScan("me.ixk.hoshi.security.mapper")
+@EnableJpaRepositories("me.ixk.hoshi.security")
+@EntityScan("me.ixk.hoshi.security")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class HoshiSecurityAutoConfiguration {}

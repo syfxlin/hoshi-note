@@ -1,54 +1,67 @@
 package me.ixk.hoshi.security.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * <p>
  * 权限表
- * </p>
  *
- * @author syfxlin
- * @since 2021-05-18
+ * @author Otstar Lin
+ * @date 2021/5/19 下午 3:37
  */
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = false)
+@Entity
+@ApiModel("权限表")
 @Accessors(chain = true)
-@ApiModel(value = "Roles对象", description = "权限表")
+@Table(name = "roles")
 public class Roles implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "权限 ID")
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
-
-    @ApiModelProperty(value = "权限名称，必须是大写英文")
+    /**
+     * 权限名称，必须是大写英文
+     */
+    @Id
+    @ApiModelProperty("权限名称，必须是大写英文")
+    @Column(name = "name", nullable = false, unique = true, length = 50)
     private String name;
 
-    @ApiModelProperty(value = "权限的描述")
-    private String description;
-
-    @ApiModelProperty(value = "创建时间")
+    /**
+     * 创建时间
+     */
+    @ApiModelProperty("创建时间")
+    @Column(name = "created_time", nullable = false)
     private LocalDateTime createdTime;
 
-    @ApiModelProperty(value = "状态")
-    private Integer status;
+    /**
+     * 状态
+     */
+    @ApiModelProperty("状态")
+    @Column(name = "status", nullable = false)
+    private Boolean status;
 
-    public static final String ID = "id";
+    /**
+     * 权限的描述
+     */
+    @ApiModelProperty("权限的描述")
+    @Column(name = "description", columnDefinition = "text")
+    private String description;
 
-    public static final String NAME = "name";
-
-    public static final String DESCRIPTION = "description";
-
-    public static final String CREATED_TIME = "created_time";
-
-    public static final String STATUS = "status";
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles", cascade = { CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @ApiModelProperty("用户列表")
+    private List<Users> users;
 }

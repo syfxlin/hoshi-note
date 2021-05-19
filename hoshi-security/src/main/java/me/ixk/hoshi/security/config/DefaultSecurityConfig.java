@@ -5,7 +5,7 @@
 package me.ixk.hoshi.security.config;
 
 import me.ixk.hoshi.common.result.ApiResult;
-import me.ixk.hoshi.security.security.Roles;
+import me.ixk.hoshi.security.security.RoleNames;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -47,7 +47,7 @@ public class DefaultSecurityConfig {
                 .requestMatcher(EndpointRequest.toAnyEndpoint())
                 .authorizeRequests()
                 .anyRequest()
-                .hasRole(Roles.ACTUATOR.name())
+                .hasRole(RoleNames.ACTUATOR.name())
                 .and()
                 .httpBasic();
         }

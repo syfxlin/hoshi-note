@@ -1,8 +1,8 @@
 package me.ixk.hoshi.security.security;
 
+import java.util.Optional;
 import me.ixk.hoshi.security.entity.Users;
-import me.ixk.hoshi.security.service.RolesService;
-import me.ixk.hoshi.security.service.UsersService;
+import me.ixk.hoshi.security.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,18 +17,14 @@ import org.springframework.stereotype.Component;
 public class UserDetailsManager implements UserDetailsService {
 
     @Autowired
-    private UsersService usersService;
-
-    @Autowired
-    private RolesService rolesService;
+    UsersRepository usersRepository;
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        final Users user =
-            this.usersService.query().eq(Users.USERNAME, username).eq(Users.STATUS, Status.ENABLE.ordinal()).one();
-        if (user == null) {
+        final Optional<Users> user = this.usersRepository.findByUsernameAndStatusTrue(username);
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException("用户名不存在或已禁用");
         }
-        return new me.ixk.hoshi.security.security.UserDetails(user, rolesService.queriesByUser(user));
+        return new me.ixk.hoshi.security.security.UserDetails(user.get());
     }
 }

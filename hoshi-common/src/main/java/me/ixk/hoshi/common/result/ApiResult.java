@@ -1,6 +1,5 @@
 package me.ixk.hoshi.common.result;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.net.URI;
@@ -15,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import me.ixk.hoshi.common.util.Json;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.util.Assert;
 import org.springframework.util.MultiValueMap;
@@ -240,11 +240,11 @@ public class ApiResult<T> {
         return page(new ApiPage<>(records), message);
     }
 
-    public static <T> ApiResult<ApiPage<T>> page(@NotNull final IPage<T> page) {
+    public static <T> ApiResult<ApiPage<T>> page(@NotNull final Page<T> page) {
         return page(page, null);
     }
 
-    public static <T> ApiResult<ApiPage<T>> page(@NotNull final IPage<T> page, @Nullable final String message) {
+    public static <T> ApiResult<ApiPage<T>> page(@NotNull final Page<T> page, @Nullable final String message) {
         return ok(message).page(page);
     }
 
@@ -457,7 +457,7 @@ public class ApiResult<T> {
 
         DataBuilder message(@Nullable final String message);
 
-        default <T> ApiResult<ApiPage<T>> page(final IPage<T> page) {
+        default <T> ApiResult<ApiPage<T>> page(final Page<T> page) {
             return page(new ApiPage<>(page));
         }
 

@@ -1,7 +1,5 @@
 package me.ixk.hoshi.ums.entity;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,10 +15,8 @@ import me.ixk.hoshi.security.entity.Users;
 @EqualsAndHashCode(callSuper = true)
 public class AddUserView extends RegisterUserView {
 
-    @Min(value = 0, message = "状态值最小不能小于 0")
-    @Max(value = 127, message = "状态值最大不能超过 127")
     @NotNull(message = "状态值不能为空")
-    private Integer status;
+    private Boolean status;
 
     public AddUserView(
         final String username,
@@ -28,7 +24,7 @@ public class AddUserView extends RegisterUserView {
         final String nickname,
         final String email,
         final String avatar,
-        final Integer status
+        final Boolean status
     ) {
         super(username, password, nickname, email, avatar);
         this.status = status;

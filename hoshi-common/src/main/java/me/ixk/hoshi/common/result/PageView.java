@@ -1,13 +1,14 @@
 package me.ixk.hoshi.common.result;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 /**
  * @author Otstar Lin
@@ -18,25 +19,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PageView<T> {
 
-    private Long page;
-    private long pageSize = 15;
+    private Integer page;
+    private int pageSize = 15;
     private List<String> orderBy = new ArrayList<>();
 
-    public IPage<T> toPage() {
-        final Page<T> page = new Page<>(this.page, this.pageSize);
-        page.addOrder(
+    public Pageable toPage() {
+        final Sort sort = Sort.by(
             this.orderBy.stream()
                 .map(
                     o -> {
-                        final String[] split = o.split("\\.");
-                        if (split.length == 1) {
-                            return OrderItem.asc(split[0]);
+                        final String[] split = o.split(":");
+                        if (split.length == 1 || "ASC".equalsIgnoreCase(split[1])) {
+                            return Sort.Order.asc(split[0]);
+                        } else {
+                            return Sort.Order.desc(split[1]);
                         }
-                        return new OrderItem(split[0], "ASC".equals(split[1]));
                     }
                 )
-                .toArray(OrderItem[]::new)
+                .collect(Collectors.toList())
         );
-        return page;
+        return PageRequest.of(this.page, this.pageSize, sort);
     }
 }

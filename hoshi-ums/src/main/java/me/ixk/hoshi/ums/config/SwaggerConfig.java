@@ -7,8 +7,9 @@ package me.ixk.hoshi.ums.config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
-import me.ixk.hoshi.security.service.RolesService;
+import me.ixk.hoshi.security.repository.RolesRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -34,7 +35,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class SwaggerConfig {
 
     private final Environment environment;
-    private final RolesService rolesService;
+    private final RolesRepository rolesRepository;
 
     @Bean
     public Docket docket() {
@@ -67,10 +68,8 @@ public class SwaggerConfig {
     }
 
     private List<SecurityScheme> securitySchemes() {
-        return rolesService
-            .query()
-            .list()
-            .stream()
+        return StreamSupport
+            .stream(rolesRepository.findAll().spliterator(), false)
             .map(
                 role ->
                     new HttpAuthenticationBuilder()

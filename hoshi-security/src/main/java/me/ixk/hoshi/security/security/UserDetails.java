@@ -1,6 +1,5 @@
 package me.ixk.hoshi.security.security;
 
-import java.util.List;
 import me.ixk.hoshi.security.entity.Roles;
 import me.ixk.hoshi.security.entity.Users;
 import org.springframework.security.core.Authentication;
@@ -19,12 +18,12 @@ public class UserDetails extends User {
     private static final String ANONYMOUS_USER = "anonymousUser";
     private final Users user;
 
-    public UserDetails(final Users user, final List<Roles> roles) {
+    public UserDetails(final Users user) {
         super(
             user.getUsername(),
             user.getPassword(),
             AuthorityUtils.createAuthorityList(
-                roles.stream().map(Roles::getName).map(r -> "ROLE_" + r).toArray(String[]::new)
+                user.getRoles().stream().map(Roles::getName).map(r -> "ROLE_" + r).toArray(String[]::new)
             )
         );
         this.user = user;
