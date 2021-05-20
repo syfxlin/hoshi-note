@@ -34,6 +34,7 @@
     <module>hoshi-user</module>
     <module>hoshi-session</module>
     <module>hoshi-client</module>
+    <module>hoshi-test</module>
   </modules>
 
   <properties>
@@ -149,6 +150,11 @@
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-client</artifactId>
+        <version>${version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-test</artifactId>
         <version>${version}</version>
       </dependency>
     </dependencies>
