@@ -10,15 +10,19 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import me.ixk.hoshi.common.util.Json;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.util.Assert;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 
 /**
  * 统一响应
@@ -107,7 +111,7 @@ public class ApiResult<T> {
     }
 
     public String getMessage() {
-        return message == null ? getStatusCode().message() : message;
+        return this.message == null ? this.getStatusCode().message() : this.message;
     }
 
     public HttpHeaders getHeaders() {
@@ -128,7 +132,7 @@ public class ApiResult<T> {
         if (this == other) {
             return true;
         }
-        if (other == null || other.getClass() != getClass()) {
+        if (other == null || other.getClass() != this.getClass()) {
             return false;
         }
         final ApiResult<?> otherEntity = (ApiResult<?>) other;
@@ -157,8 +161,8 @@ public class ApiResult<T> {
             builder.append(((ApiMessage) this.status).message());
         }
         builder.append(',');
-        final T data = getData();
-        final HttpHeaders headers = getHeaders();
+        final T data = this.getData();
+        final HttpHeaders headers = this.getHeaders();
         if (data != null) {
             builder.append(data);
             builder.append(',');
@@ -300,6 +304,43 @@ public class ApiResult<T> {
 
     public static DataBuilder badRequest(@Nullable final String message) {
         return status(ApiMessage.BAD_REQUEST, message);
+    }
+
+    public static ApiResult<Object> bindException(final String... error) {
+        return bindException(null, error);
+    }
+
+    public static ApiResult<Object> bindException(final String message, final String... error) {
+        return badRequest(message).data(error);
+    }
+
+    public static ApiResult<Object> bindException(final List<String> error) {
+        return bindException(null, error);
+    }
+
+    public static ApiResult<Object> bindException(final String message, final List<String> error) {
+        return bindException(message, error.toArray(String[]::new));
+    }
+
+    public static ApiResult<Object> bindException(final BindingResult result) {
+        return bindException(null, result);
+    }
+
+    public static ApiResult<Object> bindException(final String message, final BindingResult result) {
+        final List<String> errors = result
+            .getAllErrors()
+            .stream()
+            .map(DefaultMessageSourceResolvable::getDefaultMessage)
+            .collect(Collectors.toList());
+        return bindException(message, errors);
+    }
+
+    public static ApiResult<Object> bindException(final BindException e) {
+        return bindException(null, e);
+    }
+
+    public static ApiResult<Object> bindException(final String message, final BindException e) {
+        return bindException(message, e.getBindingResult());
     }
 
     public static HeadersBuilder<?> notFound() {
@@ -458,11 +499,11 @@ public class ApiResult<T> {
         DataBuilder message(@Nullable final String message);
 
         default <T> ApiResult<ApiPage<T>> page(final Page<T> page) {
-            return page(new ApiPage<>(page));
+            return this.page(new ApiPage<>(page));
         }
 
         default <T> ApiResult<ApiPage<T>> page(final ApiPage<T> page) {
-            return data(page);
+            return this.data(page);
         }
     }
 
@@ -574,7 +615,7 @@ public class ApiResult<T> {
 
         @Override
         public <T> ApiResult<T> build() {
-            return data(null);
+            return this.data(null);
         }
 
         @Override

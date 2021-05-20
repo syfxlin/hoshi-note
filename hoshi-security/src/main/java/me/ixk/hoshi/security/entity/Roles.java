@@ -7,10 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
@@ -27,6 +24,8 @@ import lombok.experimental.Accessors;
 @ApiModel("权限表")
 @Accessors(chain = true)
 @Table(name = "roles")
+@EqualsAndHashCode(of = "name")
+@ToString(exclude = "users")
 public class Roles implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,7 +60,7 @@ public class Roles implements Serializable {
     private String description;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "roles", cascade = { CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     @ApiModelProperty("用户列表")
     private List<Users> users;
 }

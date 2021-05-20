@@ -4,17 +4,26 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.common.result.PageView;
 import me.ixk.hoshi.common.util.Jpa;
+import me.ixk.hoshi.security.entity.Roles;
 import me.ixk.hoshi.security.entity.Users;
+import me.ixk.hoshi.security.repository.RolesRepository;
 import me.ixk.hoshi.security.repository.UsersRepository;
+import me.ixk.hoshi.security.security.RoleNames;
 import me.ixk.hoshi.ums.entity.AddUserView;
+import me.ixk.hoshi.ums.entity.EditUserRoleView;
 import me.ixk.hoshi.ums.entity.FilterUserView;
 import me.ixk.hoshi.ums.entity.UpdateUserView;
 import org.springframework.data.jpa.domain.Specification;
@@ -37,6 +46,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserManagerController {
 
     private final UsersRepository usersRepository;
+    private final RolesRepository rolesRepository;
     private final PasswordEncoder passwordEncoder;
 
     @ApiOperation("列出用户（查询用户）")
@@ -64,9 +74,9 @@ public class UserManagerController {
         };
         final ApiResult<ApiPage<Users>> users;
         if (page.getPage() != null) {
-            users = ApiResult.page(usersRepository.findAll(specification, page.toPage()));
+            users = ApiResult.page(this.usersRepository.findAll(specification, page.toPage()));
         } else {
-            users = ApiResult.page(usersRepository.findAll(specification));
+            users = ApiResult.page(this.usersRepository.findAll(specification));
         }
         return users;
     }
@@ -76,15 +86,19 @@ public class UserManagerController {
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Users> add(@Valid @RequestBody final AddUserView vo) {
         final Users user = vo.toUsers();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return ApiResult.ok(usersRepository.save(user));
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Collections.singletonList(this.rolesRepository.findById(RoleNames.USER.name()).get()));
+        return ApiResult.ok(this.usersRepository.save(user));
     }
 
     @ApiOperation("删除用户")
     @DeleteMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Void> remove(@RequestParam("id") final Long id) {
-        usersRepository.deleteById(id);
+    public ApiResult<Object> remove(@RequestParam("id") final Long id) {
+        if (this.usersRepository.findById(id).isEmpty()) {
+            return ApiResult.bindException(new String[] { "用户 ID 不存在" });
+        }
+        this.usersRepository.deleteById(id);
         return ApiResult.ok().build();
     }
 
@@ -95,8 +109,87 @@ public class UserManagerController {
         final Users user = vo.toUsers();
         final String password = user.getPassword();
         if (password != null) {
-            user.setPassword(passwordEncoder.encode(password));
+            user.setPassword(this.passwordEncoder.encode(password));
         }
-        return ApiResult.ok(usersRepository.update(user));
+        return ApiResult.ok(this.usersRepository.update(user));
+    }
+
+    @ApiOperation("添加用户权限")
+    @PostMapping("/roles")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
+    public ApiResult<Users> addRoles(@Valid @RequestBody final EditUserRoleView vo) {
+        final Users user = this.usersRepository.findById(vo.getId()).get();
+        final int size = this.addRoleToUser(user, vo.getRoles());
+        final Users newUser = this.usersRepository.save(user);
+        if (size == vo.getRoles().size()) {
+            return ApiResult.ok(newUser, "所有权限均添加成功");
+        } else {
+            return ApiResult.ok(newUser, "部分权限添加成功（可能添加了不存在的权限）");
+        }
+    }
+
+    @ApiOperation("更改用户权限")
+    @PutMapping("/roles")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
+    public ApiResult<Users> updateRoles(@Valid @RequestBody final EditUserRoleView vo) {
+        final Users user = this.usersRepository.findById(vo.getId()).get();
+        final List<Roles> roles = vo
+            .getRoles()
+            .stream()
+            .map(this.rolesRepository::findById)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toList());
+        user.setRoles(roles);
+        final Users newUser = this.usersRepository.save(user);
+        if (roles.size() != vo.getRoles().size()) {
+            return ApiResult.ok(newUser, "所有权限均修改成功");
+        } else {
+            return ApiResult.ok(newUser, "部分权限修改成功（可能添加了或删除了不存在的权限）");
+        }
+    }
+
+    @ApiOperation("删除用户权限")
+    @DeleteMapping("/roles")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
+    public ApiResult<Object> removeRoles(
+        @RequestParam("id") @NotNull final Long id,
+        @RequestParam("roles") @NotNull final List<String> roles
+    ) {
+        final Optional<Users> optional = this.usersRepository.findById(id);
+        if (optional.isEmpty()) {
+            return ApiResult.bindException(new String[] { "用户 ID 不存在" });
+        }
+        final Users user = optional.get();
+        final int size = this.removeRoleToUser(user, roles);
+        final Users newUser = this.usersRepository.save(user);
+        if (size == roles.size()) {
+            return ApiResult.ok(newUser, "所有权限均删除成功");
+        } else {
+            return ApiResult.ok(newUser, "部分权限删除成功（可能删除了不存在的权限）");
+        }
+    }
+
+    private int addRoleToUser(final Users user, final List<String> addRoleNames) {
+        final List<Roles> addRoles = addRoleNames
+            .stream()
+            .map(this.rolesRepository::findById)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toList());
+        user.setRoles(
+            Stream.concat(user.getRoles().stream(), addRoles.stream()).distinct().collect(Collectors.toList())
+        );
+        return addRoles.size();
+    }
+
+    private int removeRoleToUser(final Users user, final List<String> removeRoleNames) {
+        final List<Roles> roles = user.getRoles();
+        final List<Roles> removeRoles = roles
+            .stream()
+            .filter(r -> !removeRoleNames.contains(r.getName()))
+            .collect(Collectors.toList());
+        user.setRoles(removeRoles);
+        return roles.size() - removeRoles.size();
     }
 }

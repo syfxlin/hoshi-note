@@ -31,28 +31,28 @@ public class RoleManagerController {
     @ApiOperation("列出所有权限")
     @GetMapping("")
     public ApiResult<List<Roles>> list() {
-        return ApiResult.ok(rolesRepository.findAll(null));
+        return ApiResult.ok(this.rolesRepository.findAll(null));
     }
 
     @ApiOperation("添加权限")
     @PostMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Roles> add(@Valid @RequestBody final AddRoleView vo) {
-        return ApiResult.ok(rolesRepository.save(vo.toRole()));
+        return ApiResult.ok(this.rolesRepository.save(vo.toRole()));
     }
 
     @ApiOperation("更新权限")
     @PutMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Roles> update(@Valid @RequestBody final UpdateRoleView vo) {
-        return ApiResult.ok(rolesRepository.update(vo.toRole()));
+        return ApiResult.ok(this.rolesRepository.update(vo.toRole()));
     }
 
     @ApiOperation("删除权限")
     @DeleteMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Void> remove(@RequestParam("id") final String id) {
-        rolesRepository.deleteById(id);
+        this.rolesRepository.deleteById(id);
         return ApiResult.ok().build();
     }
 }

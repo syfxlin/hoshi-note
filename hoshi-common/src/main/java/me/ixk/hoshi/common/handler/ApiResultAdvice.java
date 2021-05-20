@@ -1,9 +1,6 @@
 package me.ixk.hoshi.common.handler;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import me.ixk.hoshi.common.result.ApiResult;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,12 +21,6 @@ public class ApiResultAdvice {
 
     @ExceptionHandler(BindException.class)
     public Object validateException(final BindException e) {
-        final List<String> errors = e
-            .getBindingResult()
-            .getAllErrors()
-            .stream()
-            .map(DefaultMessageSourceResolvable::getDefaultMessage)
-            .collect(Collectors.toList());
-        return ApiResult.badRequest().data(errors).toResponseEntity();
+        return ApiResult.bindException(e).toResponseEntity();
     }
 }

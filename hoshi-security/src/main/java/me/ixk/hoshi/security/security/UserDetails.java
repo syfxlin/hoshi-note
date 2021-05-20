@@ -23,7 +23,13 @@ public class UserDetails extends User {
             user.getUsername(),
             user.getPassword(),
             AuthorityUtils.createAuthorityList(
-                user.getRoles().stream().map(Roles::getName).map(r -> "ROLE_" + r).toArray(String[]::new)
+                user
+                    .getRoles()
+                    .stream()
+                    .filter(Roles::getStatus)
+                    .map(Roles::getName)
+                    .map(r -> "ROLE_" + r)
+                    .toArray(String[]::new)
             )
         );
         this.user = user;

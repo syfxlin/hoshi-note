@@ -39,8 +39,8 @@ public class AuthController {
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Users> register(@Valid @RequestBody final RegisterUserView vo) {
         final Users user = vo.toUsers();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Collections.singletonList(rolesRepository.findById(RoleNames.USER.name()).get()));
-        return ApiResult.ok(usersRepository.save(user));
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Collections.singletonList(this.rolesRepository.findById(RoleNames.USER.name()).get()));
+        return ApiResult.ok(this.usersRepository.save(user));
     }
 }

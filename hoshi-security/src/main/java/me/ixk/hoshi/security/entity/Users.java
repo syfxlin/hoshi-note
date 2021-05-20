@@ -88,7 +88,7 @@ public class Users implements Serializable {
     @ApiModelProperty("用户头像的地址")
     private String avatar;
 
-    @ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_role_relation",
         joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
