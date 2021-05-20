@@ -24,13 +24,16 @@
   <modules>
     <module>hoshi-common</module>
     <module>hoshi-security</module>
-    <module>hoshi-generator</module>
     <module>hoshi-config</module>
     <module>hoshi-gateway</module>
     <module>hoshi-registry</module>
     <module>hoshi-ums</module>
     <module>hoshi-consumer</module>
     <module>hoshi-admin</module>
+    <module>hoshi-swagger</module>
+    <module>hoshi-user</module>
+    <module>hoshi-session</module>
+    <module>hoshi-client</module>
   </modules>
 
   <properties>
@@ -126,6 +129,26 @@
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-common</artifactId>
+        <version>${version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-swagger</artifactId>
+        <version>${version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-user</artifactId>
+        <version>${version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-session</artifactId>
+        <version>${version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-client</artifactId>
         <version>${version}</version>
       </dependency>
     </dependencies>

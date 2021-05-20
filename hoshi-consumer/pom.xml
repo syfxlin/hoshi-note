@@ -19,5 +19,9 @@
       <groupId>me.ixk.hoshi</groupId>
       <artifactId>hoshi-security</artifactId>
     </dependency>
+    <dependency>
+      <groupId>me.ixk.hoshi</groupId>
+      <artifactId>hoshi-client</artifactId>
+    </dependency>
   </dependencies>
 </project>

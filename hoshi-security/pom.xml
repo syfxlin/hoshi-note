@@ -23,22 +23,16 @@
       <artifactId>hoshi-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.session</groupId>
-      <artifactId>spring-session-data-redis</artifactId>
+      <groupId>me.ixk.hoshi</groupId>
+      <artifactId>hoshi-user</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-redis</artifactId>
+      <groupId>me.ixk.hoshi</groupId>
+      <artifactId>hoshi-session</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
-    <!-- Tool & Test -->
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-boot-starter</artifactId>
-      <version>3.0.0</version>
     </dependency>
   </dependencies>
 </project>

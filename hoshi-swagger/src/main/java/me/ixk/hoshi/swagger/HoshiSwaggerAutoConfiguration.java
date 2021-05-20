@@ -1,0 +1,16 @@
+package me.ixk.hoshi.swagger;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import springfox.documentation.oas.annotations.EnableOpenApi;
+
+/**
+ * 自动配置
+ *
+ * @author Otstar Lin
+ * @date 2021/5/20 20:11
+ */
+@Configuration
+@ComponentScan("me.ixk.hoshi.swagger")
+@EnableOpenApi
+public class HoshiSwaggerAutoConfiguration {}

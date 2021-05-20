@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.ixk.hoshi.security.entity.Roles;
+import me.ixk.hoshi.user.entity.Roles;
 
 /**
  * @author Otstar Lin

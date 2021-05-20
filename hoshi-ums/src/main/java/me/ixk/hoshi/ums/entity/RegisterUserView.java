@@ -9,8 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.ixk.hoshi.common.util.App;
-import me.ixk.hoshi.security.entity.Users;
-import me.ixk.hoshi.security.repository.UsersRepository;
+import me.ixk.hoshi.user.entity.Users;
+import me.ixk.hoshi.user.repository.UsersRepository;
 import org.hibernate.validator.constraints.URL;
 
 /**
@@ -45,7 +45,7 @@ public class RegisterUserView {
 
     @AssertTrue(message = "用户名已存在")
     protected boolean isUnique() {
-        return App.getBean(UsersRepository.class).findByUsername(username).isEmpty();
+        return App.getBean(UsersRepository.class).findByUsername(this.username).isEmpty();
     }
 
     public Users toUsers() {

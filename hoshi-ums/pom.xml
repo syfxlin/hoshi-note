@@ -21,11 +21,5 @@
       <groupId>me.ixk.hoshi</groupId>
       <artifactId>hoshi-security</artifactId>
     </dependency>
-    <!-- Tool & Test -->
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-boot-starter</artifactId>
-      <version>3.0.0</version>
-    </dependency>
   </dependencies>
 </project>

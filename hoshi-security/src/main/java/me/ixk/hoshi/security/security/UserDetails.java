@@ -1,7 +1,7 @@
 package me.ixk.hoshi.security.security;
 
-import me.ixk.hoshi.security.entity.Roles;
-import me.ixk.hoshi.security.entity.Users;
+import me.ixk.hoshi.user.entity.Roles;
+import me.ixk.hoshi.user.entity.Users;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
