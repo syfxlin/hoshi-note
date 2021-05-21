@@ -64,7 +64,7 @@ public final class Json extends ObjectMapper {
         }
     }
 
-    public static String stringify(final Object object) {
+    public static String toJson(final Object object) {
         try {
             return make().writeValueAsString(object);
         } catch (final JsonProcessingException e) {
@@ -72,7 +72,7 @@ public final class Json extends ObjectMapper {
         }
     }
 
-    public static String stringify(final JsonNode node) {
+    public static String toJson(final JsonNode node) {
         return node.toString();
     }
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <!--
   ~ Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
   -->
@@ -28,7 +28,6 @@
     <module>hoshi-gateway</module>
     <module>hoshi-registry</module>
     <module>hoshi-ums</module>
-    <module>hoshi-consumer</module>
     <module>hoshi-admin</module>
     <module>hoshi-swagger</module>
     <module>hoshi-user</module>
@@ -95,6 +94,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
       <version>20.1.0</version>
@@ -119,43 +123,63 @@
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-security</artifactId>
-        <version>${version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-generator</artifactId>
-        <version>${version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-common</artifactId>
-        <version>${version}</version>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-security</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-config</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-gateway</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-registry</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-ums</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-admin</artifactId>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-swagger</artifactId>
-        <version>${version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-user</artifactId>
-        <version>${version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-session</artifactId>
-        <version>${version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-client</artifactId>
-        <version>${version}</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-test</artifactId>
-        <version>${version}</version>
+        <version>${project.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -173,6 +197,19 @@
             </exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.12.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>compileTests</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
