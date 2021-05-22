@@ -1,12 +1,13 @@
 package me.ixk.hoshi.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -23,10 +24,9 @@ import lombok.experimental.Accessors;
 @Entity
 @ApiModel("权限表")
 @Accessors(chain = true)
-@Table(name = "roles")
+@Table(name = "role")
 @EqualsAndHashCode(of = "name")
-@ToString(exclude = "users")
-public class Roles implements Serializable {
+public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -58,9 +58,4 @@ public class Roles implements Serializable {
     @ApiModelProperty("权限的描述")
     @Column(name = "description", columnDefinition = "text")
     private String description;
-
-    @JsonIgnore
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-    @ApiModelProperty("用户列表")
-    private List<Users> users;
 }

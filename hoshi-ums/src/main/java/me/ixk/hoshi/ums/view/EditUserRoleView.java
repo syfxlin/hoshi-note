@@ -1,4 +1,4 @@
-package me.ixk.hoshi.ums.entity;
+package me.ixk.hoshi.ums.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.ixk.hoshi.common.util.App;
-import me.ixk.hoshi.user.repository.UsersRepository;
+import me.ixk.hoshi.user.repository.UserRepository;
 
 /**
  * @author Otstar Lin
@@ -26,6 +26,6 @@ public class EditUserRoleView {
 
     @AssertTrue(message = "用户 ID 不存在")
     protected boolean isExist() {
-        return App.getBean(UsersRepository.class).findById(this.getId()).isPresent();
+        return App.getBean(UserRepository.class).findById(this.getId()).isPresent();
     }
 }

@@ -1,5 +1,6 @@
 package me.ixk.hoshi.common.handler;
 
+import me.ixk.hoshi.common.result.ApiBindException;
 import me.ixk.hoshi.common.result.ApiResult;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,5 +23,15 @@ public class ApiResultAdvice {
     @ExceptionHandler(BindException.class)
     public Object validateException(final BindException e) {
         return ApiResult.bindException(e).toResponseEntity();
+    }
+
+    @ExceptionHandler(ApiBindException.class)
+    public Object validateException(final ApiBindException e) {
+        final String message = e.getMessage();
+        if (message == null) {
+            return ApiResult.bindException(e.getErrors()).toResponseEntity();
+        } else {
+            return ApiResult.bindException(message, e.getErrors()).toResponseEntity();
+        }
     }
 }

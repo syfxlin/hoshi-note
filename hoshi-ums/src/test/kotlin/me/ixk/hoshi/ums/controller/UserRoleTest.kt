@@ -2,11 +2,12 @@ package me.ixk.hoshi.ums.controller
 
 import me.ixk.hoshi.common.util.Json
 import me.ixk.hoshi.session.config.CompositeSessionIdResolver.X_AUTH_TOKEN
-import me.ixk.hoshi.test.SpringWebTest
-import me.ixk.hoshi.user.repository.RolesRepository
-import me.ixk.hoshi.user.repository.UsersRepository
+import me.ixk.hoshi.user.repository.RoleRepository
+import me.ixk.hoshi.user.repository.UserRepository
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.OverrideAutoConfiguration
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.*
@@ -15,14 +16,15 @@ import org.springframework.test.web.servlet.*
  * @author Otstar Lin
  * @date 2021/5/21 19:45
  */
-@SpringWebTest(UserManagerController::class, RoleManagerController::class, UserController::class)
+@WebMvcTest(UserManagerController::class, RoleManagerController::class, UserController::class)
+@OverrideAutoConfiguration(enabled = true)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class UserRoleTest {
     @Autowired
-    private lateinit var usersRepository: UsersRepository
+    private lateinit var userRepository: UserRepository
 
     @Autowired
-    private lateinit var roleRepository: RolesRepository
+    private lateinit var roleRepository: RoleRepository
 
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -158,7 +160,7 @@ class UserRoleTest {
     @Test
     @Order(7)
     fun addRoleToUser() {
-        mockMvc.post("/admin/users/roles") {
+        mockMvc.post("/admin/users/role") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
@@ -181,7 +183,7 @@ class UserRoleTest {
     @Test
     @Order(8)
     fun updateRoleToUser() {
-        mockMvc.put("/admin/users/roles") {
+        mockMvc.put("/admin/users/role") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
@@ -204,7 +206,7 @@ class UserRoleTest {
     @Test
     @Order(9)
     fun deleteRoleToUser() {
-        mockMvc.delete("/admin/users/roles") {
+        mockMvc.delete("/admin/users/role") {
             header(X_AUTH_TOKEN, token)
             param("id", userId.toString())
             param("roles", "USER")
@@ -240,8 +242,8 @@ class UserRoleTest {
 
     @AfterAll
     internal fun clean() {
-        usersRepository.findByUsername("test").ifPresent {
-            usersRepository.deleteById(it.id)
+        userRepository.findByUsername("test").ifPresent {
+            userRepository.deleteById(it.id)
         }
         roleRepository.findById("TEST").ifPresent {
             roleRepository.deleteById(it.name)

@@ -25,8 +25,8 @@ import lombok.experimental.Accessors;
 @Entity
 @ApiModel("用户表")
 @Accessors(chain = true)
-@Table(name = "users")
-public class Users implements Serializable {
+@Table(name = "user")
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -81,13 +81,6 @@ public class Users implements Serializable {
     @Column(name = "created_time")
     private LocalDateTime createdTime;
 
-    /**
-     * 用户头像的地址
-     */
-    @Column(name = "avatar")
-    @ApiModelProperty("用户头像的地址")
-    private String avatar;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_role_relation",
@@ -95,5 +88,10 @@ public class Users implements Serializable {
         inverseJoinColumns = { @JoinColumn(name = "role_name", referencedColumnName = "name") }
     )
     @ApiModelProperty("用户权限列表")
-    private List<Roles> roles;
+    private List<Role> roles;
+
+    @OneToOne
+    @JoinColumn(name = "user_info", referencedColumnName = "id")
+    @ApiModelProperty("用户信息")
+    private UserInfo info;
 }

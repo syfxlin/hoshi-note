@@ -1,4 +1,4 @@
-package me.ixk.hoshi.ums.entity;
+package me.ixk.hoshi.ums.view;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -24,7 +24,7 @@ public class FilterUserView {
     private String nickname;
 
     @Size(max = 75, message = "邮箱的长度不能超过 75")
-    @Email
+    @Email(message = "邮箱格式有误")
     private String email;
 
     @Min(value = 0, message = "状态值最小不能小于 0")

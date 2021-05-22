@@ -1,10 +1,10 @@
-package me.ixk.hoshi.ums.entity;
+package me.ixk.hoshi.ums.view;
 
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import me.ixk.hoshi.user.entity.Users;
+import me.ixk.hoshi.user.entity.User;
 
 /**
  * @author Otstar Lin
@@ -23,16 +23,15 @@ public class AddUserView extends RegisterUserView {
         final String password,
         final String nickname,
         final String email,
-        final String avatar,
         final Boolean status
     ) {
-        super(username, password, nickname, email, avatar);
+        super(username, password, nickname, email);
         this.status = status;
     }
 
     @Override
-    public Users toUsers() {
-        final Users user = super.toUsers();
+    public User toEntity() {
+        final User user = super.toEntity();
         user.setStatus(this.getStatus());
         return user;
     }

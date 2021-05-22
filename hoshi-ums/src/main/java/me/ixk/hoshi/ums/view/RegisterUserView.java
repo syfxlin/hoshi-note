@@ -1,4 +1,4 @@
-package me.ixk.hoshi.ums.entity;
+package me.ixk.hoshi.ums.view;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.AssertTrue;
@@ -9,9 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.ixk.hoshi.common.util.App;
-import me.ixk.hoshi.user.entity.Users;
-import me.ixk.hoshi.user.repository.UsersRepository;
-import org.hibernate.validator.constraints.URL;
+import me.ixk.hoshi.user.entity.User;
+import me.ixk.hoshi.user.entity.UserInfo;
+import me.ixk.hoshi.user.repository.UserRepository;
 
 /**
  * @author Otstar Lin
@@ -36,27 +36,24 @@ public class RegisterUserView {
 
     @Size(max = 75, message = "邮箱的长度不能超过 75")
     @NotNull(message = "邮箱不能为空")
-    @Email
+    @Email(message = "邮箱格式有误")
     private String email;
-
-    @Size(max = 255, message = "头像链接长度不能超过 255")
-    @URL
-    private String avatar;
 
     @AssertTrue(message = "用户名已存在")
     protected boolean isUnique() {
-        return App.getBean(UsersRepository.class).findByUsername(this.username).isEmpty();
+        return App.getBean(UserRepository.class).findByUsername(this.username).isEmpty();
     }
 
-    public Users toUsers() {
-        final Users user = new Users();
-        user.setUsername(this.getUsername());
-        user.setPassword(this.getPassword());
-        user.setNickname(this.getNickname());
-        user.setEmail(this.getEmail());
-        user.setAvatar(this.getAvatar());
-        user.setStatus(true);
-        user.setCreatedTime(LocalDateTime.now());
-        return user;
+    public User toEntity() {
+        return User
+            .builder()
+            .username(this.getUsername())
+            .password(this.getPassword())
+            .nickname(this.getNickname())
+            .email(this.getEmail())
+            .status(true)
+            .createdTime(LocalDateTime.now())
+            .info(new UserInfo())
+            .build();
     }
 }
