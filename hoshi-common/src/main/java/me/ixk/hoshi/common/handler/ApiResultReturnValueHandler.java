@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import me.ixk.hoshi.common.annotation.ApiResultBody;
 import me.ixk.hoshi.common.result.ApiResult;
+import me.ixk.hoshi.common.result.ApiResult.HeadersBuilder;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class ApiResultReturnValueHandler implements HandlerMethodReturnValueHand
     public boolean supportsReturnType(final MethodParameter returnType) {
         return (
             ApiResult.class.isAssignableFrom(returnType.getParameterType()) ||
+            HeadersBuilder.class.isAssignableFrom(returnType.getParameterType()) ||
             returnType.hasMethodAnnotation(ApiResultBody.class)
         );
     }
@@ -47,7 +49,7 @@ public class ApiResultReturnValueHandler implements HandlerMethodReturnValueHand
         final NativeWebRequest webRequest
     ) throws Exception {
         final ApiResultBody annotation = returnType.getMethodAnnotation(ApiResultBody.class);
-        if (annotation != null) {
+        if (annotation != null && !(returnValue instanceof HeadersBuilder) && !(returnValue instanceof ApiResult)) {
             int status = annotation.status();
             String message = annotation.message();
             if (status == -1) {
@@ -58,15 +60,19 @@ public class ApiResultReturnValueHandler implements HandlerMethodReturnValueHand
             }
             returnValue = ApiResult.status(status, message).data(returnValue);
         }
+        if (returnValue instanceof HeadersBuilder) {
+            returnValue = ((HeadersBuilder<?>) returnValue).build();
+        }
         if (returnValue instanceof ApiResult) {
             returnValue = ((ApiResult<?>) returnValue).toResponseEntity();
         }
-        handler.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
+        this.handler.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        final List<HandlerMethodReturnValueHandler> handlers = requestMappingHandlerAdapter.getReturnValueHandlers();
+        final List<HandlerMethodReturnValueHandler> handlers =
+            this.requestMappingHandlerAdapter.getReturnValueHandlers();
         Assert.notNull(handlers, "HandlerMethodReturnValueHandler 还未初始化");
         final Optional<HandlerMethodReturnValueHandler> handler = handlers
             .stream()
@@ -76,6 +82,6 @@ public class ApiResultReturnValueHandler implements HandlerMethodReturnValueHand
         final List<HandlerMethodReturnValueHandler> returnValueHandlers = new ArrayList<>();
         returnValueHandlers.add(this);
         returnValueHandlers.addAll(handlers);
-        requestMappingHandlerAdapter.setReturnValueHandlers(returnValueHandlers);
+        this.requestMappingHandlerAdapter.setReturnValueHandlers(returnValueHandlers);
     }
 }

@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2021/5/16 下午 5:13
  */
 @RestController
-@RequestMapping("/admin/users")
+@RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 @Api(value = "用户管理控制器")

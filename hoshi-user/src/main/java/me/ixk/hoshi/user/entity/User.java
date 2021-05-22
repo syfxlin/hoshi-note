@@ -1,15 +1,13 @@
 package me.ixk.hoshi.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
@@ -26,6 +24,8 @@ import lombok.experimental.Accessors;
 @ApiModel("用户表")
 @Accessors(chain = true)
 @Table(name = "user")
+@EqualsAndHashCode(of = { "id" })
+@ToString(exclude = { "followers", "following" })
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -94,4 +94,14 @@ public class User implements Serializable {
     @JoinColumn(name = "user_info", referencedColumnName = "id")
     @ApiModelProperty("用户信息")
     private UserInfo info;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "following", targetEntity = Follow.class)
+    @ApiModelProperty("用户关注了")
+    private List<User> following;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "follower", targetEntity = Follow.class)
+    @ApiModelProperty("用户关注者")
+    private List<User> followers;
 }

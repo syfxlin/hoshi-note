@@ -34,7 +34,7 @@ public class UserInfo implements Serializable {
     @Id
     @ApiModelProperty("用户信息 ID")
     @Column(name = "id", nullable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

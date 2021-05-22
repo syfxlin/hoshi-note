@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2021/5/16 下午 5:12
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @Api("用户控制器")
 @RequiredArgsConstructor
 public class UserController {

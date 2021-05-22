@@ -49,7 +49,7 @@ class UserRoleTest {
     @Test
     @Order(1)
     fun getCurrentUser() {
-        mockMvc.get("/users") {
+        mockMvc.get("/api/users") {
             header(X_AUTH_TOKEN, token)
         }.andExpect {
             status { isOk() }
@@ -62,7 +62,7 @@ class UserRoleTest {
     @Test
     @Order(2)
     fun getAllUser() {
-        mockMvc.get("/admin/users") {
+        mockMvc.get("/api/admin/users") {
             header(X_AUTH_TOKEN, token)
         }.andExpect {
             status { isOk() }
@@ -76,7 +76,7 @@ class UserRoleTest {
     @Test
     @Order(3)
     fun addUser() {
-        val response = mockMvc.post("/admin/users") {
+        val response = mockMvc.post("/api/admin/users") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
@@ -102,7 +102,7 @@ class UserRoleTest {
     @Test
     @Order(4)
     fun updateUser() {
-        mockMvc.put("/admin/users") {
+        mockMvc.put("/api/admin/users") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
@@ -122,7 +122,7 @@ class UserRoleTest {
     @Test
     @Order(5)
     fun addRole() {
-        mockMvc.post("/admin/roles") {
+        mockMvc.post("/api/admin/roles") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
@@ -140,7 +140,7 @@ class UserRoleTest {
     @Test
     @Order(6)
     fun updateRole() {
-        mockMvc.put("/admin/roles") {
+        mockMvc.put("/api/admin/roles") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
@@ -160,7 +160,7 @@ class UserRoleTest {
     @Test
     @Order(7)
     fun addRoleToUser() {
-        mockMvc.post("/admin/users/role") {
+        mockMvc.post("/api/admin/users/role") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
@@ -183,7 +183,7 @@ class UserRoleTest {
     @Test
     @Order(8)
     fun updateRoleToUser() {
-        mockMvc.put("/admin/users/role") {
+        mockMvc.put("/api/admin/users/role") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
@@ -206,7 +206,7 @@ class UserRoleTest {
     @Test
     @Order(9)
     fun deleteRoleToUser() {
-        mockMvc.delete("/admin/users/role") {
+        mockMvc.delete("/api/admin/users/role") {
             header(X_AUTH_TOKEN, token)
             param("id", userId.toString())
             param("roles", "USER")
@@ -221,7 +221,7 @@ class UserRoleTest {
     @Test
     @Order(10)
     fun deleteUser() {
-        mockMvc.delete("/admin/users") {
+        mockMvc.delete("/api/admin/users") {
             header(X_AUTH_TOKEN, token)
             param("id", userId.toString())
         }.andExpect {
@@ -232,7 +232,7 @@ class UserRoleTest {
     @Test
     @Order(11)
     fun deleteRole() {
-        mockMvc.delete("/admin/roles") {
+        mockMvc.delete("/api/admin/roles") {
             header(X_AUTH_TOKEN, token)
             param("id", "TEST")
         }.andExpect {

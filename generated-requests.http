@@ -1,0 +1,156 @@
+### 注册
+POST http://localhost:8000/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "password",
+  "nickname": "Test",
+  "email": "email@ixk.me",
+  "status": 1,
+  "avatar": null
+}
+
+### 登录
+POST http://localhost:8000/login
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+username=admin&password=password
+
+> {% client.global.set("token", response.headers.valueOf("X-Auth-Token")); %}
+
+### 获取当前登录的用户信息
+GET http://localhost:8000/api/users
+Accept: application/json
+X-Auth-Token: {{token}}
+
+### 获取所有用户
+GET http://localhost:8000/api/admin/users
+Accept: application/json
+X-Auth-Token: {{token}}
+
+### 添加用户
+POST http://localhost:8000/api/admin/users
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{token}}
+
+{
+  "username": "test",
+  "password": "password",
+  "nickname": "Test",
+  "email": "email@ixk.me",
+  "status": 1,
+  "avatar": null
+}
+
+> {% client.global.set("test_user_id", response.body.data.id); %}
+
+### 更新用户
+PUT http://localhost:8000/api/admin/users
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{token}}
+
+{
+  "id": {{test_user_id}},
+  "nickname": "Test1"
+}
+
+### 添加用户权限
+POST http://localhost:8000/api/admin/users/role
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{token}}
+
+{
+  "id": {{test_user_id}},
+  "roles": ["TEST"]
+}
+
+### 修改用户权限
+PUT http://localhost:8000/api/admin/users/role
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{token}}
+
+{
+  "id": {{test_user_id}},
+  "roles": ["USER"]
+}
+
+### 删除用户权限
+DELETE http://localhost:8000/api/admin/users/role?id={{test_user_id}}&roles=USER
+Accept: application/json
+Content-Type: application/json
+X-Auth-Token: {{token}}
+
+### 删除用户
+DELETE http://localhost:8000/api/admin/users?id={{test_user_id}}
+Accept: application/json
+X-Auth-Token: {{token}}
+
+### 获取所有权限
+GET http://localhost:8000/api/admin/roles
+Accept: application/json
+X-Auth-Token: {{token}}
+
+### 添加一个权限
+POST http://localhost:8000/api/admin/roles
+Accept: application/json
+X-Auth-Token: {{token}}
+Content-Type: application/json
+
+{
+  "name": "TEST",
+  "description": "测试权限",
+  "status": 1
+}
+
+### 更新权限
+PUT http://localhost:8000/api/admin/roles
+Accept: application/json
+X-Auth-Token: {{token}}
+Content-Type: application/json
+
+{
+  "name": "TEST",
+  "description": "更新权限"
+}
+
+### 删除权限
+DELETE http://localhost:8000/api/admin/roles?id=TEST
+Accept: application/json
+X-Auth-Token: {{token}}
+
+### 更改用户信息
+PUT http://localhost:8000/api/users/info
+Accept: application/json
+X-Auth-Token: {{token}}
+Content-Type: application/json
+
+{
+  "avatar": "https://ixk.me/avatar-full.jpg"
+}
+
+### 添加关注
+POST http://localhost:8000/api/follows
+Accept: application/json
+X-Auth-Token: {{token}}
+Content-Type: application/json
+
+{
+  "user": 3
+}
+
+### 取消关注
+DELETE http://localhost:8000/api/follows?user=3
+Accept: application/json
+X-Auth-Token: {{token}}
+
+### 获取关注列表
+GET http://localhost:8000/api/follows
+Accept: application/json
+X-Auth-Token: {{token}}
