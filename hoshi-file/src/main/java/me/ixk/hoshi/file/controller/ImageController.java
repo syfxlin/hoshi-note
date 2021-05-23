@@ -1,16 +1,19 @@
 package me.ixk.hoshi.file.controller;
 
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.file.service.StorageService;
 import me.ixk.hoshi.file.service.StorageService.StoreInfo;
+import me.ixk.hoshi.file.util.Mime;
 import me.ixk.hoshi.file.view.UploadView;
 import me.ixk.hoshi.user.entity.User;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,18 +22,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Otstar Lin
- * @date 2021/5/23 9:08
+ * @date 2021/5/23 16:12
  */
 @RestController
-@RequestMapping("/api/files")
-@Api("文件控制器")
+@RequestMapping("/api/images")
+@Api("图片控制器")
 @RequiredArgsConstructor
-public class FileController {
+public class ImageController {
 
-    public static final String FILE_DIR = "user-file";
+    public static final String FILE_DIR = "user-image";
     private final StorageService storageService;
 
-    @ApiOperation("上传文件")
+    @ApiOperation("上传图片")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
     public ApiResult<UploadView> upload(
@@ -44,30 +47,28 @@ public class FileController {
             .mediaType(store.getMediaType())
             .fileName(store.getFileName())
             .size(store.getSize())
-            .url("/api/files/" + store.getFileName())
+            .url("/api/images/" + store.getFileName())
             .build();
         return ApiResult.ok(view);
     }
 
-    @ApiOperation("下载文件")
+    @ApiOperation("读取图片")
     @GetMapping("/{filename:.+\\.[a-zA-Z]+}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> get(@PathVariable("filename") final String filename, @ModelAttribute final User user) {
         if (!this.storageService.exist(filename, FILE_DIR, user.getId().toString())) {
-            return ApiResult.notFound("指定文件不存在").build().toResponseEntity();
+            return ApiResult.notFound("指定图片不存在").build().toResponseEntity();
         }
         try {
             final Resource resource = this.storageService.load(filename, FILE_DIR, user.getId().toString());
-            final HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Disposition", String.format("attachment;filename=\"%s\"", filename));
-            headers.add("Cache-Control", "no-cache,no-store,must-revalidate");
-            headers.add("Pragma", "no-cache");
-            headers.add("Expires", "0");
-            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.setContentLength(resource.contentLength());
-            return ResponseEntity.ok().headers(headers).body(resource);
+            final BufferedInputStream bis = new BufferedInputStream(resource.getInputStream());
+            String contentType = Mime.media(bis, filename).toString();
+            if (contentType == null) {
+                contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+            }
+            return ResponseEntity.ok().header(CONTENT_TYPE, contentType).body(resource);
         } catch (final IOException e) {
-            return ApiResult.error("获取文件异常").build().toResponseEntity();
+            return ApiResult.error("获取图片异常").build().toResponseEntity();
         }
     }
 }

@@ -11,8 +11,9 @@ import lombok.Data;
 @Builder
 public class UploadView {
 
-    private final String extname;
-    private final String filename;
+    private final String extName;
+    private final String mediaType;
+    private final String fileName;
     private final long size;
     private final String url;
 }

@@ -1,6 +1,7 @@
 package me.ixk.hoshi.file.service;
 
 import cn.hutool.core.io.FileUtil;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -11,6 +12,9 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import me.ixk.hoshi.file.exception.StorageException;
+import me.ixk.hoshi.file.util.Mime;
+import org.apache.tika.mime.MediaType;
+import org.apache.tika.mime.MimeType;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,9 +43,12 @@ public class FileStorageService implements StorageService {
             if (file.isEmpty()) {
                 throw new StorageException("不能存储空文件");
             }
-            final String ext = FileUtil.extName(file.getOriginalFilename());
+            final BufferedInputStream bis = new BufferedInputStream(file.getInputStream());
+            final MediaType mediaType = Mime.media(bis, file.getOriginalFilename());
+            final MimeType mimeType = Mime.mime(mediaType);
+            final String ext = mimeType.getExtension();
             final String uuid = UUID.randomUUID().toString();
-            final String filename = uuid + (ext == null || ext.isBlank() ? "" : ".") + ext;
+            final String filename = uuid + ext;
             final Path resolve = this.join(filename, paths);
             final Path path = this.location.resolve(resolve).normalize().toAbsolutePath();
             if (!path.startsWith(this.location.toAbsolutePath())) {
@@ -54,8 +61,9 @@ public class FileStorageService implements StorageService {
             return StoreInfo
                 .builder()
                 .path(resolve.toString())
-                .extname(ext)
-                .filename(filename)
+                .extName(ext)
+                .mediaType(mediaType.toString())
+                .fileName(filename)
                 .size(file.getSize())
                 .build();
         } catch (final IOException e) {

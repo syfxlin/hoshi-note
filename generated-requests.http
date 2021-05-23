@@ -159,7 +159,7 @@ X-Auth-Token: {{token}}
 GET http://localhost:8000/api/users/3/follower
 
 ### 上传文件
-POST http://localhost:8001/api/file
+POST http://localhost:8001/api/files
 Accept: application/json
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 X-Auth-Token: {{token}}
@@ -172,22 +172,22 @@ Content-Type: application/json
 --WebAppBoundary--
 
 ### 读取文件
-GET http://localhost:8001/api/file/7826ed8f-054a-4266-966a-b3a32c895d3b.xml
+GET http://localhost:8001/api/files/a91db416-46b1-40c0-ad79-9ce9b0306a4e.xml
 X-Auth-Token: {{token}}
 
 ### 上传图片
-POST http://localhost:8001/api/file
+POST http://localhost:8001/api/images
 Accept: application/json
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 X-Auth-Token: {{token}}
 
 --WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="1.jpg"
+Content-Disposition: form-data; name="file"; filename="1.png"
 Content-Type: application/json
 
 < D:/Pictures/1.jpg
 --WebAppBoundary--
 
 ### 下载图片
-GET http://localhost:8001/api/file/07f285a0-b013-4288-a4fd-0afc2cf70fcc.jpg
+GET http://localhost:8001/api/images/909356d9-e642-4a3f-a396-37e7a7382aac.jpg
 X-Auth-Token: {{token}}

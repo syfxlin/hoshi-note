@@ -47,14 +47,14 @@ class FileStorageServiceTest {
         s1 should {
             if (it != null) {
                 it.size shouldBe 9
-                it.filename shouldBe it.path
+                it.fileName shouldBe it.path
             }
         }
         s2 = this.storageService.store(MockMultipartFile("file", "test file".toByteArray()), "1")
         s2 should {
             if (it != null) {
                 it.size shouldBe 9
-                it.path shouldEndWith it.filename
+                it.path shouldEndWith it.fileName
                 it.path shouldStartWith Paths.get("1").toString()
             }
         }
@@ -72,14 +72,14 @@ class FileStorageServiceTest {
     @Test
     @Order(3)
     fun exist() {
-        this.storageService.exist(s1?.filename) shouldBe true
-        this.storageService.exist(s2?.filename, "1") shouldBe true
+        this.storageService.exist(s1?.fileName) shouldBe true
+        this.storageService.exist(s2?.fileName, "1") shouldBe true
     }
 
     @Test
     @Order(4)
     fun load() {
-        this.storageService.load(s1?.filename).inputStream should {
+        this.storageService.load(s1?.fileName).inputStream should {
             IoUtil.readUtf8(it) shouldBe "test file"
         }
         this.storageService.load(s2?.path).inputStream should {
@@ -96,15 +96,15 @@ class FileStorageServiceTest {
     @Test
     @Order(6)
     fun delete() {
-        this.storageService.delete(s1?.filename)
-        this.storageService.exist(s1?.filename) shouldBe false
+        this.storageService.delete(s1?.fileName)
+        this.storageService.exist(s1?.fileName) shouldBe false
     }
 
     @Test
     @Order(7)
     fun deleteAll() {
         this.storageService.deleteAll()
-        this.storageService.exist(s2?.filename) shouldBe false
+        this.storageService.exist(s2?.fileName) shouldBe false
     }
 
     @BeforeAll
