@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.annotation.JsonParam;
 import me.ixk.hoshi.common.result.ApiResult;
+import me.ixk.hoshi.ums.view.PublicUserView;
 import me.ixk.hoshi.user.entity.Follow;
 import me.ixk.hoshi.user.entity.User;
 import me.ixk.hoshi.user.repository.FollowRepository;
@@ -31,11 +32,20 @@ public class FollowController {
     private final FollowRepository followRepository;
 
     @ApiOperation("获取关注列表")
-    @GetMapping("")
+    @GetMapping("/following")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<List<User>> list(@ModelAttribute final User user) {
+    public ApiResult<List<PublicUserView>> following(@ModelAttribute final User user) {
         return ApiResult.ok(
-            this.followRepository.findByFollower(user).stream().map(Follow::getFollowing).collect(Collectors.toList())
+            user.getFollowing().stream().map(Follow::getFollowing).map(PublicUserView::of).collect(Collectors.toList())
+        );
+    }
+
+    @ApiOperation("被关注列表")
+    @GetMapping("/follower")
+    @PreAuthorize("isAuthenticated()")
+    public ApiResult<List<PublicUserView>> follower(@ModelAttribute final User user) {
+        return ApiResult.ok(
+            user.getFollowers().stream().map(Follow::getFollower).map(PublicUserView::of).collect(Collectors.toList())
         );
     }
 

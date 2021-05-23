@@ -4,12 +4,12 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "username": "test",
-  "password": "password",
-  "nickname": "Test",
-  "email": "email@ixk.me",
-  "status": 1,
-  "avatar": null
+    "username": "test",
+    "password": "password",
+    "nickname": "Test",
+    "email": "email@ixk.me",
+    "status": 1,
+    "avatar": null
 }
 
 ### 登录
@@ -38,12 +38,12 @@ Content-Type: application/json
 X-Auth-Token: {{token}}
 
 {
-  "username": "test",
-  "password": "password",
-  "nickname": "Test",
-  "email": "email@ixk.me",
-  "status": 1,
-  "avatar": null
+    "username": "test",
+    "password": "password",
+    "nickname": "Test",
+    "email": "email@ixk.me",
+    "status": 1,
+    "avatar": null
 }
 
 > {% client.global.set("test_user_id", response.body.data.id); %}
@@ -104,9 +104,9 @@ X-Auth-Token: {{token}}
 Content-Type: application/json
 
 {
-  "name": "TEST",
-  "description": "测试权限",
-  "status": 1
+    "name": "TEST",
+    "description": "测试权限",
+    "status": 1
 }
 
 ### 更新权限
@@ -116,8 +116,8 @@ X-Auth-Token: {{token}}
 Content-Type: application/json
 
 {
-  "name": "TEST",
-  "description": "更新权限"
+    "name": "TEST",
+    "description": "更新权限"
 }
 
 ### 删除权限
@@ -132,7 +132,7 @@ X-Auth-Token: {{token}}
 Content-Type: application/json
 
 {
-  "avatar": "https://ixk.me/avatar-full.jpg"
+    "avatar": "https://ixk.me/avatar-full.jpg"
 }
 
 ### 添加关注
@@ -142,7 +142,7 @@ X-Auth-Token: {{token}}
 Content-Type: application/json
 
 {
-  "user": 3
+    "user": 3
 }
 
 ### 取消关注
@@ -151,6 +151,43 @@ Accept: application/json
 X-Auth-Token: {{token}}
 
 ### 获取关注列表
-GET http://localhost:8000/api/follows
+GET http://localhost:8000/api/follows/following
 Accept: application/json
+X-Auth-Token: {{token}}
+
+### 获取被关注列表
+GET http://localhost:8000/api/users/3/follower
+
+### 上传文件
+POST http://localhost:8001/api/file
+Accept: application/json
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+X-Auth-Token: {{token}}
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="pom.xml"
+Content-Type: application/json
+
+< ./pom.xml
+--WebAppBoundary--
+
+### 读取文件
+GET http://localhost:8001/api/file/7826ed8f-054a-4266-966a-b3a32c895d3b.xml
+X-Auth-Token: {{token}}
+
+### 上传图片
+POST http://localhost:8001/api/file
+Accept: application/json
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+X-Auth-Token: {{token}}
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="1.jpg"
+Content-Type: application/json
+
+< D:/Pictures/1.jpg
+--WebAppBoundary--
+
+### 下载图片
+GET http://localhost:8001/api/file/07f285a0-b013-4288-a4fd-0afc2cf70fcc.jpg
 X-Auth-Token: {{token}}

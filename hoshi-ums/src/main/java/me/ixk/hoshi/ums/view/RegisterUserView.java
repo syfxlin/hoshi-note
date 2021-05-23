@@ -1,10 +1,7 @@
 package me.ixk.hoshi.ums.view;
 
 import java.time.LocalDateTime;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +21,7 @@ public class RegisterUserView {
 
     @Size(min = 3, max = 50, message = "用户名长度应在（3-50）之间")
     @NotNull(message = "用户名不能为空")
+    @Pattern(regexp = "[^0-9]+", message = "用户名必须包含非数字")
     private String username;
 
     @Size(min = 8, max = 50, message = "密码长度应在（3-50）之间")

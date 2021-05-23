@@ -96,12 +96,12 @@ public class User implements Serializable {
     private UserInfo info;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "following", targetEntity = Follow.class)
+    @OneToMany(mappedBy = "follower", targetEntity = Follow.class)
     @ApiModelProperty("用户关注了")
-    private List<User> following;
+    private List<Follow> following;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "follower", targetEntity = Follow.class)
+    @OneToMany(mappedBy = "following", targetEntity = Follow.class)
     @ApiModelProperty("用户关注者")
-    private List<User> followers;
+    private List<Follow> followers;
 }

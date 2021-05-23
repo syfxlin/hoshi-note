@@ -34,6 +34,7 @@
     <module>hoshi-session</module>
     <module>hoshi-client</module>
     <module>hoshi-test</module>
+    <module>hoshi-file</module>
   </modules>
 
   <properties>
