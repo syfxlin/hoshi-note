@@ -49,7 +49,7 @@ public class FileStorageService implements StorageService {
             final String ext = mimeType.getExtension();
             final String uuid = UUID.randomUUID().toString();
             final String filename = uuid + ext;
-            final Path resolve = this.join(filename, paths);
+            final Path resolve = this.join(paths, filename);
             final Path path = this.location.resolve(resolve).normalize().toAbsolutePath();
             if (!path.startsWith(this.location.toAbsolutePath())) {
                 throw new StorageException("不能将文件保存到文件系统外（非法操作）");
@@ -73,34 +73,32 @@ public class FileStorageService implements StorageService {
 
     @Override
     public boolean exist(final String filename, final String... paths) {
-        return this.location.resolve(this.join(filename, paths)).toFile().exists();
+        return this.location.resolve(this.join(paths, filename)).toFile().exists();
     }
 
     @Override
     public void delete(final String filename, final String... paths) {
-        FileUtil.del(this.location.resolve(this.join(filename, paths)));
+        FileUtil.del(this.location.resolve(this.join(paths, filename)));
     }
 
     @Override
     public Resource load(final String filename, final String... paths) {
-        return new FileSystemResource(this.location.resolve(this.join(filename, paths)));
+        return new FileSystemResource(this.location.resolve(this.join(paths, filename)));
     }
 
     @Override
-    public Stream<Resource> loadAll() {
+    public Stream<Resource> loadAll(final String... paths) {
         try {
-            return Files
-                .walk(this.location, 1)
-                .filter(path -> !path.equals(this.location))
-                .map(FileSystemResource::new);
+            final Path resolve = this.location.resolve(this.join(paths));
+            return Files.walk(resolve, 1).filter(path -> !path.equals(resolve)).map(FileSystemResource::new);
         } catch (final IOException e) {
             throw new StorageException("无法读取文件列表", e);
         }
     }
 
     @Override
-    public void deleteAll() {
-        FileUtil.del(this.location);
+    public void deleteAll(final String... paths) {
+        FileUtil.del(this.location.resolve(this.join(paths)));
     }
 
     @PreDestroy

@@ -1,5 +1,7 @@
 package me.ixk.hoshi.ums.controller;
 
+import static me.ixk.hoshi.security.util.Security.USER_ATTR;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -34,7 +36,7 @@ public class FollowController {
     @ApiOperation("获取关注列表")
     @GetMapping("/following")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<List<PublicUserView>> following(@ModelAttribute final User user) {
+    public ApiResult<List<PublicUserView>> following(@ModelAttribute(USER_ATTR) final User user) {
         return ApiResult.ok(
             user.getFollowing().stream().map(Follow::getFollowing).map(PublicUserView::of).collect(Collectors.toList())
         );
@@ -43,7 +45,7 @@ public class FollowController {
     @ApiOperation("被关注列表")
     @GetMapping("/follower")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<List<PublicUserView>> follower(@ModelAttribute final User user) {
+    public ApiResult<List<PublicUserView>> follower(@ModelAttribute(USER_ATTR) final User user) {
         return ApiResult.ok(
             user.getFollowers().stream().map(Follow::getFollower).map(PublicUserView::of).collect(Collectors.toList())
         );
@@ -52,7 +54,7 @@ public class FollowController {
     @ApiOperation("添加关注")
     @PostMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> add(@JsonParam("user") final Long id, @ModelAttribute final User user) {
+    public ApiResult<Object> add(@JsonParam("user") final Long id, @ModelAttribute(USER_ATTR) final User user) {
         final Optional<User> optional = this.userRepository.findById(id);
         if (optional.isEmpty()) {
             return ApiResult.bindException(new String[] { "关注失败（关注的用户不存在）" });
@@ -67,7 +69,7 @@ public class FollowController {
     @ApiOperation("取消关注")
     @DeleteMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> delete(@RequestParam("user") final Long id, @ModelAttribute final User user) {
+    public ApiResult<Object> delete(@RequestParam("user") final Long id, @ModelAttribute(USER_ATTR) final User user) {
         final Optional<User> following = this.userRepository.findById(id);
         if (following.isEmpty()) {
             return ApiResult.bindException(new String[] { "要取消关注的用户不存在" });

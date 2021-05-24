@@ -17,7 +17,7 @@ import org.springframework.data.domain.Sort;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageView<T> {
+public class PageView {
 
     private Integer page;
     private int pageSize = 15;

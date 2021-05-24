@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public final class Security {
 
     public static final String ANONYMOUS_USER = "anonymousUser";
+    public static final String USER_ATTR = "user";
 
     private Security() throws UnsupportedInstantiationException {
         throw new UnsupportedInstantiationException(Security.class);

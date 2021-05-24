@@ -343,6 +343,14 @@ public class ApiResult<T> {
         return bindException(message, e.getBindingResult());
     }
 
+    public static DataBuilder unauthorized() {
+        return unauthorized(null);
+    }
+
+    public static DataBuilder unauthorized(@Nullable final String message) {
+        return status(ApiMessage.UNAUTHORIZED, message);
+    }
+
     public static HeadersBuilder<?> notFound() {
         return notFound(null);
     }

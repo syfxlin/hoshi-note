@@ -1,5 +1,7 @@
 package me.ixk.hoshi.security.handler;
 
+import static me.ixk.hoshi.security.util.Security.USER_ATTR;
+
 import java.util.Collections;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,7 @@ public class SecurityAdvice {
 
     private final UserRepository userRepository;
 
-    @ModelAttribute
+    @ModelAttribute(USER_ATTR)
     public User user() {
         final Long userId = Security.id();
         if (userId == null) {

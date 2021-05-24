@@ -1,5 +1,6 @@
 package me.ixk.hoshi.file.service;
 
+import cn.hutool.core.util.ArrayUtil;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
@@ -56,14 +57,17 @@ public interface StorageService extends AutoCloseable {
     /**
      * 读取文件列表
      *
+     * @param paths 路径
      * @return 文件列表
      */
-    Stream<Resource> loadAll();
+    Stream<Resource> loadAll(String... paths);
 
     /**
      * 删除所有文件
+     *
+     * @param paths 路径
      */
-    void deleteAll();
+    void deleteAll(String... paths);
 
     /**
      * 关闭文件
@@ -76,22 +80,29 @@ public interface StorageService extends AutoCloseable {
     /**
      * 拼接路径的工具方法
      *
-     * @param filename 文件名
-     * @param paths    路径
+     * @param paths 路径
      * @return Path
      */
-    default Path join(final String filename, final String... paths) {
-        if (filename == null) {
-            throw new IllegalArgumentException("输入文件名不能为 null");
-        }
-        if (paths.length == 0) {
-            return Paths.get(filename);
+    default Path join(final String... paths) {
+        if (paths == null || paths.length == 0) {
+            throw new IllegalArgumentException("输入路径不能为空");
         }
         Path resolve = Paths.get(paths[0]);
         for (int i = 1; i < paths.length; i++) {
             resolve = resolve.resolve(paths[i]);
         }
-        return resolve.resolve(filename);
+        return resolve;
+    }
+
+    /**
+     * 拼接路径的工具方法
+     *
+     * @param paths    路径
+     * @param filename 文件名
+     * @return Path
+     */
+    default Path join(final String[] paths, final String filename) {
+        return this.join(ArrayUtil.append(paths, filename));
     }
 
     @Data

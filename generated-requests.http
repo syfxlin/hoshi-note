@@ -191,3 +191,7 @@ Content-Type: application/json
 ### 下载图片
 GET http://localhost:8001/api/images/909356d9-e642-4a3f-a396-37e7a7382aac.jpg
 X-Auth-Token: {{token}}
+
+### 列出文件
+GET http://localhost:8001/api/files?page=1&pageSize=1
+X-Auth-Token: {{token}}

@@ -4,9 +4,13 @@
 
 package me.ixk.hoshi.ums.config;
 
+import java.util.Optional;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.security.config.DefaultSecurityConfig.SecurityConfigAdapter;
 import me.ixk.hoshi.security.security.UserDetails;
+import me.ixk.hoshi.user.entity.User;
+import me.ixk.hoshi.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
@@ -19,6 +23,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 @Configuration
 public class SecurityConfig extends SecurityConfigAdapter {
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         super.configure(http);
@@ -26,12 +33,19 @@ public class SecurityConfig extends SecurityConfigAdapter {
         http
             .formLogin()
             .successHandler(
-                (request, response, authentication) ->
-                    ApiResult.ok((UserDetails) authentication.getPrincipal()).toResponse(response)
+                (request, response, authentication) -> {
+                    final UserDetails details = (UserDetails) authentication.getPrincipal();
+                    final Optional<User> user = this.userRepository.findById(details.getId());
+                    if (user.isEmpty()) {
+                        ApiResult.unauthorized("用户 ID 不存在").build().toResponse(response);
+                    } else {
+                        ApiResult.ok(user.get()).toResponse(response);
+                    }
+                }
             )
             .failureHandler(
                 (request, response, exception) ->
-                    ApiResult.badRequest(exception.getMessage()).build().toResponse(response)
+                    ApiResult.unauthorized(exception.getMessage()).build().toResponse(response)
             );
         http
             .logout()

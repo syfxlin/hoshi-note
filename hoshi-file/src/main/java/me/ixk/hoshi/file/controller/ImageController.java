@@ -1,16 +1,23 @@
 package me.ixk.hoshi.file.controller;
 
+import static me.ixk.hoshi.security.util.Security.USER_ATTR;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
+import me.ixk.hoshi.common.result.PageView;
+import me.ixk.hoshi.file.exception.StorageException;
 import me.ixk.hoshi.file.service.StorageService;
 import me.ixk.hoshi.file.service.StorageService.StoreInfo;
 import me.ixk.hoshi.file.util.Mime;
+import me.ixk.hoshi.file.view.FileView;
 import me.ixk.hoshi.file.view.UploadView;
 import me.ixk.hoshi.user.entity.User;
 import org.springframework.core.io.Resource;
@@ -33,12 +40,40 @@ public class ImageController {
     public static final String FILE_DIR = "user-image";
     private final StorageService storageService;
 
+    @ApiOperation("列出图片")
+    @GetMapping("")
+    @PreAuthorize("isAuthenticated()")
+    public ApiResult<List<FileView>> list(final PageView vo, @ModelAttribute(USER_ATTR) final User user) {
+        Stream<Resource> all = this.storageService.loadAll(FILE_DIR, user.getId().toString());
+        if (vo.getPage() != null) {
+            all = all.skip(((long) vo.getPage() - 1L) * vo.getPageSize()).limit(vo.getPageSize());
+        }
+        return ApiResult.ok(
+            all
+                .map(
+                    r -> {
+                        try {
+                            return FileView
+                                .builder()
+                                .fileName(r.getFilename())
+                                .size(r.contentLength())
+                                .url("/api/files/" + r.getFilename())
+                                .build();
+                        } catch (final IOException e) {
+                            throw new StorageException("获取文件大小失败", e);
+                        }
+                    }
+                )
+                .collect(Collectors.toList())
+        );
+    }
+
     @ApiOperation("上传图片")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
     public ApiResult<UploadView> upload(
         @RequestParam("file") final MultipartFile file,
-        @ModelAttribute final User user
+        @ModelAttribute(USER_ATTR) final User user
     ) {
         final StoreInfo store = this.storageService.store(file, FILE_DIR, user.getId().toString());
         final UploadView view = UploadView
@@ -55,7 +90,10 @@ public class ImageController {
     @ApiOperation("读取图片")
     @GetMapping("/{filename:.+\\.[a-zA-Z]+}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> get(@PathVariable("filename") final String filename, @ModelAttribute final User user) {
+    public ResponseEntity<?> get(
+        @PathVariable("filename") final String filename,
+        @ModelAttribute(USER_ATTR) final User user
+    ) {
         if (!this.storageService.exist(filename, FILE_DIR, user.getId().toString())) {
             return ApiResult.notFound("指定图片不存在").build().toResponseEntity();
         }

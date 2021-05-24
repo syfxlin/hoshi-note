@@ -50,7 +50,7 @@ public class UserManagerController {
 
     @ApiOperation("列出用户（查询用户）")
     @GetMapping("")
-    public ApiResult<ApiPage<User>> list(final PageView<User> page, final FilterUserView user) {
+    public ApiResult<ApiPage<User>> list(final PageView page, final FilterUserView user) {
         final String username = user.getUsername();
         final String nickname = user.getNickname();
         final String email = user.getEmail();

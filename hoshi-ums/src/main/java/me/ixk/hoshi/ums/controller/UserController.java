@@ -1,5 +1,7 @@
 package me.ixk.hoshi.ums.controller;
 
+import static me.ixk.hoshi.security.util.Security.USER_ATTR;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
@@ -30,14 +32,14 @@ public class UserController {
     @ApiOperation("获取用户")
     @GetMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> user(@ModelAttribute final User user) {
+    public ApiResult<Object> user(@ModelAttribute(USER_ATTR) final User user) {
         return ApiResult.ok(user);
     }
 
     @ApiOperation("获取用户信息")
     @GetMapping("/info")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<UserInfo> getInfo(@ModelAttribute final User user) {
+    public ApiResult<UserInfo> getInfo(@ModelAttribute(USER_ATTR) final User user) {
         return ApiResult.ok(user.getInfo());
     }
 
@@ -45,7 +47,10 @@ public class UserController {
     @PutMapping("/info")
     @PreAuthorize("isAuthenticated()")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<UserInfo> updateInfo(@ModelAttribute final User user, @Valid @RequestBody final UserInfoView vo) {
+    public ApiResult<UserInfo> updateInfo(
+        @ModelAttribute(USER_ATTR) final User user,
+        @Valid @RequestBody final UserInfoView vo
+    ) {
         final UserInfo info = user.getInfo();
         final String address = vo.getAddress();
         if (address != null) {
