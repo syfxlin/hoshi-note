@@ -1,8 +1,8 @@
-package me.ixk.hoshi.user.repository;
+package me.ixk.hoshi.db.repository;
 
 import java.util.Optional;
 import me.ixk.hoshi.common.util.Jpa;
-import me.ixk.hoshi.user.entity.Role;
+import me.ixk.hoshi.db.entity.Role;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.util.Assert;

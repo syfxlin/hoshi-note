@@ -6,10 +6,10 @@ package me.ixk.hoshi.ums.config;
 
 import java.util.Optional;
 import me.ixk.hoshi.common.result.ApiResult;
+import me.ixk.hoshi.db.entity.User;
+import me.ixk.hoshi.db.repository.UserRepository;
 import me.ixk.hoshi.security.config.DefaultSecurityConfig.SecurityConfigAdapter;
 import me.ixk.hoshi.security.security.UserDetails;
-import me.ixk.hoshi.user.entity.User;
-import me.ixk.hoshi.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

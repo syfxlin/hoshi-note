@@ -30,11 +30,12 @@
     <module>hoshi-ums</module>
     <module>hoshi-admin</module>
     <module>hoshi-swagger</module>
-    <module>hoshi-user</module>
+    <module>hoshi-db</module>
     <module>hoshi-session</module>
     <module>hoshi-client</module>
     <module>hoshi-test</module>
     <module>hoshi-file</module>
+    <module>hoshi-note</module>
   </modules>
 
   <properties>
@@ -164,7 +165,7 @@
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-user</artifactId>
+        <artifactId>hoshi-db</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -180,6 +181,16 @@
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-test</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-file</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-note</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
-  ~ Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
-  -->
 <project
   xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -15,7 +12,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>me.ixk.hoshi</groupId>
-  <artifactId>hoshi-security</artifactId>
+  <artifactId>hoshi-db</artifactId>
 
   <dependencies>
     <dependency>
@@ -24,20 +21,7 @@
     </dependency>
     <dependency>
       <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-db</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-session</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>cn.hutool</groupId>
-      <artifactId>hutool-crypto</artifactId>
-      <version>5.6.5</version>
+      <artifactId>hoshi-swagger</artifactId>
     </dependency>
   </dependencies>
 </project>

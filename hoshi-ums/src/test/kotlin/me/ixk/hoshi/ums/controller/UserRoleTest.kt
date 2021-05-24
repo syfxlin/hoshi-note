@@ -1,9 +1,9 @@
 package me.ixk.hoshi.ums.controller
 
 import me.ixk.hoshi.common.util.Json
+import me.ixk.hoshi.db.repository.RoleRepository
+import me.ixk.hoshi.db.repository.UserRepository
 import me.ixk.hoshi.session.config.CompositeSessionIdResolver.X_AUTH_TOKEN
-import me.ixk.hoshi.user.repository.RoleRepository
-import me.ixk.hoshi.user.repository.UserRepository
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.OverrideAutoConfiguration

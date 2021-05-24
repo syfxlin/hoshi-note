@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import me.ixk.hoshi.user.entity.User;
+import me.ixk.hoshi.db.entity.User;
 
 /**
  * @author Otstar Lin

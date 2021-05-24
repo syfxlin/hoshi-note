@@ -1,7 +1,7 @@
 package me.ixk.hoshi.security.security;
 
-import me.ixk.hoshi.user.entity.Role;
-import me.ixk.hoshi.user.entity.User;
+import me.ixk.hoshi.db.entity.Role;
+import me.ixk.hoshi.db.entity.User;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 /**

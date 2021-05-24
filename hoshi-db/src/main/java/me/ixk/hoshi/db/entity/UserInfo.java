@@ -1,4 +1,4 @@
-package me.ixk.hoshi.user.entity;
+package me.ixk.hoshi.db.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

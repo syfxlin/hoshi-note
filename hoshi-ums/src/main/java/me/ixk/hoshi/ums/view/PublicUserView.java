@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Data;
-import me.ixk.hoshi.user.entity.Role;
-import me.ixk.hoshi.user.entity.User;
-import me.ixk.hoshi.user.entity.UserInfo;
+import me.ixk.hoshi.db.entity.Role;
+import me.ixk.hoshi.db.entity.User;
+import me.ixk.hoshi.db.entity.UserInfo;
 
 /**
  * 开放的用户信息

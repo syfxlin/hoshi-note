@@ -1,8 +1,8 @@
-package me.ixk.hoshi.user.repository;
+package me.ixk.hoshi.db.repository;
 
 import java.util.Optional;
 import me.ixk.hoshi.common.util.Jpa;
-import me.ixk.hoshi.user.entity.User;
+import me.ixk.hoshi.db.entity.User;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.util.Assert;

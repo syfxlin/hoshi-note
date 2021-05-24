@@ -1,7 +1,7 @@
 package me.ixk.hoshi.admin.config;
 
+import me.ixk.hoshi.db.entity.RoleNames;
 import me.ixk.hoshi.security.config.DefaultSecurityConfig.SecurityConfigAdapter;
-import me.ixk.hoshi.user.entity.RoleNames;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 

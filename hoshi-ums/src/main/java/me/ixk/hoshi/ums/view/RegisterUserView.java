@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.ixk.hoshi.common.util.App;
-import me.ixk.hoshi.user.entity.User;
-import me.ixk.hoshi.user.entity.UserInfo;
-import me.ixk.hoshi.user.repository.UserRepository;
+import me.ixk.hoshi.db.entity.User;
+import me.ixk.hoshi.db.entity.UserInfo;
+import me.ixk.hoshi.db.repository.UserRepository;
 
 /**
  * @author Otstar Lin

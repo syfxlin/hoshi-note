@@ -5,7 +5,7 @@
 package me.ixk.hoshi.security.config;
 
 import me.ixk.hoshi.common.result.ApiResult;
-import me.ixk.hoshi.user.entity.RoleNames;
+import me.ixk.hoshi.db.entity.RoleNames;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

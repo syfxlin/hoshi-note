@@ -1,9 +1,9 @@
-package me.ixk.hoshi.user.repository;
+package me.ixk.hoshi.db.repository;
 
 import java.util.List;
 import java.util.Optional;
-import me.ixk.hoshi.user.entity.Follow;
-import me.ixk.hoshi.user.entity.User;
+import me.ixk.hoshi.db.entity.Follow;
+import me.ixk.hoshi.db.entity.User;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 

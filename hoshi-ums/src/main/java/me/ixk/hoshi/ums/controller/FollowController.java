@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.annotation.JsonParam;
 import me.ixk.hoshi.common.result.ApiResult;
+import me.ixk.hoshi.db.entity.Follow;
+import me.ixk.hoshi.db.entity.User;
+import me.ixk.hoshi.db.repository.FollowRepository;
+import me.ixk.hoshi.db.repository.UserRepository;
 import me.ixk.hoshi.ums.view.PublicUserView;
-import me.ixk.hoshi.user.entity.Follow;
-import me.ixk.hoshi.user.entity.User;
-import me.ixk.hoshi.user.repository.FollowRepository;
-import me.ixk.hoshi.user.repository.UserRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

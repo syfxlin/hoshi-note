@@ -1,4 +1,4 @@
-package me.ixk.hoshi.user.entity;
+package me.ixk.hoshi.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;

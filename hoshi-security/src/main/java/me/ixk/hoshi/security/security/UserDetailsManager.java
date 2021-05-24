@@ -1,8 +1,8 @@
 package me.ixk.hoshi.security.security;
 
 import java.util.Optional;
-import me.ixk.hoshi.user.entity.User;
-import me.ixk.hoshi.user.repository.UserRepository;
+import me.ixk.hoshi.db.entity.User;
+import me.ixk.hoshi.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

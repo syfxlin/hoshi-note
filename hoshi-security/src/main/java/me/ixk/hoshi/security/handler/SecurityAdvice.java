@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiBindException;
+import me.ixk.hoshi.db.entity.User;
+import me.ixk.hoshi.db.repository.UserRepository;
 import me.ixk.hoshi.security.util.Security;
-import me.ixk.hoshi.user.entity.User;
-import me.ixk.hoshi.user.repository.UserRepository;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
