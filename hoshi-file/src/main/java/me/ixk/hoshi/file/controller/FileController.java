@@ -55,7 +55,7 @@ public class FileController {
                                 .builder()
                                 .fileName(r.getFilename())
                                 .size(r.contentLength())
-                                .url("/api/files/" + r.getFilename())
+                                .url(String.format("/api/files/%s/%s", user.getId().toString(), r.getFilename()))
                                 .build();
                         } catch (final IOException e) {
                             throw new StorageException("获取文件大小失败", e);
@@ -80,23 +80,22 @@ public class FileController {
             .mediaType(store.getMediaType())
             .fileName(store.getFileName())
             .size(store.getSize())
-            .url("/api/files/" + store.getFileName())
+            .url(String.format("/api/files/%s/%s", user.getId().toString(), store.getFileName()))
             .build();
         return ApiResult.ok(view);
     }
 
     @ApiOperation("下载文件")
-    @GetMapping("/{filename:.+\\.[a-zA-Z]+}")
-    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{userId:[0-9]+}/{filename:[a-zA-Z0-9]+}")
     public ResponseEntity<?> get(
-        @PathVariable("filename") final String filename,
-        @ModelAttribute(USER_ATTR) final User user
+        @PathVariable("userId") final String userId,
+        @PathVariable("filename") final String filename
     ) {
-        if (!this.storageService.exist(filename, FILE_DIR, user.getId().toString())) {
+        if (!this.storageService.exist(filename, FILE_DIR, userId)) {
             return ApiResult.notFound("指定文件不存在").build().toResponseEntity();
         }
         try {
-            final Resource resource = this.storageService.load(filename, FILE_DIR, user.getId().toString());
+            final Resource resource = this.storageService.load(filename, FILE_DIR, userId);
             final HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", String.format("attachment;filename=\"%s\"", filename));
             headers.add("Cache-Control", "no-cache,no-store,must-revalidate");
@@ -108,5 +107,19 @@ public class FileController {
         } catch (final IOException e) {
             return ApiResult.error("获取文件异常").build().toResponseEntity();
         }
+    }
+
+    @ApiOperation("删除文件")
+    @GetMapping("")
+    @PreAuthorize("isAuthenticated()")
+    public ApiResult<Object> delete(
+        @RequestParam("filename") final String filename,
+        @ModelAttribute(USER_ATTR) final User user
+    ) {
+        if (!this.storageService.exist(filename, FILE_DIR, user.getId().toString())) {
+            return ApiResult.bindException(new String[] { "文件不存在，无法删除" });
+        }
+        this.storageService.delete(filename, FILE_DIR, user.getId().toString());
+        return ApiResult.ok("删除成功").build();
     }
 }

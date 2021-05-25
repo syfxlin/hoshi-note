@@ -4,7 +4,6 @@ import static me.ixk.hoshi.security.util.Security.USER_ATTR;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import me.ixk.hoshi.db.entity.Follow;
 import me.ixk.hoshi.db.entity.User;
 import me.ixk.hoshi.db.repository.FollowRepository;
 import me.ixk.hoshi.db.repository.UserRepository;
-import me.ixk.hoshi.ums.view.PublicUserView;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,20 +32,27 @@ public class FollowController {
     private final FollowRepository followRepository;
 
     @ApiOperation("获取关注列表")
-    @GetMapping("/following")
-    @PreAuthorize("isAuthenticated()")
-    public ApiResult<List<PublicUserView>> following(@ModelAttribute(USER_ATTR) final User user) {
+    @GetMapping("/{userId:[0-9]+]}/following")
+    public ApiResult<Object> following(@PathVariable("userId") final Long userId) {
+        final Optional<User> optional = this.userRepository.findById(userId);
+        if (optional.isEmpty()) {
+            return ApiResult.bindException(new String[] { "该用户不存在，无法获取关注列表" });
+        }
         return ApiResult.ok(
-            user.getFollowing().stream().map(Follow::getFollowing).map(PublicUserView::of).collect(Collectors.toList())
+            optional.get().getFollowing().stream().map(Follow::getFollowing).collect(Collectors.toList()),
+            "获取关注列表成功"
         );
     }
 
     @ApiOperation("被关注列表")
-    @GetMapping("/follower")
-    @PreAuthorize("isAuthenticated()")
-    public ApiResult<List<PublicUserView>> follower(@ModelAttribute(USER_ATTR) final User user) {
+    @GetMapping("/{userId:[0-9]+}/follower")
+    public ApiResult<Object> follower(@PathVariable("userId") final Long userId) {
+        final Optional<User> optional = this.userRepository.findById(userId);
+        if (optional.isEmpty()) {
+            return ApiResult.bindException(new String[] { "该用户不存在，无法获取关注列表" });
+        }
         return ApiResult.ok(
-            user.getFollowers().stream().map(Follow::getFollower).map(PublicUserView::of).collect(Collectors.toList())
+            optional.get().getFollowers().stream().map(Follow::getFollower).collect(Collectors.toList())
         );
     }
 

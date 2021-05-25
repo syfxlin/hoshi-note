@@ -1,5 +1,7 @@
 package me.ixk.hoshi.common.result;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,12 +16,22 @@ import org.springframework.data.domain.Page;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel("分页响应")
 public class ApiPage<T> {
 
+    @ApiModelProperty("当前页")
     private long page;
+
+    @ApiModelProperty("页大小")
     private long pageSize;
+
+    @ApiModelProperty("页面数量")
     private long pages;
+
+    @ApiModelProperty("数据总量")
     private long total;
+
+    @ApiModelProperty("当前页的数据")
     private List<T> records;
 
     public ApiPage(@NotNull final Page<T> page) {

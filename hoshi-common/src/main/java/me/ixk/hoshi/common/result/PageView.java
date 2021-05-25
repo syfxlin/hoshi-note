@@ -1,5 +1,7 @@
 package me.ixk.hoshi.common.result;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,10 +19,16 @@ import org.springframework.data.domain.Sort;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel("分页")
 public class PageView {
 
+    @ApiModelProperty("当前页（为 null 则不分页）")
     private Integer page;
+
+    @ApiModelProperty("页大小")
     private int pageSize = 15;
+
+    @ApiModelProperty("排序规则（默认 ASC，通过 : 分割排序的列和排序方向）")
     private List<String> orderBy = new ArrayList<>();
 
     public Pageable toPage() {
