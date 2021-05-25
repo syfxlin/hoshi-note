@@ -4,7 +4,7 @@ import java.util.Optional;
 import me.ixk.hoshi.common.util.Jpa;
 import me.ixk.hoshi.db.entity.Role;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.util.Assert;
 
 /**
@@ -13,7 +13,7 @@ import org.springframework.util.Assert;
  * @author Otstar Lin
  * @date 2021/5/19 下午 3:07
  */
-public interface RoleRepository extends CrudRepository<Role, String>, JpaSpecificationExecutor<Role> {
+public interface RoleRepository extends PagingAndSortingRepository<Role, String>, JpaSpecificationExecutor<Role> {
     /**
      * 更新权限
      *

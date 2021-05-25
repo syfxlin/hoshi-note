@@ -151,12 +151,12 @@ Accept: application/json
 X-Auth-Token: {{token}}
 
 ### 获取关注列表
-GET http://localhost:8000/api/follows/following
+GET http://localhost:8000/api/follows/1/following
 Accept: application/json
-X-Auth-Token: {{token}}
 
 ### 获取被关注列表
-GET http://localhost:8000/api/users/3/follower
+GET http://localhost:8000/api/follows/3/follower
+Accept: application/json
 
 ### 上传文件
 POST http://localhost:8001/api/files

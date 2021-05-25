@@ -19,7 +19,7 @@ public final class Security {
         throw new UnsupportedInstantiationException(Security.class);
     }
 
-    public static Long id() {
+    public static String id() {
         final UserDetails details = principal();
         if (details == null) {
             return null;

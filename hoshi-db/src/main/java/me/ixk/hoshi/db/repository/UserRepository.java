@@ -13,7 +13,7 @@ import org.springframework.util.Assert;
  * @author Otstar Lin
  * @date 2021/5/19 下午 3:07
  */
-public interface UserRepository extends PagingAndSortingRepository<User, Long>, JpaSpecificationExecutor<User> {
+public interface UserRepository extends PagingAndSortingRepository<User, String>, JpaSpecificationExecutor<User> {
     /**
      * 通过用户名查找用户
      *
@@ -37,7 +37,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>, 
      * @return 用户
      */
     default User update(final User user) {
-        final Long id = user.getId();
+        final String id = user.getId();
         Assert.notNull(id, "更新时 ID 必须设置");
         final Optional<User> optional = this.findById(id);
         if (optional.isEmpty()) {

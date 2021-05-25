@@ -45,6 +45,7 @@ public class RegisterUserView {
     public User toEntity() {
         return User
             .builder()
+            .id(User.generateId())
             .username(this.getUsername())
             .password(this.getPassword())
             .nickname(this.getNickname())

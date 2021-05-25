@@ -32,40 +32,38 @@ public class FollowController {
     private final FollowRepository followRepository;
 
     @ApiOperation("获取关注列表")
-    @GetMapping("/{userId:[0-9]+]}/following")
-    public ApiResult<Object> following(@PathVariable("userId") final Long userId) {
-        final Optional<User> optional = this.userRepository.findById(userId);
-        if (optional.isEmpty()) {
-            return ApiResult.bindException(new String[] { "该用户不存在，无法获取关注列表" });
-        }
+    @GetMapping("/{userId}/following")
+    public ApiResult<Object> following(@PathVariable("userId") final String userId) {
         return ApiResult.ok(
-            optional.get().getFollowing().stream().map(Follow::getFollowing).collect(Collectors.toList()),
+            this.followRepository.findByFollowerId(userId)
+                .stream()
+                .map(Follow::getFollowing)
+                .collect(Collectors.toList()),
             "获取关注列表成功"
         );
     }
 
     @ApiOperation("被关注列表")
-    @GetMapping("/{userId:[0-9]+}/follower")
-    public ApiResult<Object> follower(@PathVariable("userId") final Long userId) {
-        final Optional<User> optional = this.userRepository.findById(userId);
-        if (optional.isEmpty()) {
-            return ApiResult.bindException(new String[] { "该用户不存在，无法获取关注列表" });
-        }
+    @GetMapping("/{userId}/follower")
+    public ApiResult<Object> follower(@PathVariable("userId") final String userId) {
         return ApiResult.ok(
-            optional.get().getFollowers().stream().map(Follow::getFollower).collect(Collectors.toList())
+            this.followRepository.findByFollowingId(userId)
+                .stream()
+                .map(Follow::getFollower)
+                .collect(Collectors.toList())
         );
     }
 
     @ApiOperation("添加关注")
     @PostMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> add(@JsonParam("user") final Long id, @ModelAttribute(USER_ATTR) final User user) {
+    public ApiResult<Object> add(@JsonParam("user") final String id, @ModelAttribute(USER_ATTR) final User user) {
         final Optional<User> optional = this.userRepository.findById(id);
         if (optional.isEmpty()) {
             return ApiResult.bindException(new String[] { "关注失败（关注的用户不存在）" });
         }
         final User following = optional.get();
-        if (this.followRepository.findByFollowerAndFollowing(user, following).isEmpty()) {
+        if (this.followRepository.findByFollowerIdAndFollowingId(user.getId(), following.getId()).isEmpty()) {
             this.followRepository.save(Follow.builder().follower(user).following(following).build());
         }
         return ApiResult.ok("关注成功").build();
@@ -74,12 +72,8 @@ public class FollowController {
     @ApiOperation("取消关注")
     @DeleteMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> delete(@RequestParam("user") final Long id, @ModelAttribute(USER_ATTR) final User user) {
-        final Optional<User> following = this.userRepository.findById(id);
-        if (following.isEmpty()) {
-            return ApiResult.bindException(new String[] { "要取消关注的用户不存在" });
-        }
-        this.followRepository.findByFollowerAndFollowing(user, following.get())
+    public ApiResult<Object> delete(@RequestParam("user") final String id, @ModelAttribute(USER_ATTR) final User user) {
+        this.followRepository.findByFollowerIdAndFollowingId(user.getId(), id)
             .ifPresent(follow -> this.followRepository.deleteById(follow.getId()));
         return ApiResult.ok("取消关注成功").build();
     }

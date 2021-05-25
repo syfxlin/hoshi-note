@@ -20,7 +20,7 @@ import me.ixk.hoshi.db.repository.UserRepository;
 public class EditUserRoleView {
 
     @NotNull(message = "修改权限时必须设置用户 id")
-    private Long id;
+    private String id;
 
     private List<String> roles = new ArrayList<>();
 

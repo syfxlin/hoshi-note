@@ -93,7 +93,7 @@ public class UserManagerController {
     @ApiOperation("删除用户")
     @DeleteMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> remove(@RequestParam("id") final Long id) {
+    public ApiResult<Object> remove(@RequestParam("id") final String id) {
         if (this.userRepository.findById(id).isEmpty()) {
             return ApiResult.bindException(new String[] { "用户 ID 不存在" });
         }
@@ -152,7 +152,7 @@ public class UserManagerController {
     @DeleteMapping("/role")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> removeRoles(
-        @RequestParam("id") @NotNull final Long id,
+        @RequestParam("id") @NotNull final String id,
         @RequestParam("roles") @NotNull final List<String> roles
     ) {
         final Optional<User> optional = this.userRepository.findById(id);

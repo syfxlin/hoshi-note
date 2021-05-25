@@ -1,10 +1,12 @@
 package me.ixk.hoshi.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import cn.hutool.core.util.RandomUtil;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
@@ -37,7 +39,7 @@ public class User implements Serializable {
     @ApiModelProperty("用户 ID")
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     /**
      * 用户名
@@ -95,13 +97,17 @@ public class User implements Serializable {
     @ApiModelProperty("用户信息")
     private UserInfo info;
 
-    @JsonIgnore
+    @JsonBackReference
     @OneToMany(mappedBy = "follower", targetEntity = Follow.class)
     @ApiModelProperty("用户关注了")
-    private List<Follow> following;
+    private List<Follow> following = new ArrayList<>();
 
-    @JsonIgnore
+    @JsonBackReference
     @OneToMany(mappedBy = "following", targetEntity = Follow.class)
     @ApiModelProperty("用户关注者")
-    private List<Follow> followers;
+    private List<Follow> followers = new ArrayList<>();
+
+    public static String generateId() {
+        return RandomUtil.randomString(10);
+    }
 }

@@ -24,7 +24,7 @@ public class SecurityAdvice {
 
     @ModelAttribute(USER_ATTR)
     public User user() {
-        final Long userId = Security.id();
+        final String userId = Security.id();
         if (userId == null) {
             return null;
         }

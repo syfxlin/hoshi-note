@@ -86,7 +86,7 @@ public class FileController {
     }
 
     @ApiOperation("下载文件")
-    @GetMapping("/{userId:[0-9]+}/{filename:[a-zA-Z0-9]+}")
+    @GetMapping("/{userId}/{filename:[a-zA-Z0-9]+}")
     public ResponseEntity<?> get(
         @PathVariable("userId") final String userId,
         @PathVariable("filename") final String filename

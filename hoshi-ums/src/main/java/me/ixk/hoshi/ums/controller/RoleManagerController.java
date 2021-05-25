@@ -10,6 +10,7 @@ import me.ixk.hoshi.db.entity.Role;
 import me.ixk.hoshi.db.repository.RoleRepository;
 import me.ixk.hoshi.ums.view.AddRoleView;
 import me.ixk.hoshi.ums.view.UpdateRoleView;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class RoleManagerController {
     @ApiOperation("列出所有权限")
     @GetMapping("")
     public ApiResult<List<Role>> list() {
-        return ApiResult.ok(this.roleRepository.findAll(null));
+        return ApiResult.ok(this.roleRepository.findAll((Specification<Role>) null));
     }
 
     @ApiOperation("添加权限")

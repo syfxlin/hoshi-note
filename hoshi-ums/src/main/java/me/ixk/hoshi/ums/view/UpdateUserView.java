@@ -22,7 +22,7 @@ import me.ixk.hoshi.db.repository.UserRepository;
 public class UpdateUserView {
 
     @NotNull(message = "更新时必须设置用户 id")
-    private Long id;
+    private String id;
 
     @Size(min = 3, max = 50, message = "用户名长度应在（3-50）之间")
     private String username;
