@@ -22,20 +22,12 @@
   <url>https://github.com/syfxlin/hoshi-note</url>
 
   <modules>
-    <module>hoshi-common</module>
-    <module>hoshi-security</module>
     <module>hoshi-config</module>
     <module>hoshi-gateway</module>
     <module>hoshi-registry</module>
-    <module>hoshi-ums</module>
     <module>hoshi-admin</module>
-    <module>hoshi-swagger</module>
-    <module>hoshi-db</module>
-    <module>hoshi-session</module>
-    <module>hoshi-client</module>
-    <module>hoshi-test</module>
-    <module>hoshi-file</module>
-    <module>hoshi-note</module>
+    <module>hoshi-modules</module>
+    <module>hoshi-services</module>
   </modules>
 
   <properties>
@@ -161,11 +153,6 @@
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-swagger</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-db</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
