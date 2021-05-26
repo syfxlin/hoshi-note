@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.db.entity.User;
 import me.ixk.hoshi.db.entity.UserInfo;
@@ -49,7 +50,7 @@ public class UserController {
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<UserInfo> updateInfo(
         @ModelAttribute(USER_ATTR) final User user,
-        @Valid @RequestBody final UserInfoView vo
+        @Valid @JsonModel final UserInfoView vo
     ) {
         final UserInfo info = user.getInfo();
         final String address = vo.getAddress();

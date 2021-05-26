@@ -20,12 +20,12 @@ import me.ixk.hoshi.db.repository.UserRepository;
 public class EditUserRoleView {
 
     @NotNull(message = "修改权限时必须设置用户 id")
-    private String id;
+    private String userId;
 
     private List<String> roles = new ArrayList<>();
 
     @AssertTrue(message = "用户 ID 不存在")
     protected boolean isExist() {
-        return App.getBean(UserRepository.class).findById(this.getId()).isPresent();
+        return App.getBean(UserRepository.class).findById(this.getUserId()).isPresent();
     }
 }

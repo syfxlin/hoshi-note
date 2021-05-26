@@ -1,16 +1,15 @@
 package me.ixk.hoshi.common.resolver;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
-import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.annotation.JsonParam;
 import me.ixk.hoshi.common.annotation.RequestJson;
-import me.ixk.hoshi.common.util.Data;
-import me.ixk.hoshi.common.util.Json;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -23,10 +22,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * @author Otstar Lin
  * @date 2020/11/17 下午 5:47
  */
+@RequiredArgsConstructor
 public class JsonArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String JSON_REQUEST_ATTRIBUTE_NAME = "JSON_REQUEST_BODY";
-    private static final String BODY_VALUE_NAME = "&BODY";
+    private final ConversionService conversionService;
 
     @Override
     public boolean supportsParameter(final MethodParameter methodParameter) {
@@ -43,56 +43,50 @@ public class JsonArgumentResolver implements HandlerMethodArgumentResolver {
         final NativeWebRequest nativeWebRequest,
         final WebDataBinderFactory webDataBinderFactory
     ) throws Exception {
-        final JsonNode body = this.getJsonBody(nativeWebRequest);
-        if (BODY_VALUE_NAME.equals(methodParameter.getParameterName())) {
-            return Json.convertToObject(body, methodParameter.getParameterType());
-        }
+        final DocumentContext context = this.getJsonBody(nativeWebRequest);
         final JsonParam jsonParam = methodParameter.getParameterAnnotation(JsonParam.class);
-        JsonNode node;
-        if (jsonParam != null && !"".equals(jsonParam.name())) {
-            node = Data.dataGet(body, jsonParam.name(), NullNode.getInstance());
+        Object value;
+        if (jsonParam != null && !"".equals(jsonParam.path())) {
+            value = context.read(jsonParam.path());
         } else {
-            node = body.get(methodParameter.getParameterName());
+            value = context.read(methodParameter.getParameterName());
         }
-        if (node.isNull()) {
+        if (value == null) {
             if (jsonParam != null) {
                 if (jsonParam.required()) {
                     throw new MissingServletRequestParameterException(
-                        jsonParam.name(),
+                        jsonParam.path(),
                         methodParameter.getParameterType().getTypeName()
                     );
                 } else {
-                    node = TextNode.valueOf(jsonParam.defaultValue());
+                    value = TextNode.valueOf(jsonParam.defaultValue());
                 }
             } else {
                 return null;
             }
         }
-        return Json.convertToObject(node, methodParameter.getParameterType());
+        return this.conversionService.convert(value, methodParameter.getParameterType());
     }
 
-    private JsonNode getJsonBody(final NativeWebRequest nativeWebRequest) {
+    private DocumentContext getJsonBody(final NativeWebRequest nativeWebRequest) {
         final HttpServletRequest servletRequest = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
-
-        JsonNode body = (JsonNode) nativeWebRequest.getAttribute(
+        final DocumentContext context = (DocumentContext) nativeWebRequest.getAttribute(
             JSON_REQUEST_ATTRIBUTE_NAME,
             NativeWebRequest.SCOPE_REQUEST
         );
-
-        if (body == null) {
+        if (context == null) {
             try {
                 if (servletRequest != null) {
-                    body = Json.parse(servletRequest.getReader().lines().collect(Collectors.joining("\n")));
+                    JsonPath.parse(servletRequest.getInputStream());
                 }
             } catch (final IOException e) {
                 //
             }
-            if (body == null) {
-                body = NullNode.getInstance();
+            if (context != null) {
+                nativeWebRequest.setAttribute(JSON_REQUEST_ATTRIBUTE_NAME, context, NativeWebRequest.SCOPE_REQUEST);
             }
-            nativeWebRequest.setAttribute(JSON_REQUEST_ATTRIBUTE_NAME, body, NativeWebRequest.SCOPE_REQUEST);
         }
 
-        return body;
+        return context;
     }
 }

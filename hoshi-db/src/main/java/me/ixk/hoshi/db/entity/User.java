@@ -37,8 +37,7 @@ public class User implements Serializable {
      */
     @Id
     @ApiModelProperty("用户 ID")
-    @Column(name = "id", nullable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true, length = 20)
     private String id;
 
     /**
@@ -92,7 +91,7 @@ public class User implements Serializable {
     @ApiModelProperty("用户权限列表")
     private List<Role> roles;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_info", referencedColumnName = "id")
     @ApiModelProperty("用户信息")
     private UserInfo info;

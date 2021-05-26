@@ -12,6 +12,7 @@ import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.common.result.PageView;
@@ -83,7 +84,7 @@ public class UserManagerController {
     @ApiOperation("添加用户")
     @PostMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<User> add(@Valid @RequestBody final AddUserView vo) {
+    public ApiResult<User> add(@Valid @JsonModel final AddUserView vo) {
         final User user = vo.toEntity();
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singletonList(this.roleRepository.findById(RoleNames.USER.name()).get()));
@@ -91,20 +92,20 @@ public class UserManagerController {
     }
 
     @ApiOperation("删除用户")
-    @DeleteMapping("")
+    @DeleteMapping("/{userId}")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> remove(@RequestParam("id") final String id) {
-        if (this.userRepository.findById(id).isEmpty()) {
+    public ApiResult<Object> remove(@PathVariable("userId") final String userId) {
+        if (this.userRepository.findById(userId).isEmpty()) {
             return ApiResult.bindException(new String[] { "用户 ID 不存在" });
         }
-        this.userRepository.deleteById(id);
+        this.userRepository.deleteById(userId);
         return ApiResult.ok().build();
     }
 
     @ApiOperation("更新用户")
-    @PutMapping("")
+    @PutMapping("/{userId}")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<User> update(@Valid @RequestBody final UpdateUserView vo) {
+    public ApiResult<User> update(@Valid @JsonModel final UpdateUserView vo) {
         final User user = vo.toEntity();
         final String password = user.getPassword();
         if (password != null) {
@@ -114,10 +115,10 @@ public class UserManagerController {
     }
 
     @ApiOperation("添加用户权限")
-    @PostMapping("/role")
+    @PostMapping("/{userId}/role")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<User> addRoles(@Valid @RequestBody final EditUserRoleView vo) {
-        final User user = this.userRepository.findById(vo.getId()).get();
+    public ApiResult<User> addRoles(@Valid @JsonModel final EditUserRoleView vo) {
+        final User user = this.userRepository.findById(vo.getUserId()).get();
         final int size = this.addRoleToUser(user, vo.getRoles());
         final User newUser = this.userRepository.save(user);
         if (size == vo.getRoles().size()) {
@@ -128,10 +129,10 @@ public class UserManagerController {
     }
 
     @ApiOperation("更改用户权限")
-    @PutMapping("/role")
+    @PutMapping("/{userId}/role")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<User> updateRoles(@Valid @RequestBody final EditUserRoleView vo) {
-        final User user = this.userRepository.findById(vo.getId()).get();
+    public ApiResult<User> updateRoles(@Valid @JsonModel final EditUserRoleView vo) {
+        final User user = this.userRepository.findById(vo.getUserId()).get();
         final List<Role> roles = vo
             .getRoles()
             .stream()
@@ -149,10 +150,10 @@ public class UserManagerController {
     }
 
     @ApiOperation("删除用户权限")
-    @DeleteMapping("/role")
+    @DeleteMapping("/{userId}/role")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> removeRoles(
-        @RequestParam("id") @NotNull final String id,
+        @PathVariable("userId") @NotNull final String id,
         @RequestParam("roles") @NotNull final List<String> roles
     ) {
         final Optional<User> optional = this.userRepository.findById(id);

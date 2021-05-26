@@ -22,7 +22,7 @@ import me.ixk.hoshi.db.repository.UserRepository;
 public class UpdateUserView {
 
     @NotNull(message = "更新时必须设置用户 id")
-    private String id;
+    private String userId;
 
     @Size(min = 3, max = 50, message = "用户名长度应在（3-50）之间")
     private String username;
@@ -42,7 +42,7 @@ public class UpdateUserView {
     public User toEntity() {
         return User
             .builder()
-            .id(this.getId())
+            .id(this.getUserId())
             .username(this.getUsername())
             .password(this.getPassword())
             .nickname(this.getNickname())
@@ -53,12 +53,12 @@ public class UpdateUserView {
 
     @AssertTrue(message = "用户 ID 不存在")
     protected boolean isExist() {
-        return App.getBean(UserRepository.class).findById(this.getId()).isPresent();
+        return App.getBean(UserRepository.class).findById(this.getUserId()).isPresent();
     }
 
     @AssertTrue(message = "用户名已存在")
     protected boolean isUnique() {
         final Optional<User> user = App.getBean(UserRepository.class).findByUsername(this.getUsername());
-        return user.isEmpty() || user.get().getId().equals(this.getId());
+        return user.isEmpty() || user.get().getId().equals(this.getUserId());
     }
 }

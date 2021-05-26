@@ -25,7 +25,7 @@ public class Workspace {
 
     @Id
     @ApiModelProperty("空间 ID")
-    @Column(name = "id", nullable = false, unique = true)
+    @Column(name = "id", nullable = false, unique = true, length = 20)
     private String id;
 
     @ApiModelProperty("空间名称")

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.db.entity.Role;
 import me.ixk.hoshi.db.repository.RoleRepository;
@@ -37,22 +38,22 @@ public class RoleManagerController {
     @ApiOperation("添加权限")
     @PostMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Role> add(@Valid @RequestBody final AddRoleView vo) {
+    public ApiResult<Role> add(@Valid @JsonModel final AddRoleView vo) {
         return ApiResult.ok(this.roleRepository.save(vo.toRole()));
     }
 
     @ApiOperation("更新权限")
-    @PutMapping("")
+    @PutMapping("/{roleName}")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Role> update(@Valid @RequestBody final UpdateRoleView vo) {
+    public ApiResult<Role> update(@Valid @JsonModel final UpdateRoleView vo) {
         return ApiResult.ok(this.roleRepository.update(vo.toRole()));
     }
 
     @ApiOperation("删除权限")
-    @DeleteMapping("")
+    @DeleteMapping("/{roleName}")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Void> remove(@RequestParam("id") final String id) {
-        this.roleRepository.deleteById(id);
+    public ApiResult<Void> remove(@PathVariable("roleName") final String roleName) {
+        this.roleRepository.deleteById(roleName);
         return ApiResult.ok().build();
     }
 }

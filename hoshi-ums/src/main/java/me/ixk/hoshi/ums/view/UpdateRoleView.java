@@ -19,7 +19,7 @@ public class UpdateRoleView {
 
     @Size(min = 1, max = 50, message = "权限名称的长度应在 1-50 之内")
     @Pattern(regexp = "[A-Z]+", message = "权限名称必须是全大写的英文字符")
-    private String name;
+    private String roleName;
 
     private String description;
 
@@ -27,7 +27,7 @@ public class UpdateRoleView {
 
     public Role toRole() {
         final Role role = new Role();
-        role.setName(this.getName());
+        role.setName(this.getRoleName());
         role.setDescription(this.getDescription());
         role.setStatus(this.getStatus());
         role.setCreatedTime(LocalDateTime.now());

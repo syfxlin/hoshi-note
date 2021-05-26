@@ -47,6 +47,10 @@
       <groupId>me.ixk.hoshi</groupId>
       <artifactId>hoshi-swagger</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+    </dependency>
     <!-- optional -->
     <dependency>
       <groupId>de.codecentric</groupId>

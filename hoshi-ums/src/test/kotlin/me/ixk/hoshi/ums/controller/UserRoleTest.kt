@@ -30,7 +30,7 @@ class UserRoleTest {
     private lateinit var mockMvc: MockMvc
 
     private var token: String = "";
-    private var userId: Int = -1;
+    private var userId: String = "";
 
     @BeforeAll
     internal fun getToken() {
@@ -92,21 +92,20 @@ class UserRoleTest {
         }.andExpect {
             status { isOk() }
             jsonPath("$.data.id") {
-                isNumber()
+                isString()
             }
         }.andReturn().response
         val json = Json.parse(response.contentAsString)
-        userId = json["data"]["id"].asInt();
+        userId = json["data"]["id"].asText();
     }
 
     @Test
     @Order(4)
     fun updateUser() {
-        mockMvc.put("/api/admin/users") {
+        mockMvc.put("/api/admin/users/${userId}") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
-                 "id": ${userId},
                  "nickname": "Test1"
                }
            """.trimIndent()
@@ -140,11 +139,10 @@ class UserRoleTest {
     @Test
     @Order(6)
     fun updateRole() {
-        mockMvc.put("/api/admin/roles") {
+        mockMvc.put("/api/admin/roles/TEST") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
-                 "name": "TEST",
                  "description": "更新权限"
                }
            """.trimIndent()
@@ -160,11 +158,10 @@ class UserRoleTest {
     @Test
     @Order(7)
     fun addRoleToUser() {
-        mockMvc.post("/api/admin/users/role") {
+        mockMvc.post("/api/admin/users/${userId}/role") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
-                 "id": ${userId},
                  "roles": ["TEST"]
                }
            """.trimIndent()
@@ -183,11 +180,10 @@ class UserRoleTest {
     @Test
     @Order(8)
     fun updateRoleToUser() {
-        mockMvc.put("/api/admin/users/role") {
+        mockMvc.put("/api/admin/users/${userId}/role") {
             header(X_AUTH_TOKEN, token)
             content = """
                {
-                 "id": ${userId},
                  "roles": ["USER"]
                }
            """.trimIndent()
@@ -206,9 +202,8 @@ class UserRoleTest {
     @Test
     @Order(9)
     fun deleteRoleToUser() {
-        mockMvc.delete("/api/admin/users/role") {
+        mockMvc.delete("/api/admin/users/${userId}/role") {
             header(X_AUTH_TOKEN, token)
-            param("id", userId.toString())
             param("roles", "USER")
         }.andExpect {
             status { isOk() }
@@ -221,9 +216,8 @@ class UserRoleTest {
     @Test
     @Order(10)
     fun deleteUser() {
-        mockMvc.delete("/api/admin/users") {
+        mockMvc.delete("/api/admin/users/${userId}") {
             header(X_AUTH_TOKEN, token)
-            param("id", userId.toString())
         }.andExpect {
             status { isOk() }
         }
@@ -232,9 +226,8 @@ class UserRoleTest {
     @Test
     @Order(11)
     fun deleteRole() {
-        mockMvc.delete("/api/admin/roles") {
+        mockMvc.delete("/api/admin/roles/TEST") {
             header(X_AUTH_TOKEN, token)
-            param("id", "TEST")
         }.andExpect {
             status { isOk() }
         }

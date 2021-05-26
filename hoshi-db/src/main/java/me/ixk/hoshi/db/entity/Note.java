@@ -28,7 +28,7 @@ public class Note {
 
     @Id
     @ApiModelProperty("笔记 ID")
-    @Column(name = "id", nullable = false, unique = true)
+    @Column(name = "id", nullable = false, unique = true, length = 20)
     private String id;
 
     @JsonBackReference

@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiOperation;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import me.ixk.hoshi.common.annotation.JsonParam;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.db.entity.Follow;
 import me.ixk.hoshi.db.entity.User;
@@ -55,9 +54,12 @@ public class FollowController {
     }
 
     @ApiOperation("添加关注")
-    @PostMapping("")
+    @PostMapping("/{followId}")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> add(@JsonParam("user") final String id, @ModelAttribute(USER_ATTR) final User user) {
+    public ApiResult<Object> add(
+        @PathVariable("followId") final String id,
+        @ModelAttribute(USER_ATTR) final User user
+    ) {
         final Optional<User> optional = this.userRepository.findById(id);
         if (optional.isEmpty()) {
             return ApiResult.bindException(new String[] { "关注失败（关注的用户不存在）" });
@@ -70,9 +72,12 @@ public class FollowController {
     }
 
     @ApiOperation("取消关注")
-    @DeleteMapping("")
+    @DeleteMapping("/{followId}")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> delete(@RequestParam("user") final String id, @ModelAttribute(USER_ATTR) final User user) {
+    public ApiResult<Object> delete(
+        @PathVariable("followId") final String id,
+        @ModelAttribute(USER_ATTR) final User user
+    ) {
         this.followRepository.findByFollowerIdAndFollowingId(user.getId(), id)
             .ifPresent(follow -> this.followRepository.deleteById(follow.getId()));
         return ApiResult.ok("取消关注成功").build();

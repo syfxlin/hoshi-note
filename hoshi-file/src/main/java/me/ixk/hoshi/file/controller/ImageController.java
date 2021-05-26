@@ -44,7 +44,7 @@ public class ImageController {
     @GetMapping("")
     @PreAuthorize("isAuthenticated()")
     public ApiResult<List<FileView>> list(final PageView vo, @ModelAttribute(USER_ATTR) final User user) {
-        Stream<Resource> all = this.storageService.loadAll(FILE_DIR, user.getId().toString());
+        Stream<Resource> all = this.storageService.loadAll(FILE_DIR, user.getId());
         if (vo.getPage() != null) {
             all = all.skip(((long) vo.getPage() - 1L) * vo.getPageSize()).limit(vo.getPageSize());
         }
@@ -75,14 +75,14 @@ public class ImageController {
         @RequestParam("file") final MultipartFile file,
         @ModelAttribute(USER_ATTR) final User user
     ) {
-        final StoreInfo store = this.storageService.store(file, FILE_DIR, user.getId().toString());
+        final StoreInfo store = this.storageService.store(file, FILE_DIR, user.getId());
         final UploadView view = UploadView
             .builder()
             .extName(store.getExtName())
             .mediaType(store.getMediaType())
             .fileName(store.getFileName())
             .size(store.getSize())
-            .url(String.format("/api/files/%s/%s", user.getId().toString(), store.getFileName()))
+            .url(String.format("/api/files/%s/%s", user.getId(), store.getFileName()))
             .build();
         return ApiResult.ok(view);
     }
@@ -110,16 +110,16 @@ public class ImageController {
     }
 
     @ApiOperation("删除图片")
-    @GetMapping("")
+    @GetMapping("/{filename:[a-zA-Z0-9]+}")
     @PreAuthorize("isAuthenticated()")
     public ApiResult<Object> delete(
-        @RequestParam("filename") final String filename,
+        @PathVariable("filename") final String filename,
         @ModelAttribute(USER_ATTR) final User user
     ) {
-        if (!this.storageService.exist(filename, FILE_DIR, user.getId().toString())) {
+        if (!this.storageService.exist(filename, FILE_DIR, user.getId())) {
             return ApiResult.bindException(new String[] { "图片不存在，无法删除" });
         }
-        this.storageService.delete(filename, FILE_DIR, user.getId().toString());
+        this.storageService.delete(filename, FILE_DIR, user.getId());
         return ApiResult.ok("删除成功").build();
     }
 }

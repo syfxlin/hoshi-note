@@ -11,11 +11,11 @@ import org.springframework.core.annotation.AliasFor;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface JsonParam {
-    @AliasFor("name")
+    @AliasFor("path")
     String value() default "";
 
     @AliasFor("value")
-    String name() default "";
+    String path() default "";
 
     boolean required() default true;
 
