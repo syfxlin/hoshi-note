@@ -195,3 +195,7 @@ X-Auth-Token: {{token}}
 ### 列出文件
 GET http://localhost:8001/api/files?page=1&pageSize=1
 X-Auth-Token: {{token}}
+
+###
+GET http://localhost:8001/index
+#X-Auth-Token: {{token}}

@@ -1,8 +1,6 @@
 package me.ixk.hoshi.client.util;
 
 import feign.RequestTemplate;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.function.BiConsumer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,19 +39,24 @@ public final class Request {
         return attributes.getResponse();
     }
 
-    public static void wrapperHeaders(final BiConsumer<String, Enumeration<String>> consumer) {
+    public static void addToken(final BiConsumer<String, String> consumer) {
         final HttpServletRequest request = request();
         if (request == null) {
             return;
         }
-        final Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            final String headerName = headerNames.nextElement();
-            consumer.accept(headerName, request.getHeaders(headerName));
+        String token = request.getHeader("X-Auth-Token");
+        if (token == null) {
+            token = request.getHeader("Authorization");
+            if (token != null) {
+                token = token.replace("Bearer ", "");
+            }
+        }
+        if (token != null) {
+            consumer.accept("X-Auth-Token", token);
         }
     }
 
-    public static RestTemplate wrapperHeaders(final RestTemplate restTemplate) {
+    public static RestTemplate addToken(final RestTemplate restTemplate) {
         final HttpServletRequest request = request();
         if (request == null) {
             return restTemplate;
@@ -62,28 +65,19 @@ public final class Request {
             .getInterceptors()
             .add(
                 (req, body, execution) -> {
-                    final Enumeration<String> headerNames = request.getHeaderNames();
-                    while (headerNames.hasMoreElements()) {
-                        final String headerName = headerNames.nextElement();
-                        req.getHeaders().addAll(headerName, Collections.list(request.getHeaders(headerName)));
-                    }
+                    addToken(req.getHeaders()::add);
                     return execution.execute(req, body);
                 }
             );
         return restTemplate;
     }
 
-    public static RequestTemplate wrapperHeaders(final RequestTemplate requestTemplate) {
+    public static RequestTemplate addToken(final RequestTemplate requestTemplate) {
         final HttpServletRequest request = request();
         if (request == null) {
             return requestTemplate;
         }
-        final Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            final String headerName = headerNames.nextElement();
-            final Iterable<String> headerValues = () -> request.getHeaders(headerName).asIterator();
-            requestTemplate.header(headerName, headerValues);
-        }
+        addToken(requestTemplate::header);
         return requestTemplate;
     }
 }

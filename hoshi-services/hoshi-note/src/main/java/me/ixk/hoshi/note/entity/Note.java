@@ -79,4 +79,8 @@ public class Note {
     @ApiModelProperty("笔记历史")
     @OneToMany(mappedBy = "note")
     private List<NoteHistory> histories = new ArrayList<>();
+
+    @ApiModelProperty("笔记配置")
+    @OneToOne(mappedBy = "note")
+    private NoteConfig config;
 }

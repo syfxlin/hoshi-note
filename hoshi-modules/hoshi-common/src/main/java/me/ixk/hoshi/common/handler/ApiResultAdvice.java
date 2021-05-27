@@ -2,6 +2,8 @@ package me.ixk.hoshi.common.handler;
 
 import me.ixk.hoshi.common.result.ApiBindException;
 import me.ixk.hoshi.common.result.ApiResult;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,7 +18,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiResultAdvice {
 
     @ExceptionHandler(Exception.class)
-    public Object beforeBodyWriteException(final Exception e) {
+    public Object globalException(final Exception e) throws Exception {
+        if (e instanceof AccessDeniedException || e instanceof AuthenticationException) {
+            throw e;
+        }
         return ApiResult.error(e.getMessage()).build().toResponseEntity();
     }
 

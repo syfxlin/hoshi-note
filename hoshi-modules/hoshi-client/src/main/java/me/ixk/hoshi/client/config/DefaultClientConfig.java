@@ -29,6 +29,6 @@ public class DefaultClientConfig {
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
-        return Request.wrapperHeaders(new RestTemplate());
+        return Request.addToken(new RestTemplate());
     }
 }

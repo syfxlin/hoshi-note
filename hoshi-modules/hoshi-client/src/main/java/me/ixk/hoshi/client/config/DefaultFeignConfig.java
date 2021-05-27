@@ -14,6 +14,6 @@ public class DefaultFeignConfig {
 
     @Bean
     public RequestInterceptor sessionRequestInterceptor() {
-        return Request::wrapperHeaders;
+        return Request::addToken;
     }
 }

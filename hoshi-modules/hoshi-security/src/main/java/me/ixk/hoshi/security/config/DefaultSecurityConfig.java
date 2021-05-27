@@ -60,9 +60,11 @@ public class DefaultSecurityConfig {
             http.cors();
             http
                 .exceptionHandling()
+                .accessDeniedHandler(
+                    (request, response, e) -> ApiResult.unauthorized(e.getMessage()).build().toResponse(response)
+                )
                 .authenticationEntryPoint(
-                    (request, response, authException) ->
-                        ApiResult.badRequest("尚未登录，请先登录").build().toResponse(response)
+                    (request, response, e) -> ApiResult.unauthorized(e.getMessage()).build().toResponse(response)
                 );
         }
     }
