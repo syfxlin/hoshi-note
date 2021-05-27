@@ -21,7 +21,7 @@ public class UserDetailsManager implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        final Optional<User> optional = this.userRepository.findByUsernameAndStatusTrue(username);
+        final Optional<User> optional = this.userRepository.findByUsername(username);
         if (optional.isEmpty()) {
             throw new UsernameNotFoundException("用户名不存在或已禁用");
         }

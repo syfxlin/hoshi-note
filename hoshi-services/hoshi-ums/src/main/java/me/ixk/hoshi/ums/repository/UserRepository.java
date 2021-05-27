@@ -23,14 +23,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, String>
     Optional<User> findByUsername(String username);
 
     /**
-     * 通过用户名查找有效用户
-     *
-     * @param username 用户名
-     * @return 用户
-     */
-    Optional<User> findByUsernameAndStatusTrue(String username);
-
-    /**
      * 更新用户
      *
      * @param user 用户

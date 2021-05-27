@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import me.ixk.hoshi.file.config.StorageMimeTypes;
 import me.ixk.hoshi.file.exception.StorageException;
 import me.ixk.hoshi.file.util.Mime;
 import org.apache.tika.mime.MediaType;
@@ -26,9 +27,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileStorageService implements StorageService {
 
     private final Path location;
+    public final StorageMimeTypes mimeTypes;
 
-    public FileStorageService(final Path location) {
+    public FileStorageService(final Path location, final StorageMimeTypes mimeTypes) {
         this.location = location;
+        this.mimeTypes = mimeTypes;
     }
 
     @PostConstruct
@@ -45,6 +48,7 @@ public class FileStorageService implements StorageService {
             }
             final BufferedInputStream bis = new BufferedInputStream(file.getInputStream());
             final MediaType mediaType = Mime.media(bis, file.getOriginalFilename());
+            this.mimeTypes.valid(mediaType.toString());
             final MimeType mimeType = Mime.mime(mediaType);
             final String ext = mimeType.getExtension();
             final String uuid = UUID.randomUUID().toString();

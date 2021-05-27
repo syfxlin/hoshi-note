@@ -1,7 +1,10 @@
 package me.ixk.hoshi.file.controller;
 
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -11,6 +14,7 @@ import me.ixk.hoshi.common.result.PageView;
 import me.ixk.hoshi.file.exception.StorageException;
 import me.ixk.hoshi.file.service.StorageService;
 import me.ixk.hoshi.file.service.StorageService.StoreInfo;
+import me.ixk.hoshi.file.util.Mime;
 import me.ixk.hoshi.file.view.FileView;
 import me.ixk.hoshi.file.view.UploadView;
 import me.ixk.hoshi.security.util.Security;
@@ -85,8 +89,8 @@ public class FileController {
     }
 
     @ApiOperation("下载文件")
-    @GetMapping("/{userId}/{filename:[a-zA-Z0-9]+}")
-    public ResponseEntity<?> get(
+    @GetMapping("/{userId}/{filename:[a-zA-Z0-9]+}/download")
+    public ResponseEntity<?> download(
         @PathVariable("userId") final String userId,
         @PathVariable("filename") final String filename
     ) {
@@ -105,6 +109,28 @@ public class FileController {
             return ResponseEntity.ok().headers(headers).body(resource);
         } catch (final IOException e) {
             return ApiResult.error("获取文件异常").build().toResponseEntity();
+        }
+    }
+
+    @ApiOperation("读取文件")
+    @GetMapping("/{userId}/{filename:[a-zA-Z0-9]+}")
+    public ResponseEntity<?> get(
+        @PathVariable("userId") final String userId,
+        @PathVariable("filename") final String filename
+    ) {
+        if (!this.storageService.exist(filename, FILE_DIR, userId)) {
+            return ApiResult.notFound("指定图片不存在").build().toResponseEntity();
+        }
+        try {
+            final Resource resource = this.storageService.load(filename, FILE_DIR, userId);
+            final BufferedInputStream bis = new BufferedInputStream(resource.getInputStream());
+            String contentType = Mime.media(bis, filename).toString();
+            if (contentType == null) {
+                contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+            }
+            return ResponseEntity.ok().header(CONTENT_TYPE, contentType).body(resource);
+        } catch (final IOException e) {
+            return ApiResult.error("获取图片异常").build().toResponseEntity();
         }
     }
 

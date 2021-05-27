@@ -28,6 +28,9 @@ import me.ixk.hoshi.ums.view.UpdateUserView;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.session.FindByIndexNameSessionRepository;
+import org.springframework.session.Session;
+import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +50,7 @@ public class UserManagerController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RedisIndexedSessionRepository sessionRepository;
 
     @ApiOperation("列出用户（查询用户）")
     @GetMapping("")
@@ -94,10 +98,12 @@ public class UserManagerController {
     @DeleteMapping("/{userId}")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> remove(@PathVariable("userId") final String userId) {
-        if (this.userRepository.findById(userId).isEmpty()) {
+        final Optional<User> user = this.userRepository.findById(userId);
+        if (user.isEmpty()) {
             return ApiResult.bindException(new String[] { "用户 ID 不存在" });
         }
         this.userRepository.deleteById(userId);
+        this.invalidSession(user.get().getUsername());
         return ApiResult.ok().build();
     }
 
@@ -110,7 +116,11 @@ public class UserManagerController {
         if (password != null) {
             user.setPassword(this.passwordEncoder.encode(password));
         }
-        return ApiResult.ok(this.userRepository.update(user));
+        final User newUser = this.userRepository.update(user);
+        if (!user.getStatus()) {
+            this.invalidSession(newUser.getUsername());
+        }
+        return ApiResult.ok(newUser);
     }
 
     @ApiOperation("添加用户权限")
@@ -120,6 +130,7 @@ public class UserManagerController {
         final User user = this.userRepository.findById(vo.getUserId()).get();
         final int size = this.addRoleToUser(user, vo.getRoles());
         final User newUser = this.userRepository.save(user);
+        this.invalidSession(newUser.getUsername());
         if (size == vo.getRoles().size()) {
             return ApiResult.ok(newUser, "所有权限均添加成功");
         } else {
@@ -141,6 +152,7 @@ public class UserManagerController {
             .collect(Collectors.toList());
         user.setRoles(roles);
         final User newUser = this.userRepository.save(user);
+        this.invalidSession(newUser.getUsername());
         if (roles.size() != vo.getRoles().size()) {
             return ApiResult.ok(newUser, "所有权限均修改成功");
         } else {
@@ -162,6 +174,7 @@ public class UserManagerController {
         final User user = optional.get();
         final int size = this.removeRoleToUser(user, roles);
         final User newUser = this.userRepository.save(user);
+        this.invalidSession(newUser.getUsername());
         if (size == roles.size()) {
             return ApiResult.ok(newUser, "所有权限均删除成功");
         } else {
@@ -190,5 +203,13 @@ public class UserManagerController {
             .collect(Collectors.toList());
         user.setRoles(removeRoles);
         return roles.size() - removeRoles.size();
+    }
+
+    private void invalidSession(final String username) {
+        this.sessionRepository.findByIndexNameAndIndexValue(
+                FindByIndexNameSessionRepository.PRINCIPAL_NAME_INDEX_NAME,
+                username
+            )
+            .forEach((String key, Session value) -> this.sessionRepository.deleteById(key));
     }
 }

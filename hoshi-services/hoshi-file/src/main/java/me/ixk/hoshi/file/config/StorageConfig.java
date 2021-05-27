@@ -17,10 +17,11 @@ import org.springframework.context.annotation.Configuration;
 public class StorageConfig {
 
     private final StorageProperties properties;
+    private final StorageMimeTypes mimeTypes;
 
     @Bean
     @ConditionalOnMissingBean(StorageService.class)
     public StorageService storageService() {
-        return new FileStorageService(Paths.get(this.properties.getUploadDir()));
+        return new FileStorageService(Paths.get(this.properties.getUploadDir()), this.mimeTypes);
     }
 }
