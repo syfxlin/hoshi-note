@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+ */
+
 package me.ixk.hoshi.common.util;
 
 import org.springframework.beans.BeansException;

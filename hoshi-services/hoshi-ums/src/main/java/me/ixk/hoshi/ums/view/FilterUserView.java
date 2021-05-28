@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+ */
+
 package me.ixk.hoshi.ums.view;
 
 import javax.validation.constraints.Email;

@@ -1,6 +1,8 @@
-package me.ixk.hoshi.ums.controller;
+/*
+ * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+ */
 
-import static me.ixk.hoshi.ums.handler.SecurityUserAdvice.USER;
+package me.ixk.hoshi.ums.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +14,7 @@ import me.ixk.hoshi.ums.entity.Follow;
 import me.ixk.hoshi.ums.entity.User;
 import me.ixk.hoshi.ums.repository.FollowRepository;
 import me.ixk.hoshi.ums.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,7 +59,7 @@ public class FollowController {
     @ApiOperation("添加关注")
     @PostMapping("/{followId}")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> add(@PathVariable("followId") final String id, @ModelAttribute(USER) final User user) {
+    public ApiResult<Object> add(@PathVariable("followId") final String id, @Autowired final User user) {
         final Optional<User> optional = this.userRepository.findById(id);
         if (optional.isEmpty()) {
             return ApiResult.bindException(new String[] { "关注失败（关注的用户不存在）" });
@@ -71,7 +74,7 @@ public class FollowController {
     @ApiOperation("取消关注")
     @DeleteMapping("/{followId}")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> delete(@PathVariable("followId") final String id, @ModelAttribute(USER) final User user) {
+    public ApiResult<Object> delete(@PathVariable("followId") final String id, @Autowired final User user) {
         this.followRepository.findByFollowerIdAndFollowingId(user.getId(), id)
             .ifPresent(follow -> this.followRepository.deleteById(follow.getId()));
         return ApiResult.ok("取消关注成功").build();

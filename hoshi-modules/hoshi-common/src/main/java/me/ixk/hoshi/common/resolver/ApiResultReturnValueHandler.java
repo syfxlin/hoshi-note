@@ -1,4 +1,8 @@
-package me.ixk.hoshi.common.handler;
+/*
+ * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+ */
+
+package me.ixk.hoshi.common.resolver;
 
 import java.util.List;
 import me.ixk.hoshi.common.annotation.ApiResultBody;

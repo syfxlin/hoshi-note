@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+ */
+
 package me.ixk.hoshi.file.service
 
 import me.ixk.hoshi.test.MockSecurityConfig

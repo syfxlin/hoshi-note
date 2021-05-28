@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+ */
+
 package me.ixk.hoshi.admin.config;
 
 import me.ixk.hoshi.security.config.DefaultSecurityConfig.SecurityConfigAdapter;

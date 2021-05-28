@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+ */
+
 package me.ixk.hoshi.common.result;
 
 import org.springframework.http.HttpStatus;
@@ -475,32 +479,32 @@ public enum ApiMessage {
     }
 
     public boolean is1xxInformational() {
-        return (series() == Series.INFORMATIONAL);
+        return (this.series() == Series.INFORMATIONAL);
     }
 
     public boolean is2xxSuccessful() {
-        return (series() == Series.SUCCESSFUL);
+        return (this.series() == Series.SUCCESSFUL);
     }
 
     public boolean is3xxRedirection() {
-        return (series() == Series.REDIRECTION);
+        return (this.series() == Series.REDIRECTION);
     }
 
     public boolean is4xxClientError() {
-        return (series() == Series.CLIENT_ERROR);
+        return (this.series() == Series.CLIENT_ERROR);
     }
 
     public boolean is5xxServerError() {
-        return (series() == Series.SERVER_ERROR);
+        return (this.series() == Series.SERVER_ERROR);
     }
 
     public boolean isError() {
-        return (is4xxClientError() || is5xxServerError());
+        return (this.is4xxClientError() || this.is5xxServerError());
     }
 
     @Override
     public String toString() {
-        return this.value + " " + name();
+        return this.value + " " + this.name();
     }
 
     @Nullable

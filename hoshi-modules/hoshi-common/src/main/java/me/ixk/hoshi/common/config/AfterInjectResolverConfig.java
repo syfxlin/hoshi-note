@@ -1,10 +1,14 @@
+/*
+ * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+ */
+
 package me.ixk.hoshi.common.config;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import me.ixk.hoshi.common.handler.ApiResultReturnValueHandler;
+import me.ixk.hoshi.common.resolver.ApiResultReturnValueHandler;
 import me.ixk.hoshi.common.resolver.ModelArgumentResolver;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;

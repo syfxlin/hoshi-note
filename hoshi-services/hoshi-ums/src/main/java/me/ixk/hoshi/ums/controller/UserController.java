@@ -1,9 +1,16 @@
-package me.ixk.hoshi.ums.controller;
+/*
+ * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+ */
 
-import static me.ixk.hoshi.ums.handler.SecurityUserAdvice.USER;
+package me.ixk.hoshi.ums.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.annotation.JsonModel;
@@ -11,10 +18,17 @@ import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.ums.entity.User;
 import me.ixk.hoshi.ums.entity.UserInfo;
 import me.ixk.hoshi.ums.repository.UserRepository;
+import me.ixk.hoshi.ums.security.WebAuthenticationDetails;
+import me.ixk.hoshi.ums.view.LoggedView;
 import me.ixk.hoshi.ums.view.UserInfoView;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.session.FindByIndexNameSessionRepository;
+import org.springframework.session.Session;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * 用户控制器
@@ -29,18 +43,19 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final FindByIndexNameSessionRepository<? extends Session> sessionRepository;
 
     @ApiOperation("获取用户")
     @GetMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> user(@ModelAttribute(USER) final User user) {
+    public ApiResult<Object> user(@Autowired final User user) {
         return ApiResult.ok(user);
     }
 
     @ApiOperation("获取用户信息")
     @GetMapping("/info")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<UserInfo> getInfo(@ModelAttribute(USER) final User user) {
+    public ApiResult<UserInfo> getInfo(@Autowired final User user) {
         return ApiResult.ok(user.getInfo());
     }
 
@@ -48,10 +63,7 @@ public class UserController {
     @PutMapping("/info")
     @PreAuthorize("isAuthenticated()")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<UserInfo> updateInfo(
-        @ModelAttribute(USER) final User user,
-        @Valid @JsonModel final UserInfoView vo
-    ) {
+    public ApiResult<UserInfo> updateInfo(@Autowired final User user, @Valid @JsonModel final UserInfoView vo) {
         final UserInfo info = user.getInfo();
         final String address = vo.getAddress();
         if (address != null) {
@@ -78,5 +90,58 @@ public class UserController {
             info.setUrl(url);
         }
         return ApiResult.ok(this.userRepository.save(user).getInfo());
+    }
+
+    @ApiOperation("获取当前用户登录信息")
+    @GetMapping("/logged")
+    @PreAuthorize("isAuthenticated()")
+    public ApiResult<List<LoggedView>> logged(@Autowired final User user) {
+        return ApiResult.ok(
+            this.sessionRepository.findByPrincipalName(user.getUsername())
+                .entrySet()
+                .stream()
+                .map(
+                    e -> {
+                        final Session session = e.getValue();
+                        final SecurityContext securityContext = session.getAttribute("SPRING_SECURITY_CONTEXT");
+                        final WebAuthenticationDetails details = (WebAuthenticationDetails) securityContext
+                            .getAuthentication()
+                            .getDetails();
+                        final OffsetDateTime creationTime = OffsetDateTime.ofInstant(
+                            session.getCreationTime(),
+                            ZoneId.systemDefault()
+                        );
+                        final OffsetDateTime lastAccessedTime = OffsetDateTime.ofInstant(
+                            session.getLastAccessedTime(),
+                            ZoneId.systemDefault()
+                        );
+                        return LoggedView
+                            .builder()
+                            .sessionId(e.getKey())
+                            .address(details.getAddress())
+                            .userAgent(details.getUserAgent())
+                            .creationTime(creationTime)
+                            .lastAccessedTime(lastAccessedTime)
+                            .build();
+                    }
+                )
+                .sorted(Comparator.comparing(LoggedView::getCreationTime).reversed())
+                .collect(Collectors.toList())
+        );
+    }
+
+    @ApiOperation("踢出用户")
+    @DeleteMapping("/exclude/{sessionId}")
+    @PreAuthorize("isAuthenticated()")
+    public ApiResult<Object> exclude(@Autowired final User user, @PathVariable("sessionId") final String sessionId) {
+        if (sessionId.equals(RequestContextHolder.currentRequestAttributes().getSessionId())) {
+            return ApiResult.bindException(new String[] { "不能踢出自己" });
+        }
+        final Session session = this.sessionRepository.findByPrincipalName(user.getUsername()).get(sessionId);
+        if (session == null) {
+            return ApiResult.ok("指定的登录已失效，无须踢出").build();
+        }
+        this.sessionRepository.deleteById(session.getId());
+        return ApiResult.ok("踢出成功").build();
     }
 }

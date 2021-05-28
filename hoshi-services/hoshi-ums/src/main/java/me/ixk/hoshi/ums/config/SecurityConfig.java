@@ -12,6 +12,7 @@ import me.ixk.hoshi.security.security.UserDetails;
 import me.ixk.hoshi.ums.entity.User;
 import me.ixk.hoshi.ums.repository.UserRepository;
 import me.ixk.hoshi.ums.security.UserDetailsManager;
+import me.ixk.hoshi.ums.security.WebAuthenticationDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,7 +50,8 @@ public class SecurityConfig extends SecurityConfigAdapter {
             .failureHandler(
                 (request, response, exception) ->
                     ApiResult.unauthorized(exception.getMessage()).build().toResponse(response)
-            );
+            )
+            .authenticationDetailsSource(WebAuthenticationDetails::new);
         http
             .logout()
             .logoutSuccessHandler(

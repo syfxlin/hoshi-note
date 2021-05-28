@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+ */
+
 package me.ixk.hoshi.file.service;
 
 import cn.hutool.core.io.FileUtil
@@ -43,14 +47,24 @@ class FileStorageServiceTest {
     @Test
     @Order(2)
     fun store() {
-        s1 = this.storageService.store(MockMultipartFile("file", "test file".toByteArray()))
+        s1 = this.storageService.store(
+            MockMultipartFile(
+                "file",
+                "test file".toByteArray()
+            )
+        )
         s1 should {
             if (it != null) {
                 it.size shouldBe 9
                 it.fileName shouldBe it.path
             }
         }
-        s2 = this.storageService.store(MockMultipartFile("file", "test file".toByteArray()), "1")
+        s2 = this.storageService.store(
+            MockMultipartFile(
+                "file",
+                "test file".toByteArray()
+            ), "1"
+        )
         s2 should {
             if (it != null) {
                 it.size shouldBe 9
@@ -58,14 +72,24 @@ class FileStorageServiceTest {
                 it.path shouldStartWith Paths.get("1").toString()
             }
         }
-        this.storageService.store(MockMultipartFile("file", "test file".toByteArray()), "1", "2") should {
+        this.storageService.store(
+            MockMultipartFile(
+                "file",
+                "test file".toByteArray()
+            ), "1", "2"
+        ) should {
             if (it != null) {
                 it.size shouldBe 9
                 it.path shouldStartWith Paths.get("1", "2").toString()
             }
         }
         shouldThrow<StorageException> {
-            this.storageService.store(MockMultipartFile("file", "test file".toByteArray()), "../../")
+            this.storageService.store(
+                MockMultipartFile(
+                    "file",
+                    "test file".toByteArray()
+                ), "../../"
+            )
         }
     }
 

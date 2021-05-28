@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+ */
+
 package me.ixk.hoshi.common.resolver;
 
 import com.fasterxml.jackson.databind.node.TextNode;
@@ -10,6 +14,7 @@ import me.ixk.hoshi.common.annotation.JsonParam;
 import me.ixk.hoshi.common.annotation.RequestJson;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -22,6 +27,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * @author Otstar Lin
  * @date 2020/11/17 下午 5:47
  */
+@Component
 @RequiredArgsConstructor
 public class JsonArgumentResolver implements HandlerMethodArgumentResolver {
 
