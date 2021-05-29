@@ -4,6 +4,7 @@
 
 package me.ixk.hoshi.note.controller;
 
+import me.ixk.hoshi.security.annotation.UserId;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2021/5/27 17:35
  */
 @RestController
-public class IndexController {
+public class WorkspaceController {
 
     @GetMapping("/index")
     @PreAuthorize("isAuthenticated()")
-    public String index() {
-        return "index";
+    public String index(@UserId final String userId) {
+        return "index-" + userId;
     }
 }

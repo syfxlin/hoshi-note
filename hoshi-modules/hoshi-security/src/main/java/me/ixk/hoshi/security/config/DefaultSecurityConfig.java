@@ -5,6 +5,7 @@
 package me.ixk.hoshi.security.config;
 
 import me.ixk.hoshi.common.result.ApiResult;
+import me.ixk.hoshi.security.security.WebAuthenticationDetails;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +34,7 @@ public class DefaultSecurityConfig {
     @Bean
     @ConditionalOnMissingBean(SecurityConfigAdapter.class)
     public SecurityConfigAdapter securityConfigAdapter() {
-        return new SecurityConfigAdapter();
+        return new DefaultSecurityConfigAdapter();
     }
 
     @Configuration
@@ -66,6 +67,15 @@ public class DefaultSecurityConfig {
                 .authenticationEntryPoint(
                     (request, response, e) -> ApiResult.unauthorized(e.getMessage()).build().toResponse(response)
                 );
+        }
+    }
+
+    protected static class DefaultSecurityConfigAdapter extends SecurityConfigAdapter {
+
+        @Override
+        protected void configure(final HttpSecurity http) throws Exception {
+            super.configure(http);
+            http.formLogin().authenticationDetailsSource(WebAuthenticationDetails::new).disable();
         }
     }
 }

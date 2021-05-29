@@ -2,7 +2,7 @@
  * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
  */
 
-package me.ixk.hoshi.ums.security;
+package me.ixk.hoshi.security.security;
 
 import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;

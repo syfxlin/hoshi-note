@@ -203,3 +203,7 @@ X-Auth-Token: {{token}}
 ###
 DELETE http://localhost:8000/api/users/exclude/8e6746fa-92f4-4d17-841d-3d40384220df
 X-Auth-Token: {{token}}
+
+###
+GET http://localhost:8001/index
+X-Auth-Token: {{token}}

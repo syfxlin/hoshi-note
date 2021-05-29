@@ -21,7 +21,7 @@ import me.ixk.hoshi.file.service.StorageService.StoreInfo;
 import me.ixk.hoshi.file.util.Mime;
 import me.ixk.hoshi.file.view.FileView;
 import me.ixk.hoshi.file.view.UploadView;
-import me.ixk.hoshi.security.util.Security;
+import me.ixk.hoshi.security.annotation.UserId;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -46,8 +46,7 @@ public class FileController {
     @ApiOperation("列出文件")
     @GetMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> list(final PageView vo) {
-        final String userId = Security.id();
+    public ApiResult<Object> list(final PageView vo, @UserId final String userId) {
         if (!this.storageService.exist(FILE_DIR, userId)) {
             return ApiResult.ok("没有文件").build();
         }
@@ -78,8 +77,7 @@ public class FileController {
     @ApiOperation("上传文件")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<UploadView> upload(@RequestParam("file") final MultipartFile file) {
-        final String userId = Security.id();
+    public ApiResult<UploadView> upload(@RequestParam("file") final MultipartFile file, @UserId final String userId) {
         final StoreInfo store = this.storageService.store(file, FILE_DIR, userId);
         final UploadView view = UploadView
             .builder()
@@ -141,8 +139,7 @@ public class FileController {
     @ApiOperation("删除文件")
     @DeleteMapping("/{filename:[a-zA-Z0-9]+}")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> delete(@PathVariable("filename") final String filename) {
-        final String userId = Security.id();
+    public ApiResult<Object> delete(@PathVariable("filename") final String filename, @UserId final String userId) {
         if (!this.storageService.exist(filename, FILE_DIR, userId)) {
             return ApiResult.bindException(new String[] { "文件不存在，无法删除" });
         }
