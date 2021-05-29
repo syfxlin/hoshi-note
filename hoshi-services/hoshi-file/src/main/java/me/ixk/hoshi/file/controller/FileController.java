@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
-import me.ixk.hoshi.common.result.PageView;
 import me.ixk.hoshi.file.exception.StorageException;
 import me.ixk.hoshi.file.service.StorageService;
 import me.ixk.hoshi.file.service.StorageService.StoreInfo;
@@ -23,6 +22,7 @@ import me.ixk.hoshi.file.view.FileView;
 import me.ixk.hoshi.file.view.UploadView;
 import me.ixk.hoshi.security.annotation.UserId;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,13 +46,13 @@ public class FileController {
     @ApiOperation("列出文件")
     @GetMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ApiResult<Object> list(final PageView vo, @UserId final String userId) {
+    public ApiResult<Object> list(final Pageable page, @UserId final String userId) {
         if (!this.storageService.exist(FILE_DIR, userId)) {
             return ApiResult.ok("没有文件").build();
         }
         Stream<Resource> all = this.storageService.loadAll(FILE_DIR, userId);
-        if (vo.getPage() != null) {
-            all = all.skip(((long) vo.getPage() - 1L) * vo.getPageSize()).limit(vo.getPageSize());
+        if (page.isPaged()) {
+            all = all.skip(page.getOffset()).limit(page.getPageSize());
         }
         return ApiResult.ok(
             all
@@ -70,7 +70,8 @@ public class FileController {
                         }
                     }
                 )
-                .collect(Collectors.toList())
+                .collect(Collectors.toList()),
+            "获取所有文件信息成功"
         );
     }
 
@@ -87,7 +88,7 @@ public class FileController {
             .size(store.getSize())
             .url(String.format("/api/files/%s/%s", userId, store.getFileName()))
             .build();
-        return ApiResult.ok(view);
+        return ApiResult.ok(view, "上传成功");
     }
 
     @ApiOperation("下载文件")
@@ -141,7 +142,7 @@ public class FileController {
     @PreAuthorize("isAuthenticated()")
     public ApiResult<Object> delete(@PathVariable("filename") final String filename, @UserId final String userId) {
         if (!this.storageService.exist(filename, FILE_DIR, userId)) {
-            return ApiResult.bindException(new String[] { "文件不存在，无法删除" });
+            return ApiResult.bindException("文件不存在，无法删除");
         }
         this.storageService.delete(filename, FILE_DIR, userId);
         return ApiResult.ok("删除成功").build();

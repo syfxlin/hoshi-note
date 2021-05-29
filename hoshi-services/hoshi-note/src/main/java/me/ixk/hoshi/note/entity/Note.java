@@ -11,7 +11,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode.Include;
+import lombok.NoArgsConstructor;
+import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
 
 /**
@@ -26,30 +31,31 @@ import lombok.experimental.Accessors;
 @ApiModel("笔记表")
 @Accessors(chain = true)
 @Table(name = "note")
-@EqualsAndHashCode(of = { "id" })
-@ToString(exclude = { "parent", "children", "workspace" })
 public class Note {
 
     @Id
     @ApiModelProperty("笔记 ID")
     @Column(name = "id", nullable = false, unique = true, length = 20)
+    @Include
     private String id;
 
     @JsonBackReference
     @ApiModelProperty("父笔记")
     @ManyToOne
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
+    @Exclude
     private Note parent;
 
     @ApiModelProperty("子笔记")
     @OneToMany(mappedBy = "parent")
+    @Exclude
     public List<Note> children = new ArrayList<>();
 
     @JsonBackReference
     @ApiModelProperty("空间")
     @ManyToOne
     @JoinColumn(name = "workspace_id", referencedColumnName = "id", nullable = false)
-    private Workspace workspace;
+    private WorkSpace workspace;
 
     @ApiModelProperty("笔记名称")
     @Column(name = "name", nullable = false)
@@ -82,6 +88,7 @@ public class Note {
     @JsonBackReference
     @ApiModelProperty("笔记历史")
     @OneToMany(mappedBy = "note")
+    @Exclude
     private List<NoteHistory> histories = new ArrayList<>();
 
     @ApiModelProperty("笔记配置")

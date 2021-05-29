@@ -221,6 +221,7 @@ public class ApiResult<T> {
     }
 
     public static DataBuilder status(@NotNull final HttpStatus status, @Nullable final String message) {
+        Assert.notNull(status, "Status 必须不为空");
         return status(status).message(message);
     }
 
@@ -245,14 +246,17 @@ public class ApiResult<T> {
     }
 
     public static <T> ApiResult<ApiPage<T>> page(@NotNull final List<T> records, @Nullable final String message) {
+        Assert.notNull(records, "Records 必须不为空");
         return page(new ApiPage<>(records), message);
     }
 
     public static <T> ApiResult<ApiPage<T>> page(@NotNull final Page<T> page) {
+        Assert.notNull(page, "Page 必须不为空");
         return page(page, null);
     }
 
     public static <T> ApiResult<ApiPage<T>> page(@NotNull final Page<T> page, @Nullable final String message) {
+        Assert.notNull(page, "Page 必须不为空");
         return ok(message).page(page);
     }
 
@@ -261,6 +265,7 @@ public class ApiResult<T> {
     }
 
     public static <T> ApiResult<ApiPage<T>> page(@NotNull final ApiPage<T> page, @Nullable final String message) {
+        Assert.notNull(page, "Page 必须不为空");
         return ok(message).page(page);
     }
 
@@ -283,6 +288,7 @@ public class ApiResult<T> {
     }
 
     public static DataBuilder created(@NotNull final URI location, @Nullable final String message) {
+        Assert.notNull(location, "Location 必须不为空");
         return status(ApiMessage.CREATED, message).location(location);
     }
 
@@ -311,26 +317,30 @@ public class ApiResult<T> {
     }
 
     public static ApiResult<Object> bindException(final String... error) {
-        return bindException(null, error);
+        Assert.notEmpty(error, "错误信息不能为空");
+        return bindException(error[0], error);
     }
 
-    public static ApiResult<Object> bindException(final String message, final String... error) {
+    public static ApiResult<Object> bindException(@Nullable final String message, final String[] error) {
+        Assert.notEmpty(error, "错误信息不能为空");
         return badRequest(message).data(error);
     }
 
     public static ApiResult<Object> bindException(final List<String> error) {
-        return bindException(null, error);
+        Assert.notEmpty(error, "错误信息不能为空");
+        return bindException(error.get(0), error);
     }
 
-    public static ApiResult<Object> bindException(final String message, final List<String> error) {
+    public static ApiResult<Object> bindException(@Nullable final String message, final List<String> error) {
         return bindException(message, error.toArray(String[]::new));
     }
 
     public static ApiResult<Object> bindException(final BindingResult result) {
-        return bindException(null, result);
+        Assert.notEmpty(result.getAllErrors(), "错误信息不能为空");
+        return bindException(result.getAllErrors().get(0).getDefaultMessage(), result);
     }
 
-    public static ApiResult<Object> bindException(final String message, final BindingResult result) {
+    public static ApiResult<Object> bindException(@Nullable final String message, final BindingResult result) {
         final List<String> errors = result
             .getAllErrors()
             .stream()
@@ -340,7 +350,7 @@ public class ApiResult<T> {
     }
 
     public static ApiResult<Object> bindException(final BindException e) {
-        return bindException(null, e);
+        return bindException(e.getBindingResult());
     }
 
     public static ApiResult<Object> bindException(final String message, final BindException e) {

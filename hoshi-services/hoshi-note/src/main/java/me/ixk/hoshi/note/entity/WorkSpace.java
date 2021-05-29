@@ -4,12 +4,19 @@
 
 package me.ixk.hoshi.note.entity;
 
+import cn.hutool.core.util.RandomUtil;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode.Include;
+import lombok.NoArgsConstructor;
+import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
 
 /**
@@ -24,12 +31,12 @@ import lombok.experimental.Accessors;
 @ApiModel("空间表")
 @Accessors(chain = true)
 @Table(name = "workspace")
-@EqualsAndHashCode(of = { "id" })
-public class Workspace {
+public class WorkSpace {
 
     @Id
     @ApiModelProperty("空间 ID")
     @Column(name = "id", nullable = false, unique = true, length = 20)
+    @Include
     private String id;
 
     @ApiModelProperty("空间名称")
@@ -48,19 +55,21 @@ public class Workspace {
     @Column(name = "icon")
     private String icon;
 
-    @ApiModelProperty("空间计划")
-    @Column(name = "plan", nullable = false, length = 50)
-    private String plan;
-
     @ApiModelProperty("创建时间")
     @Column(name = "created_time", nullable = false)
     private LocalDateTime createdTime;
 
     @ApiModelProperty("笔记")
     @OneToMany(mappedBy = "workspace")
+    @Exclude
+    @JsonBackReference
     private List<Note> notes;
 
     @ApiModelProperty("用户")
     @Column(name = "user_id")
     private String userId;
+
+    public static String generateId() {
+        return RandomUtil.randomString(10);
+    }
 }

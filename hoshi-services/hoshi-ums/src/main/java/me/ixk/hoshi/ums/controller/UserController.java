@@ -49,14 +49,14 @@ public class UserController {
     @GetMapping("")
     @PreAuthorize("isAuthenticated()")
     public ApiResult<Object> user(@Autowired final User user) {
-        return ApiResult.ok(user);
+        return ApiResult.ok(user, "获取当前用户成功");
     }
 
     @ApiOperation("获取用户信息")
     @GetMapping("/info")
     @PreAuthorize("isAuthenticated()")
     public ApiResult<UserInfo> getInfo(@Autowired final User user) {
-        return ApiResult.ok(user.getInfo());
+        return ApiResult.ok(user.getInfo(), "获取当前用户信息成功");
     }
 
     @ApiOperation("更新用户信息")
@@ -89,7 +89,7 @@ public class UserController {
         if (url != null) {
             info.setUrl(url);
         }
-        return ApiResult.ok(this.userRepository.save(user).getInfo());
+        return ApiResult.ok(this.userRepository.save(user).getInfo(), "更新用户成功");
     }
 
     @ApiOperation("获取当前用户登录信息")
@@ -126,7 +126,8 @@ public class UserController {
                     }
                 )
                 .sorted(Comparator.comparing(LoggedView::getCreationTime).reversed())
-                .collect(Collectors.toList())
+                .collect(Collectors.toList()),
+            "获取当前用户登录信息成功"
         );
     }
 
@@ -135,7 +136,7 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     public ApiResult<Object> exclude(@Autowired final User user, @PathVariable("sessionId") final String sessionId) {
         if (sessionId.equals(RequestContextHolder.currentRequestAttributes().getSessionId())) {
-            return ApiResult.bindException(new String[] { "不能踢出自己" });
+            return ApiResult.bindException("不能踢出自己");
         }
         final Session session = this.sessionRepository.findByPrincipalName(user.getUsername()).get(sessionId);
         if (session == null) {

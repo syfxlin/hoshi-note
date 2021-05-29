@@ -9,7 +9,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import javax.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode.Include;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -24,13 +28,13 @@ import lombok.experimental.Accessors;
 @ApiModel("笔记历史表")
 @Accessors(chain = true)
 @Table(name = "note_history")
-@EqualsAndHashCode(of = { "id" })
 public class NoteHistory {
 
     @Id
     @ApiModelProperty("历史 ID")
     @Column(name = "id", nullable = false, unique = true, columnDefinition = "BIGINT")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Include
     private Long id;
 
     @JsonBackReference

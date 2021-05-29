@@ -27,7 +27,7 @@ Accept: application/json
 X-Auth-Token: {{token}}
 
 ### 获取所有用户
-GET http://localhost:8000/api/admin/users
+GET http://localhost:8000/api/admin/users?page=0&size=1&sort=id,desc
 Accept: application/json
 X-Auth-Token: {{token}}
 
@@ -193,7 +193,7 @@ GET http://localhost:8001/api/images/909356d9-e642-4a3f-a396-37e7a7382aac.jpg
 X-Auth-Token: {{token}}
 
 ### 列出文件
-GET http://localhost:8001/api/files?page=1&pageSize=1
+GET http://localhost:8001/api/files?page=1&size=1
 X-Auth-Token: {{token}}
 
 ###

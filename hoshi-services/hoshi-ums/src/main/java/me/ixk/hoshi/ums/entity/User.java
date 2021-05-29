@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
+import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
 
 /**
@@ -31,7 +32,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Table(name = "user")
 @EqualsAndHashCode(of = { "id" })
-@ToString(exclude = { "followers", "following" })
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -103,11 +103,13 @@ public class User implements Serializable {
     @JsonBackReference
     @OneToMany(mappedBy = "follower", targetEntity = Follow.class)
     @ApiModelProperty("用户关注了")
+    @Exclude
     private List<Follow> following = new ArrayList<>();
 
     @JsonBackReference
     @OneToMany(mappedBy = "following", targetEntity = Follow.class)
     @ApiModelProperty("用户关注者")
+    @Exclude
     private List<Follow> followers = new ArrayList<>();
 
     public static String generateId() {

@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
-import me.ixk.hoshi.common.result.PageView;
 import me.ixk.hoshi.common.util.Jpa;
 import me.ixk.hoshi.ums.entity.Role;
 import me.ixk.hoshi.ums.entity.User;
@@ -29,6 +28,7 @@ import me.ixk.hoshi.ums.view.AddUserView;
 import me.ixk.hoshi.ums.view.EditUserRoleView;
 import me.ixk.hoshi.ums.view.FilterUserView;
 import me.ixk.hoshi.ums.view.UpdateUserView;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,7 +58,7 @@ public class UserManagerController {
 
     @ApiOperation("列出用户（查询用户）")
     @GetMapping("")
-    public ApiResult<ApiPage<User>> list(final PageView page, final FilterUserView user) {
+    public ApiResult<ApiPage<User>> list(final Pageable page, final FilterUserView user) {
         final String username = user.getUsername();
         final String nickname = user.getNickname();
         final String email = user.getEmail();
@@ -79,13 +79,7 @@ public class UserManagerController {
             }
             return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
         };
-        final ApiResult<ApiPage<User>> users;
-        if (page.getPage() != null) {
-            users = ApiResult.page(this.userRepository.findAll(specification, page.toPage()));
-        } else {
-            users = ApiResult.page(this.userRepository.findAll(specification));
-        }
-        return users;
+        return ApiResult.page(this.userRepository.findAll(specification, page), "获取用户成功");
     }
 
     @ApiOperation("添加用户")
@@ -95,7 +89,7 @@ public class UserManagerController {
         final User user = vo.toEntity();
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singletonList(this.roleRepository.findById("USER").get()));
-        return ApiResult.ok(this.userRepository.save(user));
+        return ApiResult.ok(this.userRepository.save(user), "添加用户成功");
     }
 
     @ApiOperation("删除用户")
@@ -104,11 +98,11 @@ public class UserManagerController {
     public ApiResult<Object> remove(@PathVariable("userId") final String userId) {
         final Optional<User> user = this.userRepository.findById(userId);
         if (user.isEmpty()) {
-            return ApiResult.bindException(new String[] { "用户 ID 不存在" });
+            return ApiResult.bindException("用户 ID 不存在");
         }
         this.userRepository.deleteById(userId);
         this.invalidSession(user.get().getUsername());
-        return ApiResult.ok().build();
+        return ApiResult.ok("删除用户成功").build();
     }
 
     @ApiOperation("更新用户")
@@ -124,7 +118,7 @@ public class UserManagerController {
         if (!user.getStatus()) {
             this.invalidSession(newUser.getUsername());
         }
-        return ApiResult.ok(newUser);
+        return ApiResult.ok(newUser, "更新用户成功");
     }
 
     @ApiOperation("添加用户权限")
@@ -173,7 +167,7 @@ public class UserManagerController {
     ) {
         final Optional<User> optional = this.userRepository.findById(id);
         if (optional.isEmpty()) {
-            return ApiResult.bindException(new String[] { "用户 ID 不存在" });
+            return ApiResult.bindException("用户 ID 不存在");
         }
         final User user = optional.get();
         final int size = this.removeRoleToUser(user, roles);

@@ -8,7 +8,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode.Include;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -23,13 +27,13 @@ import lombok.experimental.Accessors;
 @ApiModel("笔记配置表")
 @Accessors(chain = true)
 @Table(name = "note_config")
-@EqualsAndHashCode(of = { "id" })
 public class NoteConfig {
 
     @Id
     @ApiModelProperty("配置 ID")
     @Column(name = "id", nullable = false, unique = true, columnDefinition = "BIGINT")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Include
     private Long id;
 
     @JsonBackReference

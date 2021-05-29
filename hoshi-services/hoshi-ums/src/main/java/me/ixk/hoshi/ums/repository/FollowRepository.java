@@ -4,9 +4,10 @@
 
 package me.ixk.hoshi.ums.repository;
 
-import java.util.List;
 import java.util.Optional;
 import me.ixk.hoshi.ums.entity.Follow;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -20,19 +21,21 @@ public interface FollowRepository extends PagingAndSortingRepository<Follow, Lon
      * 通过关注者获取 Follow 对象
      *
      * @param follower 关注者
+     * @param pageable 分页
      * @return Follow
      */
     @Query("SELECT f FROM Follow f WHERE f.follower.id = ?1")
-    List<Follow> findByFollowerId(String follower);
+    Page<Follow> findByFollowerId(String follower, Pageable pageable);
 
     /**
      * 通过关注中获取 Follow 对象
      *
      * @param following 关注中
+     * @param pageable  分页
      * @return Follow
      */
     @Query("SELECT f FROM Follow f WHERE f.following.id = ?1")
-    List<Follow> findByFollowingId(String following);
+    Page<Follow> findByFollowingId(String following, Pageable pageable);
 
     /**
      * 通过关注者和关注中获取 Follow 对象

@@ -44,6 +44,6 @@ public class AuthController {
         final User user = vo.toEntity();
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singletonList(this.roleRepository.findById("USER").get()));
-        return ApiResult.ok(this.userRepository.save(user));
+        return ApiResult.ok(this.userRepository.save(user), "注册成功");
     }
 }

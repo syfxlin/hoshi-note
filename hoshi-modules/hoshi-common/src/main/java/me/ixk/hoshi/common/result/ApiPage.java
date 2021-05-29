@@ -27,7 +27,7 @@ public class ApiPage<T> {
     private long page;
 
     @ApiModelProperty("页大小")
-    private long pageSize;
+    private long size;
 
     @ApiModelProperty("页面数量")
     private long pages;

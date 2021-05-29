@@ -36,21 +36,21 @@ public class RoleManagerController {
     @ApiOperation("列出所有权限")
     @GetMapping("")
     public ApiResult<List<Role>> list() {
-        return ApiResult.ok(this.roleRepository.findAll((Specification<Role>) null));
+        return ApiResult.ok(this.roleRepository.findAll((Specification<Role>) null), "获取所有权限成功");
     }
 
     @ApiOperation("添加权限")
     @PostMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Role> add(@Valid @JsonModel final AddRoleView vo) {
-        return ApiResult.ok(this.roleRepository.save(vo.toRole()));
+        return ApiResult.ok(this.roleRepository.save(vo.toRole()), "添加权限成功");
     }
 
     @ApiOperation("更新权限")
     @PutMapping("/{roleName}")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Role> update(@Valid @JsonModel final UpdateRoleView vo) {
-        return ApiResult.ok(this.roleRepository.update(vo.toRole()));
+        return ApiResult.ok(this.roleRepository.update(vo.toRole()), "更新权限成功");
     }
 
     @ApiOperation("删除权限")
@@ -58,6 +58,6 @@ public class RoleManagerController {
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Void> remove(@PathVariable("roleName") final String roleName) {
         this.roleRepository.deleteById(roleName);
-        return ApiResult.ok().build();
+        return ApiResult.ok("删除权限成功").build();
     }
 }
