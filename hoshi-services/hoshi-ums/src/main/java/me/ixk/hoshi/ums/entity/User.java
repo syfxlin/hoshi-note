@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -84,7 +84,7 @@ public class User implements Serializable {
      */
     @ApiModelProperty("创建时间")
     @Column(name = "created_time")
-    private LocalDateTime createdTime;
+    private OffsetDateTime createdTime;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

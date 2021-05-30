@@ -12,7 +12,6 @@ import java.time.OffsetDateTime;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 
 /**
@@ -36,9 +35,8 @@ public class ApiEntity<T> {
     @JsonInclude(Include.NON_NULL)
     private final T data;
 
-    @ApiModelProperty("错误信息（与 Http 的响应信息相同）")
-    @JsonInclude(Include.NON_NULL)
-    private final String error;
+    @ApiModelProperty("响应码对应的信息")
+    private final String reason;
 
     public ApiEntity(@NotNull final Integer status, @NotNull final String message, @Nullable final T data) {
         Assert.notNull(status, "Status Code 必须设置（规范）");
@@ -46,12 +44,7 @@ public class ApiEntity<T> {
         this.status = status;
         this.message = message;
         this.data = data;
-        if (status >= 400 && status < 600) {
-            final HttpStatus resolve = HttpStatus.resolve(status);
-            this.error =
-                resolve == null ? HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase() : resolve.getReasonPhrase();
-        } else {
-            this.error = null;
-        }
+        final ApiMessage apiMessage = ApiMessage.resolve(status);
+        this.reason = apiMessage == null ? null : apiMessage.message();
     }
 }

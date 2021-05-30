@@ -14,6 +14,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import me.ixk.hoshi.common.annotation.JsonModel;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.Conventions;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -40,11 +41,15 @@ import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConv
  */
 public class ModelArgumentResolver extends AbstractMessageConverterMethodArgumentResolver {
 
+    private final ApplicationContext applicationContext;
+
     public ModelArgumentResolver(
         final List<HttpMessageConverter<?>> converters,
-        final List<Object> requestResponseBodyAdvice
+        final List<Object> requestResponseBodyAdvice,
+        final ApplicationContext applicationContext
     ) {
         super(converters, requestResponseBodyAdvice);
+        this.applicationContext = applicationContext;
     }
 
     @Override
@@ -63,7 +68,6 @@ public class ModelArgumentResolver extends AbstractMessageConverterMethodArgumen
         final Object arg =
             this.readWithMessageConverters(webRequest, parameter, parameter.getNestedGenericParameterType());
         final String name = Conventions.getVariableNameForParameter(parameter);
-
         if (binderFactory != null) {
             final WebDataBinder binder = binderFactory.createBinder(webRequest, arg, name);
             if (arg != null) {

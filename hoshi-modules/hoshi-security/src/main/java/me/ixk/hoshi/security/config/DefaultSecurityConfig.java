@@ -4,6 +4,7 @@
 
 package me.ixk.hoshi.security.config;
 
+import me.ixk.hoshi.common.result.ApiMessage;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.security.security.WebAuthenticationDetails;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
@@ -62,7 +63,8 @@ public class DefaultSecurityConfig {
             http
                 .exceptionHandling()
                 .accessDeniedHandler(
-                    (request, response, e) -> ApiResult.unauthorized(e.getMessage()).build().toResponse(response)
+                    (request, response, e) ->
+                        ApiResult.status(ApiMessage.FORBIDDEN).message(e.getMessage()).build().toResponse(response)
                 )
                 .authenticationEntryPoint(
                     (request, response, e) -> ApiResult.unauthorized(e.getMessage()).build().toResponse(response)

@@ -4,7 +4,7 @@
 
 package me.ixk.hoshi.ums.view;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ public class UpdateRoleView {
         role.setName(this.getRoleName());
         role.setDescription(this.getDescription());
         role.setStatus(this.getStatus());
-        role.setCreatedTime(LocalDateTime.now());
+        role.setCreatedTime(OffsetDateTime.now());
         return role;
     }
 }

@@ -204,6 +204,37 @@ X-Auth-Token: {{token}}
 DELETE http://localhost:8000/api/users/exclude/8e6746fa-92f4-4d17-841d-3d40384220df
 X-Auth-Token: {{token}}
 
-###
-GET http://localhost:8001/index
+### 获取工作区
+GET http://localhost:8001/api/workspace
+X-Auth-Token: {{token}}
+
+### 增加工作区
+POST http://localhost:8001/api/workspace
+X-Auth-Token: {{token}}
+Content-Type: application/json
+
+{
+    "name": "Test",
+    "description": "Description",
+    "domain": "test",
+    "icon": "https://ixk.me/bg.jpg"
+}
+
+> {% client.global.set("test_workspace_id", response.body.data.id); %}
+
+### 修改工作区
+PUT http://localhost:8001/api/workspace/{{test_workspace_id}}
+X-Auth-Token: {{token}}
+Content-Type: application/json
+
+{
+    "description": "Description1"
+}
+
+### 删除工作区
+DELETE http://localhost:8001/api/workspace/{{test_workspace_id}}
+X-Auth-Token: {{token}}
+
+### 获取笔记列表
+GET http://localhost:8001/api/notes/123456
 X-Auth-Token: {{token}}

@@ -47,21 +47,21 @@ public class UserController {
 
     @ApiOperation("获取用户")
     @GetMapping("")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
     public ApiResult<Object> user(@Autowired final User user) {
         return ApiResult.ok(user, "获取当前用户成功");
     }
 
     @ApiOperation("获取用户信息")
     @GetMapping("/info")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
     public ApiResult<UserInfo> getInfo(@Autowired final User user) {
         return ApiResult.ok(user.getInfo(), "获取当前用户信息成功");
     }
 
     @ApiOperation("更新用户信息")
     @PutMapping("/info")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<UserInfo> updateInfo(@Autowired final User user, @Valid @JsonModel final UserInfoView vo) {
         final UserInfo info = user.getInfo();
@@ -94,7 +94,7 @@ public class UserController {
 
     @ApiOperation("获取当前用户登录信息")
     @GetMapping("/logged")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
     public ApiResult<List<LoggedView>> logged(@Autowired final User user) {
         return ApiResult.ok(
             this.sessionRepository.findByPrincipalName(user.getUsername())
@@ -133,7 +133,7 @@ public class UserController {
 
     @ApiOperation("踢出用户")
     @DeleteMapping("/exclude/{sessionId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
     public ApiResult<Object> exclude(@Autowired final User user, @PathVariable("sessionId") final String sessionId) {
         if (sessionId.equals(RequestContextHolder.currentRequestAttributes().getSessionId())) {
             return ApiResult.bindException("不能踢出自己");

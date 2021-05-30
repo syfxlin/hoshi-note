@@ -7,6 +7,7 @@ package me.ixk.hoshi.ums.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.annotation.JsonModel;
@@ -37,6 +38,16 @@ public class RoleManagerController {
     @GetMapping("")
     public ApiResult<List<Role>> list() {
         return ApiResult.ok(this.roleRepository.findAll((Specification<Role>) null), "获取所有权限成功");
+    }
+
+    @ApiOperation("获取权限")
+    @GetMapping("/{roleName}")
+    public ApiResult<Object> get(@PathVariable("roleName") final String roleName) {
+        final Optional<Role> role = this.roleRepository.findById(roleName);
+        if (role.isEmpty()) {
+            return ApiResult.notFound("权限未找到").build();
+        }
+        return ApiResult.ok(role.get(), "获取权限成功");
     }
 
     @ApiOperation("添加权限")

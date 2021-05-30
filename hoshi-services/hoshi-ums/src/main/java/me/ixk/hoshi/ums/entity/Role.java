@@ -7,7 +7,7 @@ package me.ixk.hoshi.ums.entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -47,7 +47,7 @@ public class Role implements Serializable {
      */
     @ApiModelProperty("创建时间")
     @Column(name = "created_time", nullable = false)
-    private LocalDateTime createdTime;
+    private OffsetDateTime createdTime;
 
     /**
      * 状态

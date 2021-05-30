@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.method.annotation.*;
 public class AfterInjectResolverConfig implements InitializingBean {
 
     private final RequestMappingHandlerAdapter requestMappingHandlerAdapter;
+    private final ApplicationContext applicationContext;
 
     private List<Object> requestResponseBodyAdvice() {
         final ApplicationContext applicationContext = this.requestMappingHandlerAdapter.getApplicationContext();
@@ -58,7 +59,7 @@ public class AfterInjectResolverConfig implements InitializingBean {
         this.requestMappingHandlerAdapter.setArgumentResolvers(
                 this.insert(
                         this.requestMappingHandlerAdapter.getArgumentResolvers(),
-                        new ModelArgumentResolver(converters, responseBodyAdvice)
+                        new ModelArgumentResolver(converters, responseBodyAdvice, this.applicationContext)
                     )
             );
         this.requestMappingHandlerAdapter.setReturnValueHandlers(

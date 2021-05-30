@@ -7,7 +7,7 @@ package me.ixk.hoshi.note.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -79,11 +79,11 @@ public class Note {
 
     @ApiModelProperty("创建时间")
     @Column(name = "created_time", nullable = false)
-    private LocalDateTime createdTime;
+    private OffsetDateTime createdTime;
 
     @ApiModelProperty("修改时间")
     @Column(name = "updated_time", nullable = false)
-    private LocalDateTime updatedTime;
+    private OffsetDateTime updatedTime;
 
     @JsonBackReference
     @ApiModelProperty("笔记历史")

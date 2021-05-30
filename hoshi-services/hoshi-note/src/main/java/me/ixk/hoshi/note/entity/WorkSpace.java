@@ -8,7 +8,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
@@ -57,7 +57,7 @@ public class WorkSpace {
 
     @ApiModelProperty("创建时间")
     @Column(name = "created_time", nullable = false)
-    private LocalDateTime createdTime;
+    private OffsetDateTime createdTime;
 
     @ApiModelProperty("笔记")
     @OneToMany(mappedBy = "workspace")

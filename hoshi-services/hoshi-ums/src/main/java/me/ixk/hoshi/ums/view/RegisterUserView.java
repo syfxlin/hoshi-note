@@ -4,7 +4,7 @@
 
 package me.ixk.hoshi.ums.view;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import javax.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -55,7 +55,7 @@ public class RegisterUserView {
             .nickname(this.getNickname())
             .email(this.getEmail())
             .status(true)
-            .createdTime(LocalDateTime.now())
+            .createdTime(OffsetDateTime.now())
             .info(new UserInfo())
             .build();
     }

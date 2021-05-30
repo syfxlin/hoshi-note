@@ -82,6 +82,16 @@ public class UserManagerController {
         return ApiResult.page(this.userRepository.findAll(specification, page), "获取用户成功");
     }
 
+    @ApiOperation("获取用户")
+    @GetMapping("/{userId}")
+    public ApiResult<Object> get(@PathVariable("userId") final String userId) {
+        final Optional<User> user = this.userRepository.findById(userId);
+        if (user.isEmpty()) {
+            return ApiResult.notFound("用户未找到").build();
+        }
+        return ApiResult.ok(user.get(), "获取用户成功");
+    }
+
     @ApiOperation("添加用户")
     @PostMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
@@ -98,7 +108,7 @@ public class UserManagerController {
     public ApiResult<Object> remove(@PathVariable("userId") final String userId) {
         final Optional<User> user = this.userRepository.findById(userId);
         if (user.isEmpty()) {
-            return ApiResult.bindException("用户 ID 不存在");
+            return ApiResult.notFound("用户 ID 不存在").build();
         }
         this.userRepository.deleteById(userId);
         this.invalidSession(user.get().getUsername());
@@ -167,7 +177,7 @@ public class UserManagerController {
     ) {
         final Optional<User> optional = this.userRepository.findById(id);
         if (optional.isEmpty()) {
-            return ApiResult.bindException("用户 ID 不存在");
+            return ApiResult.notFound("用户 ID 不存在").build();
         }
         final User user = optional.get();
         final int size = this.removeRoleToUser(user, roles);

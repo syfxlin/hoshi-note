@@ -17,6 +17,7 @@ import me.ixk.hoshi.ums.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -54,11 +55,12 @@ public class FollowController {
 
     @ApiOperation("添加关注")
     @PostMapping("/{followId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> add(@PathVariable("followId") final String id, @Autowired final User user) {
         final Optional<User> optional = this.userRepository.findById(id);
         if (optional.isEmpty()) {
-            return ApiResult.bindException("关注失败（关注的用户不存在）");
+            return ApiResult.notFound("关注失败（关注的用户不存在）").build();
         }
         final User following = optional.get();
         if (this.followRepository.findByFollowerIdAndFollowingId(user.getId(), following.getId()).isEmpty()) {
@@ -69,7 +71,8 @@ public class FollowController {
 
     @ApiOperation("取消关注")
     @DeleteMapping("/{followId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> delete(@PathVariable("followId") final String id, @Autowired final User user) {
         this.followRepository.findByFollowerIdAndFollowingId(user.getId(), id)
             .ifPresent(follow -> this.followRepository.deleteById(follow.getId()));

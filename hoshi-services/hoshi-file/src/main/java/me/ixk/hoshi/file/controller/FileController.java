@@ -45,7 +45,7 @@ public class FileController {
 
     @ApiOperation("列出文件")
     @GetMapping("")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
     public ApiResult<Object> list(final Pageable page, @UserId final String userId) {
         if (!this.storageService.exist(FILE_DIR, userId)) {
             return ApiResult.ok("没有文件").build();
@@ -77,7 +77,7 @@ public class FileController {
 
     @ApiOperation("上传文件")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
     public ApiResult<UploadView> upload(@RequestParam("file") final MultipartFile file, @UserId final String userId) {
         final StoreInfo store = this.storageService.store(file, FILE_DIR, userId);
         final UploadView view = UploadView
@@ -139,10 +139,10 @@ public class FileController {
 
     @ApiOperation("删除文件")
     @DeleteMapping("/{filename:[a-zA-Z0-9]+}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('USER')")
     public ApiResult<Object> delete(@PathVariable("filename") final String filename, @UserId final String userId) {
         if (!this.storageService.exist(filename, FILE_DIR, userId)) {
-            return ApiResult.bindException("文件不存在，无法删除");
+            return ApiResult.notFound("文件不存在，无法删除").build();
         }
         this.storageService.delete(filename, FILE_DIR, userId);
         return ApiResult.ok("删除成功").build();
