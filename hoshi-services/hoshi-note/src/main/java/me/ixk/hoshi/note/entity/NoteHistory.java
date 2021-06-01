@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.common.util.Json;
+import me.ixk.hoshi.note.entity.Note.History;
 
 /**
  * @author Otstar Lin
@@ -60,33 +61,13 @@ public class NoteHistory {
     @Column(name = "data", columnDefinition = "LONGTEXT", nullable = false)
     private String data;
 
-    @Data
-    @Builder
-    private static class NoteData {
-
-        private String name;
-        private String content;
-        private String type;
-        private Integer status;
-
-        public static NoteData of(final Note note) {
-            return NoteData
-                .builder()
-                .name(note.getName())
-                .content(note.getContent())
-                .type(note.getType())
-                .status(note.getStatus())
-                .build();
-        }
-    }
-
     public static NoteHistory of(final Note note) {
         return NoteHistory
             .builder()
             .note(note)
             .saveTime(note.getUpdatedTime())
             .version(note.getVersion())
-            .data(Json.toJson(NoteData.of(note)))
+            .data(Json.toJson(note, History.class))
             .build();
     }
 }

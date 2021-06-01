@@ -4,6 +4,8 @@
 
 package me.ixk.hoshi.common.config;
 
+import me.ixk.hoshi.common.json.DynamicFilterMixIn;
+import me.ixk.hoshi.common.json.DynamicFilterProvider;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,10 @@ public class DefaultJsonConfig {
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-        return builder -> builder.defaultViewInclusion(true);
+        return builder ->
+            builder
+                .defaultViewInclusion(true)
+                .mixIn(Object.class, DynamicFilterMixIn.class)
+                .filters(new DynamicFilterProvider());
     }
 }

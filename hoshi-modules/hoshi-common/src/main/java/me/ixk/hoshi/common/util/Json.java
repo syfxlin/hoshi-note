@@ -6,41 +6,34 @@ package me.ixk.hoshi.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import me.ixk.hoshi.common.exception.JsonException;
+import me.ixk.hoshi.common.json.DynamicFilter;
+import me.ixk.hoshi.common.json.DynamicFilterProvider;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Otstar Lin
  * @date 2021/5/15 下午 11:34
  */
-public final class Json extends ObjectMapper {
+@Component
+public class Json {
 
-    private static final long serialVersionUID = 8349185508138474950L;
+    private static ObjectMapper mapper;
 
-    private Json() {
-        super();
-        this.registerModule(new JavaTimeModule());
-        this.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        this.enable(MapperFeature.DEFAULT_VIEW_INCLUSION);
+    public Json(final ObjectMapper m) {
+        mapper = m;
     }
 
-    public static Json make() {
-        return Inner.INSTANCE;
-    }
-
-    private static class Inner {
-
-        private static final Json INSTANCE = new Json();
+    public static ObjectMapper get() {
+        return mapper;
     }
 
     public static ObjectNode parseObject(final String json) {
         try {
-            return make().readValue(json, ObjectNode.class);
+            return mapper.readValue(json, ObjectNode.class);
         } catch (final JsonProcessingException e) {
             throw new JsonException(e);
         }
@@ -48,7 +41,7 @@ public final class Json extends ObjectMapper {
 
     public static ArrayNode parseArray(final String json) {
         try {
-            return make().readValue(json, ArrayNode.class);
+            return mapper.readValue(json, ArrayNode.class);
         } catch (final JsonProcessingException e) {
             throw new JsonException(e);
         }
@@ -56,7 +49,7 @@ public final class Json extends ObjectMapper {
 
     public static JsonNode parse(final String json) {
         try {
-            return make().readTree(json);
+            return mapper.readTree(json);
         } catch (final JsonProcessingException e) {
             throw new JsonException(e);
         }
@@ -64,7 +57,7 @@ public final class Json extends ObjectMapper {
 
     public static <T> T parse(final String json, final Class<T> clazz) {
         try {
-            return make().readValue(json, clazz);
+            return mapper.readValue(json, clazz);
         } catch (final JsonProcessingException e) {
             throw new JsonException(e);
         }
@@ -72,7 +65,7 @@ public final class Json extends ObjectMapper {
 
     public static String toJson(final Object object) {
         try {
-            return make().writeValueAsString(object);
+            return mapper.writeValueAsString(object);
         } catch (final JsonProcessingException e) {
             throw new JsonException(e);
         }
@@ -82,16 +75,24 @@ public final class Json extends ObjectMapper {
         return node.toString();
     }
 
+    public static String toJson(final Object object, final Class<?> active) {
+        try {
+            return mapper.writer(new DynamicFilterProvider(new DynamicFilter(active))).writeValueAsString(object);
+        } catch (final JsonProcessingException e) {
+            throw new JsonException(e);
+        }
+    }
+
     public static ObjectNode createObject() {
-        return make().createObjectNode();
+        return mapper.createObjectNode();
     }
 
     public static ArrayNode createArray() {
-        return make().createArrayNode();
+        return mapper.createArrayNode();
     }
 
     public static JsonNode convertToNode(final Object object) {
-        return make().valueToTree(object);
+        return mapper.valueToTree(object);
     }
 
     public static ObjectNode convertToObjectNode(final Object object) {
@@ -104,7 +105,7 @@ public final class Json extends ObjectMapper {
 
     public static <T> T convertToObject(final JsonNode node, final Class<T> type) {
         try {
-            return make().treeToValue(node, type);
+            return mapper.treeToValue(node, type);
         } catch (final JsonProcessingException e) {
             throw new JsonException(e);
         }
