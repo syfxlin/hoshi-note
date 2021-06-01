@@ -260,5 +260,5 @@ X-Auth-Token: {{token}}
 Content-Type: application/json
 
 {
-    "content": "12345678901234567890"
+    "content": "1234567890"
 }

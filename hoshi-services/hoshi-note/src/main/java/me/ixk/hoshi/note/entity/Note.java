@@ -19,7 +19,6 @@ import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
-import me.ixk.hoshi.common.json.JsonMode;
 
 /**
  * @author Otstar Lin
@@ -61,12 +60,10 @@ public class Note {
 
     @ApiModelProperty("笔记名称")
     @Column(name = "name", nullable = false)
-    @JsonMode(History.class)
     private String name;
 
     @ApiModelProperty("笔记内容")
     @Column(name = "content", columnDefinition = "LONGTEXT")
-    @JsonMode(History.class)
     private String content;
 
     @ApiModelProperty("笔记版本号")
@@ -75,12 +72,10 @@ public class Note {
 
     @ApiModelProperty("笔记类型")
     @Column(name = "type", length = 50, nullable = false)
-    @JsonMode(History.class)
     private String type;
 
     @ApiModelProperty("笔记状态")
     @Column(name = "status", columnDefinition = "TINYINT")
-    @JsonMode(History.class)
     private Integer status;
 
     @ApiModelProperty("创建时间")
@@ -104,7 +99,4 @@ public class Note {
     public static String generateId() {
         return RandomUtil.randomString(10);
     }
-
-    @JsonMode.Include
-    public static class History {}
 }

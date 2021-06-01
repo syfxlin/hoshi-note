@@ -4,8 +4,11 @@
 
 package me.ixk.hoshi.note.controller;
 
+import static me.ixk.hoshi.note.entity.NoteHistory.MIN_UPDATED;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -118,8 +121,13 @@ public class NoteController {
         }
         final Note originNote = origin.get();
         note.setVersion(originNote.getVersion() + 1);
-        // TODO: 比较是否与旧笔记相同，同时判断时间是否大于某个值，避免频繁增加历史记录
-        this.noteHistoryRepository.save(NoteHistory.of(originNote));
+        final OffsetDateTime lastTime = originNote.getUpdatedTime();
+        final OffsetDateTime nowTime = note.getUpdatedTime();
+        if (
+            lastTime.isBefore(nowTime.minusMinutes(MIN_UPDATED)) && !originNote.getContent().equals(note.getContent())
+        ) {
+            this.noteHistoryRepository.save(NoteHistory.of(originNote));
+        }
         return ApiResult.ok(this.noteRepository.update(note), "更新成功");
     }
 

@@ -15,8 +15,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import me.ixk.hoshi.common.util.Json;
-import me.ixk.hoshi.note.entity.Note.History;
 
 /**
  * @author Otstar Lin
@@ -31,6 +29,8 @@ import me.ixk.hoshi.note.entity.Note.History;
 @Accessors(chain = true)
 @Table(name = "note_history")
 public class NoteHistory {
+
+    public static final long MIN_UPDATED = 5L;
 
     @Id
     @ApiModelProperty("历史 ID")
@@ -57,9 +57,9 @@ public class NoteHistory {
     @Column(name = "tag", length = 50)
     private String tag;
 
-    @ApiModelProperty("笔记信息")
-    @Column(name = "data", columnDefinition = "LONGTEXT", nullable = false)
-    private String data;
+    @ApiModelProperty("笔记内容")
+    @Column(name = "content", columnDefinition = "LONGTEXT", nullable = false)
+    private String content;
 
     public static NoteHistory of(final Note note) {
         return NoteHistory
@@ -67,7 +67,7 @@ public class NoteHistory {
             .note(note)
             .saveTime(note.getUpdatedTime())
             .version(note.getVersion())
-            .data(Json.toJson(note, History.class))
+            .content(note.getContent())
             .build();
     }
 }
