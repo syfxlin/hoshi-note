@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
+import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
 
 /**
@@ -40,6 +41,7 @@ public class NoteConfig {
     @ApiModelProperty("笔记 ID")
     @OneToOne
     @JoinColumn(name = "note_id", referencedColumnName = "id", nullable = false)
+    @Exclude
     private Note note;
 
     @ApiModelProperty("笔记范围密码")

@@ -32,11 +32,11 @@ public interface WorkSpaceRepository
     /**
      * 通过 ID 和用户 ID 查找工作区
      *
-     * @param id     ID
-     * @param userId 用户 ID
+     * @param userId      用户 ID
+     * @param workspaceId ID
      * @return 工作区
      */
-    Optional<WorkSpace> findByIdAndUserId(String id, String userId);
+    Optional<WorkSpace> findByUserIdAndId(String userId, String workspaceId);
 
     /**
      * 更新工作区

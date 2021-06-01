@@ -6,6 +6,7 @@ package me.ixk.hoshi.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -24,7 +25,8 @@ public final class Json extends ObjectMapper {
     private Json() {
         super();
         this.registerModule(new JavaTimeModule());
-        this.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        this.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        this.enable(MapperFeature.DEFAULT_VIEW_INCLUSION);
     }
 
     public static Json make() {

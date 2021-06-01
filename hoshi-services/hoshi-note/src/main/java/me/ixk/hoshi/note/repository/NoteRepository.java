@@ -6,6 +6,7 @@ package me.ixk.hoshi.note.repository;
 
 import java.util.Optional;
 import javax.validation.constraints.NotNull;
+import me.ixk.hoshi.common.util.Jpa;
 import me.ixk.hoshi.note.entity.Note;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.lang.NonNull;
+import org.springframework.util.Assert;
 
 /**
  * @author Otstar Lin
@@ -44,4 +46,21 @@ public interface NoteRepository extends PagingAndSortingRepository<Note, String>
         @NonNull String workspaceId,
         @NonNull String noteId
     );
+
+    /**
+     * 更新笔记
+     *
+     * @param note 工作区
+     * @return 工作区
+     */
+    default Note update(final Note note) {
+        final String id = note.getId();
+        Assert.notNull(id, "更新时 ID 必须设置");
+        final Optional<Note> optional = this.findById(id);
+        if (optional.isEmpty()) {
+            return this.save(note);
+        }
+        final Note original = optional.get();
+        return this.save(Jpa.updateNull(note, original));
+    }
 }

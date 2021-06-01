@@ -236,5 +236,29 @@ DELETE http://localhost:8001/api/workspace/{{test_workspace_id}}
 X-Auth-Token: {{token}}
 
 ### 获取笔记列表
-GET http://localhost:8001/api/notes/123456
+GET http://localhost:8001/api/notes/elxu2uz71y
 X-Auth-Token: {{token}}
+
+### 获取笔记
+GET http://localhost:8001/api/notes/elxu2uz71y/fe4o0pf0dd
+X-Auth-Token: {{token}}
+
+### 添加笔记
+POST http://localhost:8001/api/notes/elxu2uz71y
+X-Auth-Token: {{token}}
+Content-Type: application/json
+
+{
+    "name": "TestNote",
+    "content": "1234567890",
+    "type": "note"
+}
+
+### 更新笔记
+PUT http://localhost:8001/api/notes/elxu2uz71y/fe4o0pf0dd
+X-Auth-Token: {{token}}
+Content-Type: application/json
+
+{
+    "content": "12345678901234567890"
+}

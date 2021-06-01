@@ -7,6 +7,7 @@ package me.ixk.hoshi.note.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.Optional;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.result.ApiPage;
@@ -48,7 +49,7 @@ public class WorkSpaceController {
     @GetMapping("/{id}")
     @ApiOperation("获取工作区")
     public ApiResult<Object> get(@PathVariable("id") final String id, @UserId final String userId) {
-        final Optional<WorkSpace> workspace = this.workspaceRepository.findByIdAndUserId(id, userId);
+        final Optional<WorkSpace> workspace = this.workspaceRepository.findByUserIdAndId(userId, id);
         if (workspace.isEmpty()) {
             return ApiResult.notFound("工作区未找到").build();
         }
@@ -58,7 +59,7 @@ public class WorkSpaceController {
     @PostMapping("")
     @ApiOperation("添加工作区")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<WorkSpace> add(@UserId final String userId, @JsonModel final AddWorkSpaceView vo) {
+    public ApiResult<WorkSpace> add(@UserId final String userId, @Valid @JsonModel final AddWorkSpaceView vo) {
         final WorkSpace workspace = vo.toEntity();
         workspace.setUserId(userId);
         return ApiResult.ok(this.workspaceRepository.save(workspace), "添加成功");
@@ -67,8 +68,8 @@ public class WorkSpaceController {
     @PutMapping("/{id}")
     @ApiOperation("更新工作区")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> update(@UserId final String userId, @JsonModel final UpdateWorkSpaceView vo) {
-        if (this.workspaceRepository.findByIdAndUserId(vo.getId(), userId).isEmpty()) {
+    public ApiResult<Object> update(@UserId final String userId, @Valid @JsonModel final UpdateWorkSpaceView vo) {
+        if (this.workspaceRepository.findByUserIdAndId(userId, vo.getId()).isEmpty()) {
             return ApiResult.notFound("工作区未找到无法更新").build();
         }
         final WorkSpace workspace = vo.toEntity();
@@ -81,7 +82,7 @@ public class WorkSpaceController {
     public ApiResult<Object> delete(@PathVariable("id") final String id) {
         final Optional<WorkSpace> workspace = this.workspaceRepository.findById(id);
         if (workspace.isEmpty()) {
-            return ApiResult.notFound("工作区 ID 不存在").build();
+            return ApiResult.notFound("工作区不存在").build();
         }
         this.workspaceRepository.deleteById(id);
         return ApiResult.ok("删除工作区成功").build();

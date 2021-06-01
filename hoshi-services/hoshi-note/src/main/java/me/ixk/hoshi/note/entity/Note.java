@@ -4,6 +4,7 @@
 
 package me.ixk.hoshi.note.entity;
 
+import cn.hutool.core.util.RandomUtil;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -92,6 +93,10 @@ public class Note {
     private List<NoteHistory> histories = new ArrayList<>();
 
     @ApiModelProperty("笔记配置")
-    @OneToOne(mappedBy = "note")
+    @OneToOne(mappedBy = "note", cascade = CascadeType.ALL)
     private NoteConfig config;
+
+    public static String generateId() {
+        return RandomUtil.randomString(10);
+    }
 }
