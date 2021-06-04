@@ -268,3 +268,21 @@ Content-Type: application/json
 {
     "content": "1234567890"
 }
+
+### 添加日志
+POST http://localhost:8001/api/log
+Authorization: Bearer token.1706b23c-daaa-4ff5-bd50-54643d63aa7e
+Content-Type: application/json
+
+{
+    "type": "TEST",
+    "method": "POST",
+    "ip": "127.0.0.1",
+    "user": "1234567890",
+    "module": "hoshi-test",
+    "operate": "public int java.lang.Integer.intValue()",
+    "startTime": "2021-06-04T22:22:38.072398+08:00",
+    "endTime": "2021-06-04T22:22:38.072398+08:00",
+    "status": true,
+    "message": "测试"
+}

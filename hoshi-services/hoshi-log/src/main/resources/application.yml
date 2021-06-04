@@ -1,0 +1,22 @@
+#
+# Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+#
+hoshi:
+  version: 1.0
+  name: Hoshi Note 接口文档
+  description: 一个集各种神奇功能的云笔记
+  author:
+    name: Otstar Lin
+    url: https://ixk.me
+    email: syfxlin@gmail.com
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: hoshi_note
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

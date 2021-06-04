@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.*;
 import lombok.experimental.Accessors;
+import me.ixk.hoshi.api.view.request.user.AddRoleView;
+import me.ixk.hoshi.api.view.request.user.UpdateRoleView;
 
 /**
  * 权限表
@@ -62,4 +64,18 @@ public class Role implements Serializable {
     @ApiModelProperty("权限的描述")
     @Column(name = "description", columnDefinition = "text")
     private String description;
+
+    public static Role ofAdd(final AddRoleView vo) {
+        return Role
+            .builder()
+            .name(vo.getName())
+            .description(vo.getDescription())
+            .status(vo.getStatus())
+            .createdTime(OffsetDateTime.now())
+            .build();
+    }
+
+    public static Role ofUpdate(final UpdateRoleView vo) {
+        return Role.builder().name(vo.getRoleName()).description(vo.getDescription()).status(vo.getStatus()).build();
+    }
 }
