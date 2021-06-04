@@ -11,12 +11,16 @@ import me.ixk.hoshi.security.config.DefaultSecurityConfig.SecurityConfigAdapter;
 import me.ixk.hoshi.security.security.UserDetails;
 import me.ixk.hoshi.security.security.WebAuthenticationDetails;
 import me.ixk.hoshi.ums.entity.User;
+import me.ixk.hoshi.ums.repository.TokenRepository;
 import me.ixk.hoshi.ums.repository.UserRepository;
+import me.ixk.hoshi.ums.security.TokenAuthenticationFilter;
+import me.ixk.hoshi.ums.security.TokenAuthenticationProvider;
 import me.ixk.hoshi.ums.security.UserDetailsManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 /**
  * Spring Security 配置
@@ -29,6 +33,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public class SecurityConfig extends SecurityConfigAdapter {
 
     private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -57,6 +62,8 @@ public class SecurityConfig extends SecurityConfigAdapter {
             .logoutSuccessHandler(
                 (request, response, authentication) -> ApiResult.ok("注销成功").build().toResponse(response)
             );
+        http.authenticationProvider(new TokenAuthenticationProvider(this.tokenRepository));
+        http.addFilterAfter(new TokenAuthenticationFilter(), BasicAuthenticationFilter.class);
     }
 
     @Bean

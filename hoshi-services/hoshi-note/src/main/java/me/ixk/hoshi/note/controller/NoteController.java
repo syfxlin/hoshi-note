@@ -13,6 +13,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.annotation.JsonModel;
+import me.ixk.hoshi.common.json.JsonActive;
 import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.note.entity.Note;
@@ -23,6 +24,7 @@ import me.ixk.hoshi.note.repository.NoteRepository;
 import me.ixk.hoshi.note.repository.WorkSpaceRepository;
 import me.ixk.hoshi.note.view.AddNoteView;
 import me.ixk.hoshi.note.view.NoteView;
+import me.ixk.hoshi.note.view.NoteView.NoContent;
 import me.ixk.hoshi.note.view.UpdateNoteView;
 import me.ixk.hoshi.security.annotation.UserId;
 import org.springframework.data.domain.Pageable;
@@ -45,11 +47,12 @@ public class NoteController {
     private final WorkSpaceRepository workspaceRepository;
     private final NoteHistoryRepository noteHistoryRepository;
 
-    @GetMapping("/{workspaceId}")
+    @GetMapping("/{workspace}")
     @ApiOperation("获取笔记列表")
+    @JsonActive(NoContent.class)
     public ApiResult<ApiPage<NoteView>> list(
         @UserId final String userId,
-        @PathVariable("workspaceId") final String workspaceId,
+        @PathVariable("workspace") final String workspaceId,
         final Pageable page
     ) {
         return ApiResult.page(
@@ -58,48 +61,48 @@ public class NoteController {
         );
     }
 
-    @GetMapping("/{workspaceId}/{noteId}")
+    @GetMapping("/{workspace}/{note}")
     @ApiOperation("获取笔记")
     public ApiResult<Object> get(
         @UserId final String userId,
-        @PathVariable("workspaceId") final String workspaceId,
-        @PathVariable("noteId") final String noteId
+        @PathVariable("workspace") final String workspaceId,
+        @PathVariable("note") final String noteId
     ) {
         final Optional<Note> note =
             this.noteRepository.findByUserIdAndWorkSpaceIdAndNoteId(userId, workspaceId, noteId);
         if (note.isEmpty()) {
             return ApiResult.notFound("指定笔记未找到").build();
         }
-        return ApiResult.ok(note.get(), "获取笔记成功");
+        return ApiResult.ok(NoteView.of(note.get()), "获取笔记成功");
     }
 
-    @PostMapping("/{workspaceId}")
+    @PostMapping("/{workspace}")
     @ApiOperation("添加笔记")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> add(@UserId final String userId, @Valid @JsonModel final AddNoteView vo) {
-        final String workspaceId = vo.getWorkspaceId();
+        final String workspaceId = vo.getWorkspace();
         final Optional<WorkSpace> workspace = this.workspaceRepository.findByUserIdAndId(userId, workspaceId);
         if (workspace.isEmpty()) {
             return ApiResult.notFound("指定工作区未找到").build();
         }
         final Note note = vo.toEntity();
         note.setWorkspace(workspace.get());
-        if (vo.getParentId() != null) {
+        if (vo.getParent() != null) {
             final Optional<Note> parent =
-                this.noteRepository.findByUserIdAndWorkSpaceIdAndNoteId(userId, workspaceId, vo.getParentId());
+                this.noteRepository.findByUserIdAndWorkSpaceIdAndNoteId(userId, workspaceId, vo.getParent());
             if (parent.isEmpty()) {
                 return ApiResult.notFound("父笔记未找到").build();
             }
             note.setParent(parent.get());
         }
-        return ApiResult.ok(this.noteRepository.save(note), "添加笔记成功");
+        return ApiResult.ok(NoteView.of(this.noteRepository.save(note)), "添加笔记成功");
     }
 
-    @PutMapping("/{workspaceId}/{id}")
+    @PutMapping("/{workspace}/{id}")
     @ApiOperation("更新笔记")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> update(@UserId final String userId, @Valid @JsonModel final UpdateNoteView vo) {
-        final String workspaceId = vo.getWorkspaceId();
+        final String workspaceId = vo.getWorkspace();
         final Optional<WorkSpace> workspace = this.workspaceRepository.findByUserIdAndId(userId, workspaceId);
         if (workspace.isEmpty()) {
             return ApiResult.notFound("指定工作区未找到").build();
@@ -111,9 +114,9 @@ public class NoteController {
         }
         final Note note = vo.toEntity();
         note.setWorkspace(workspace.get());
-        if (vo.getParentId() != null) {
+        if (vo.getParent() != null) {
             final Optional<Note> parent =
-                this.noteRepository.findByUserIdAndWorkSpaceIdAndNoteId(userId, workspaceId, vo.getParentId());
+                this.noteRepository.findByUserIdAndWorkSpaceIdAndNoteId(userId, workspaceId, vo.getParent());
             if (parent.isEmpty()) {
                 return ApiResult.notFound("父笔记未找到").build();
             }
@@ -128,16 +131,16 @@ public class NoteController {
         ) {
             this.noteHistoryRepository.save(NoteHistory.of(originNote));
         }
-        return ApiResult.ok(this.noteRepository.update(note), "更新成功");
+        return ApiResult.ok(NoteView.of(this.noteRepository.update(note)), "更新成功");
     }
 
-    @DeleteMapping("/{workspaceId}/{noteId}")
+    @DeleteMapping("/{workspace}/{note}")
     @ApiOperation("删除笔记")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> delete(
         @UserId final String userId,
-        @PathVariable("workspaceId") final String workspaceId,
-        @PathVariable("noteId") final String noteId
+        @PathVariable("workspace") final String workspaceId,
+        @PathVariable("note") final String noteId
     ) {
         final Optional<Note> note =
             this.noteRepository.findByUserIdAndWorkSpaceIdAndNoteId(userId, workspaceId, noteId);

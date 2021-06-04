@@ -24,7 +24,12 @@ username=admin&password=password
 ### 获取当前登录的用户信息
 GET http://localhost:8000/api/users
 Accept: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer session.{{token}}
+
+### 获取当前登录的用户信息（Token）
+GET http://localhost:8000/api/users
+Accept: application/json
+Authorization: Bearer token.1706b23c-daaa-4ff5-bd50-54643d63aa7e
 
 ### 获取所有用户
 GET http://localhost:8000/api/admin/users?page=0&size=1&sort=id,desc
@@ -251,7 +256,8 @@ Content-Type: application/json
 {
     "name": "TestNote",
     "content": "1234567890",
-    "type": "note"
+    "type": "note",
+    "parent": "r52x9pi897"
 }
 
 ### 更新笔记

@@ -5,8 +5,11 @@
 package me.ixk.hoshi.note.view;
 
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Data;
+import me.ixk.hoshi.common.json.JsonMode;
 import me.ixk.hoshi.note.entity.Note;
 import me.ixk.hoshi.note.entity.NoteConfig;
 
@@ -19,21 +22,32 @@ import me.ixk.hoshi.note.entity.NoteConfig;
 public class NoteView {
 
     private final String id;
-    private final String workspaceId;
+    private final String parent;
+    private final List<String> children;
+    private final String workspace;
     private final String name;
-    private Long version;
-    private String type;
-    private Integer status;
-    private OffsetDateTime createdTime;
-    private OffsetDateTime updatedTime;
-    private NoteConfig config;
+
+    @JsonMode(NoContent.class)
+    private final String content;
+
+    private final Long version;
+    private final String type;
+    private final Integer status;
+    private final OffsetDateTime createdTime;
+    private final OffsetDateTime updatedTime;
+    private final NoteConfig config;
 
     public static NoteView of(final Note note) {
+        final Note parent = note.getParent();
+        final List<Note> children = note.getChildren();
         return NoteView
             .builder()
             .id(note.getId())
-            .workspaceId(note.getWorkspace().getId())
+            .parent(parent == null ? null : parent.getId())
+            .children(children == null ? null : children.stream().map(Note::getId).collect(Collectors.toList()))
+            .workspace(note.getWorkspace().getId())
             .name(note.getName())
+            .content(note.getContent())
             .version(note.getVersion())
             .type(note.getType())
             .status(note.getStatus())
@@ -42,4 +56,6 @@ public class NoteView {
             .config(note.getConfig())
             .build();
     }
+
+    public static class NoContent {}
 }

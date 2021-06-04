@@ -26,6 +26,7 @@ buildNumber.properties
 *.iws
 *.iml
 *.ipr
+.jpb/
 
 ### NetBeans ###
 /nbproject/private/

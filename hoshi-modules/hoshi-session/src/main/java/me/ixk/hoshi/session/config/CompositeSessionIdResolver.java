@@ -4,35 +4,49 @@
 
 package me.ixk.hoshi.session.config;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
+import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.session.entity.TokenSession;
+import me.ixk.hoshi.session.repository.TokenSessionRepository;
 import org.springframework.session.web.http.HttpSessionIdResolver;
+import org.springframework.stereotype.Component;
 
 /**
- * 支持 Cookie 和 Header 两种方式的 Session ID 解析器
- *
  * @author Otstar Lin
  * @date 2021/5/3 下午 9:49
  */
+@Component
+@RequiredArgsConstructor
 public class CompositeSessionIdResolver implements HttpSessionIdResolver {
 
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
     public static final String AUTHORIZATION = "Authorization";
-    private static final String BEARER = "Bearer ";
-    private final HeaderHttpSessionIdResolver headerResolver = new HeaderHttpSessionIdResolver(X_AUTH_TOKEN);
+    public static final String BEARER = "Bearer ";
+    public static final String SESSION_MARK = "session.";
+    public static final String TOKEN_MARK = "token.";
+
+    private final TokenSessionRepository tokenSessionRepository;
 
     @Override
     public List<String> resolveSessionIds(final HttpServletRequest request) {
-        final List<String> ids = new ArrayList<>();
-        final String authorization = request.getHeader(AUTHORIZATION);
-        if (authorization != null && authorization.startsWith(BEARER)) {
-            ids.add(authorization.replace(BEARER, ""));
+        final String token = getToken(request);
+        if (token == null) {
+            return Collections.emptyList();
         }
-        ids.addAll(this.headerResolver.resolveSessionIds(request));
-        return ids;
+        if (token.startsWith(TOKEN_MARK)) {
+            final Optional<TokenSession> session = this.tokenSessionRepository.findById(token.replace(TOKEN_MARK, ""));
+            if (session.isEmpty()) {
+                return Collections.emptyList();
+            }
+            return Collections.singletonList(session.get().getSession());
+        } else if (token.startsWith(SESSION_MARK)) {
+            return Collections.singletonList(token.replace(SESSION_MARK, ""));
+        }
+        return Collections.singletonList(token);
     }
 
     @Override
@@ -41,12 +55,20 @@ public class CompositeSessionIdResolver implements HttpSessionIdResolver {
         final HttpServletResponse response,
         final String sessionId
     ) {
-        this.headerResolver.setSessionId(request, response, sessionId);
+        response.setHeader(X_AUTH_TOKEN, SESSION_MARK + sessionId);
     }
 
     @Override
     public void expireSession(final HttpServletRequest request, final HttpServletResponse response) {
         response.setHeader(AUTHORIZATION, "");
-        this.headerResolver.expireSession(request, response);
+        response.setHeader(X_AUTH_TOKEN, "");
+    }
+
+    public static String getToken(final HttpServletRequest request) {
+        final String authorization = request.getHeader(AUTHORIZATION);
+        if (authorization == null || !authorization.startsWith(BEARER)) {
+            return null;
+        }
+        return authorization.replace(BEARER, "");
     }
 }

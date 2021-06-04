@@ -22,10 +22,10 @@ import me.ixk.hoshi.note.entity.NoteConfig;
 @NoArgsConstructor
 public class AddNoteView {
 
-    private String parentId;
+    private String parent;
 
     @NotNull(message = "工作区 ID 必须不为空")
-    private String workspaceId;
+    private String workspace;
 
     @NotNull(message = "工作区的名称必须不为空")
     private String name;
