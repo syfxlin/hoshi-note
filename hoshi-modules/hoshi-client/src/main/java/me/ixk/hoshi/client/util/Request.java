@@ -48,15 +48,9 @@ public final class Request {
         if (request == null) {
             return;
         }
-        String token = request.getHeader("X-Auth-Token");
-        if (token == null) {
-            token = request.getHeader("Authorization");
-            if (token != null) {
-                token = token.replace("Bearer ", "");
-            }
-        }
+        final String token = request.getHeader("Authorization");
         if (token != null) {
-            consumer.accept("X-Auth-Token", token);
+            consumer.accept("Authorization", token);
         }
     }
 

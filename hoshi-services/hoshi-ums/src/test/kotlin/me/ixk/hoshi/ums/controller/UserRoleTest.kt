@@ -5,7 +5,7 @@
 package me.ixk.hoshi.ums.controller
 
 import me.ixk.hoshi.common.util.Json
-import me.ixk.hoshi.session.config.CompositeSessionIdResolver.X_AUTH_TOKEN
+import me.ixk.hoshi.session.config.CompositeSessionIdResolver.*
 import me.ixk.hoshi.ums.repository.RoleRepository
 import me.ixk.hoshi.ums.repository.UserRepository
 import org.junit.jupiter.api.*
@@ -38,7 +38,7 @@ class UserRoleTest {
 
     @BeforeAll
     internal fun getToken() {
-        this.token = mockMvc.post("/login") {
+        val token = mockMvc.post("/login") {
             contentType = APPLICATION_FORM_URLENCODED
             param("username", "admin")
             param("password", "password")
@@ -48,13 +48,14 @@ class UserRoleTest {
                 exists(X_AUTH_TOKEN)
             }
         }.andReturn().response.getHeader(X_AUTH_TOKEN) as String
+        this.token = BEARER + SESSION_MARK + token;
     }
 
     @Test
     @Order(1)
     fun getCurrentUser() {
         mockMvc.get("/api/users") {
-            header(X_AUTH_TOKEN, token)
+            header(AUTHORIZATION, token)
         }.andExpect {
             status { isOk() }
             jsonPath("$.data.username") {
@@ -67,7 +68,7 @@ class UserRoleTest {
     @Order(2)
     fun getAllUser() {
         mockMvc.get("/api/admin/users") {
-            header(X_AUTH_TOKEN, token)
+            header(AUTHORIZATION, token)
         }.andExpect {
             status { isOk() }
             jsonPath("$.data.records") {
@@ -81,7 +82,7 @@ class UserRoleTest {
     @Order(3)
     fun addUser() {
         val response = mockMvc.post("/api/admin/users") {
-            header(X_AUTH_TOKEN, token)
+            header(AUTHORIZATION, token)
             content = """
                {
                  "username": "test",
@@ -107,7 +108,7 @@ class UserRoleTest {
     @Order(4)
     fun updateUser() {
         mockMvc.put("/api/admin/users/${userId}") {
-            header(X_AUTH_TOKEN, token)
+            header(AUTHORIZATION, token)
             content = """
                {
                  "nickname": "Test1"
@@ -126,7 +127,7 @@ class UserRoleTest {
     @Order(5)
     fun addRole() {
         mockMvc.post("/api/admin/roles") {
-            header(X_AUTH_TOKEN, token)
+            header(AUTHORIZATION, token)
             content = """
                {
                  "name": "TEST",
@@ -144,7 +145,7 @@ class UserRoleTest {
     @Order(6)
     fun updateRole() {
         mockMvc.put("/api/admin/roles/TEST") {
-            header(X_AUTH_TOKEN, token)
+            header(AUTHORIZATION, token)
             content = """
                {
                  "description": "更新权限"
@@ -163,7 +164,7 @@ class UserRoleTest {
     @Order(7)
     fun addRoleToUser() {
         mockMvc.post("/api/admin/users/${userId}/role") {
-            header(X_AUTH_TOKEN, token)
+            header(AUTHORIZATION, token)
             content = """
                {
                  "roles": ["TEST"]
@@ -185,7 +186,7 @@ class UserRoleTest {
     @Order(8)
     fun updateRoleToUser() {
         mockMvc.put("/api/admin/users/${userId}/role") {
-            header(X_AUTH_TOKEN, token)
+            header(AUTHORIZATION, token)
             content = """
                {
                  "roles": ["USER"]
@@ -207,7 +208,7 @@ class UserRoleTest {
     @Order(9)
     fun deleteRoleToUser() {
         mockMvc.delete("/api/admin/users/${userId}/role") {
-            header(X_AUTH_TOKEN, token)
+            header(AUTHORIZATION, token)
             param("roles", "USER")
         }.andExpect {
             status { isOk() }
@@ -221,7 +222,7 @@ class UserRoleTest {
     @Order(10)
     fun deleteUser() {
         mockMvc.delete("/api/admin/users/${userId}") {
-            header(X_AUTH_TOKEN, token)
+            header(AUTHORIZATION, token)
         }.andExpect {
             status { isOk() }
         }
@@ -231,7 +232,7 @@ class UserRoleTest {
     @Order(11)
     fun deleteRole() {
         mockMvc.delete("/api/admin/roles/TEST") {
-            header(X_AUTH_TOKEN, token)
+            header(AUTHORIZATION, token)
         }.andExpect {
             status { isOk() }
         }

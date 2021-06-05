@@ -6,6 +6,7 @@ package me.ixk.hoshi.log.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.api.view.request.log.AddLogView;
 import me.ixk.hoshi.common.annotation.JsonModel;
@@ -30,7 +31,7 @@ public class LogController {
 
     @PostMapping("")
     @ApiOperation("添加日志")
-    public ApiResult<Log> add(@JsonModel final AddLogView vo) {
+    public ApiResult<Log> add(@Valid @JsonModel final AddLogView vo) {
         final Log log = this.logRepository.save(Log.ofAdd(vo));
         return ApiResult.ok(log, "保存日志成功");
     }

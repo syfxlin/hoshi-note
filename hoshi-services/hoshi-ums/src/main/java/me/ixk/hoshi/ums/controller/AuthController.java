@@ -9,12 +9,12 @@ import io.swagger.annotations.ApiOperation;
 import java.util.Collections;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.api.view.request.user.RegisterUserView;
 import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.ums.entity.User;
 import me.ixk.hoshi.ums.repository.RoleRepository;
 import me.ixk.hoshi.ums.repository.UserRepository;
-import me.ixk.hoshi.ums.view.RegisterUserView;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +40,11 @@ public class AuthController {
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<User> register(@Valid @JsonModel final RegisterUserView vo) {
-        final User user = vo.toEntity();
+    public ApiResult<Object> register(@Valid @JsonModel final RegisterUserView vo) {
+        if (this.userRepository.findByUsername(vo.getUsername()).isPresent()) {
+            return ApiResult.bindException("用户名已存在");
+        }
+        final User user = User.ofRegister(vo);
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singletonList(this.roleRepository.findById("USER").get()));
         return ApiResult.ok(this.userRepository.save(user), "注册成功");

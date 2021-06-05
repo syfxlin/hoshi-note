@@ -6,7 +6,7 @@ package me.ixk.hoshi.note.repository;
 
 import java.util.Optional;
 import javax.validation.constraints.NotNull;
-import me.ixk.hoshi.common.util.Jpa;
+import me.ixk.hoshi.mysql.util.Jpa;
 import me.ixk.hoshi.note.entity.Note;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,6 +61,6 @@ public interface NoteRepository extends PagingAndSortingRepository<Note, String>
             return this.save(note);
         }
         final Note original = optional.get();
-        return this.save(Jpa.updateNull(note, original));
+        return this.save(Jpa.merge(note, original));
     }
 }

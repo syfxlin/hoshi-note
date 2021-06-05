@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.api.view.request.user.UpdateUserInfoView;
+import me.ixk.hoshi.api.view.response.user.LoggedView;
 import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.security.security.WebAuthenticationDetails;
 import me.ixk.hoshi.ums.entity.User;
 import me.ixk.hoshi.ums.entity.UserInfo;
 import me.ixk.hoshi.ums.repository.UserRepository;
-import me.ixk.hoshi.ums.view.LoggedView;
-import me.ixk.hoshi.ums.view.UserInfoView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContext;
@@ -63,7 +63,7 @@ public class UserController {
     @PutMapping("/info")
     @PreAuthorize("hasRole('USER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<UserInfo> updateInfo(@Autowired final User user, @Valid @JsonModel final UserInfoView vo) {
+    public ApiResult<UserInfo> updateInfo(@Autowired final User user, @Valid @JsonModel final UpdateUserInfoView vo) {
         final UserInfo info = user.getInfo();
         final String address = vo.getAddress();
         if (address != null) {

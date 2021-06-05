@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.api.view.request.user.AddRoleView;
+import me.ixk.hoshi.api.view.request.user.UpdateRoleView;
 import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.ums.entity.Role;
 import me.ixk.hoshi.ums.repository.RoleRepository;
-import me.ixk.hoshi.ums.view.AddRoleView;
-import me.ixk.hoshi.ums.view.UpdateRoleView;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,14 +54,14 @@ public class RoleManagerController {
     @PostMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Role> add(@Valid @JsonModel final AddRoleView vo) {
-        return ApiResult.ok(this.roleRepository.save(vo.toRole()), "添加权限成功");
+        return ApiResult.ok(this.roleRepository.save(Role.ofAdd(vo)), "添加权限成功");
     }
 
     @ApiOperation("更新权限")
     @PutMapping("/{roleName}")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Role> update(@Valid @JsonModel final UpdateRoleView vo) {
-        return ApiResult.ok(this.roleRepository.update(vo.toRole()), "更新权限成功");
+        return ApiResult.ok(this.roleRepository.update(Role.ofUpdate(vo)), "更新权限成功");
     }
 
     @ApiOperation("删除权限")

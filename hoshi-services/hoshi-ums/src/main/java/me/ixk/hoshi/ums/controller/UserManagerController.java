@@ -16,18 +16,18 @@ import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.api.view.request.user.AddUserView;
+import me.ixk.hoshi.api.view.request.user.EditUserRoleView;
+import me.ixk.hoshi.api.view.request.user.FilterUserView;
+import me.ixk.hoshi.api.view.request.user.UpdateUserView;
 import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
-import me.ixk.hoshi.common.util.Jpa;
+import me.ixk.hoshi.mysql.util.Jpa;
 import me.ixk.hoshi.ums.entity.Role;
 import me.ixk.hoshi.ums.entity.User;
 import me.ixk.hoshi.ums.repository.RoleRepository;
 import me.ixk.hoshi.ums.repository.UserRepository;
-import me.ixk.hoshi.ums.view.AddUserView;
-import me.ixk.hoshi.ums.view.EditUserRoleView;
-import me.ixk.hoshi.ums.view.FilterUserView;
-import me.ixk.hoshi.ums.view.UpdateUserView;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -95,8 +95,11 @@ public class UserManagerController {
     @ApiOperation("添加用户")
     @PostMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<User> add(@Valid @JsonModel final AddUserView vo) {
-        final User user = vo.toEntity();
+    public ApiResult<Object> add(@Valid @JsonModel final AddUserView vo) {
+        if (this.userRepository.findByUsername(vo.getUsername()).isPresent()) {
+            return ApiResult.bindException("用户名已存在");
+        }
+        final User user = User.ofAdd(vo);
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singletonList(this.roleRepository.findById("USER").get()));
         return ApiResult.ok(this.userRepository.save(user), "添加用户成功");
@@ -118,14 +121,23 @@ public class UserManagerController {
     @ApiOperation("更新用户")
     @PutMapping("/{userId}")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<User> update(@Valid @JsonModel final UpdateUserView vo) {
-        final User user = vo.toEntity();
+    public ApiResult<Object> update(@Valid @JsonModel final UpdateUserView vo) {
+        if (this.userRepository.findById(vo.getUserId()).isEmpty()) {
+            return ApiResult.bindException("用户 ID 不存在");
+        }
+        if (vo.getUsername() != null) {
+            final Optional<User> byUsername = this.userRepository.findByUsername(vo.getUsername());
+            if (byUsername.isPresent() && !byUsername.get().getId().equals(vo.getUserId())) {
+                return ApiResult.bindException("用户名已存在");
+            }
+        }
+        final User user = User.ofUpdate(vo);
         final String password = user.getPassword();
         if (password != null) {
             user.setPassword(this.passwordEncoder.encode(password));
         }
         final User newUser = this.userRepository.update(user);
-        if (!user.getStatus()) {
+        if (!newUser.getStatus()) {
             this.invalidSession(newUser.getUsername());
         }
         return ApiResult.ok(newUser, "更新用户成功");
@@ -135,7 +147,11 @@ public class UserManagerController {
     @PostMapping("/{userId}/role")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<User> addRoles(@Valid @JsonModel final EditUserRoleView vo) {
-        final User user = this.userRepository.findById(vo.getUserId()).get();
+        final Optional<User> optional = this.userRepository.findById(vo.getUserId());
+        if (optional.isEmpty()) {
+            return ApiResult.notFound("用户 ID 不存在").build();
+        }
+        final User user = optional.get();
         final int size = this.addRoleToUser(user, vo.getRoles());
         final User newUser = this.userRepository.save(user);
         this.invalidSession(newUser.getUsername());
@@ -150,7 +166,11 @@ public class UserManagerController {
     @PutMapping("/{userId}/role")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<User> updateRoles(@Valid @JsonModel final EditUserRoleView vo) {
-        final User user = this.userRepository.findById(vo.getUserId()).get();
+        final Optional<User> optional = this.userRepository.findById(vo.getUserId());
+        if (optional.isEmpty()) {
+            return ApiResult.notFound("用户 ID 不存在").build();
+        }
+        final User user = optional.get();
         final List<Role> roles = vo
             .getRoles()
             .stream()
