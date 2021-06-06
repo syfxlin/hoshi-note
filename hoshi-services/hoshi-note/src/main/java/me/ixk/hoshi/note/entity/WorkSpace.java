@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,8 @@ import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
+import me.ixk.hoshi.api.view.request.note.AddWorkSpaceView;
+import me.ixk.hoshi.api.view.request.note.UpdateWorkSpaceView;
 
 /**
  * @author Otstar Lin
@@ -71,5 +74,29 @@ public class WorkSpace {
 
     public static String generateId() {
         return RandomUtil.randomString(10);
+    }
+
+    public static WorkSpace ofAdd(final AddWorkSpaceView vo) {
+        return WorkSpace
+            .builder()
+            .id(WorkSpace.generateId())
+            .name(vo.getName())
+            .description(vo.getDescription())
+            .domain(vo.getDomain())
+            .icon(vo.getIcon())
+            .createdTime(OffsetDateTime.now())
+            .notes(Collections.emptyList())
+            .build();
+    }
+
+    public static WorkSpace ofUpdate(final UpdateWorkSpaceView vo) {
+        return WorkSpace
+            .builder()
+            .id(vo.getId())
+            .name(vo.getName())
+            .description(vo.getDescription())
+            .domain(vo.getDomain())
+            .icon(vo.getIcon())
+            .build();
     }
 }

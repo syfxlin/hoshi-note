@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
+import me.ixk.hoshi.api.view.response.note.NoteConfigView;
 
 /**
  * @author Otstar Lin
@@ -47,4 +48,8 @@ public class NoteConfig {
     @ApiModelProperty("笔记范围密码")
     @Column(name = "password")
     private String password;
+
+    public NoteConfigView toView() {
+        return NoteConfigView.builder().id(this.getId()).password(this.getPassword()).build();
+    }
 }

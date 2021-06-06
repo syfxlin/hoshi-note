@@ -9,13 +9,13 @@ import io.swagger.annotations.ApiOperation;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.api.view.request.note.AddWorkSpaceView;
+import me.ixk.hoshi.api.view.request.note.UpdateWorkSpaceView;
 import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.note.entity.WorkSpace;
 import me.ixk.hoshi.note.repository.WorkSpaceRepository;
-import me.ixk.hoshi.note.view.AddWorkSpaceView;
-import me.ixk.hoshi.note.view.UpdateWorkSpaceView;
 import me.ixk.hoshi.security.annotation.UserId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,7 +60,7 @@ public class WorkSpaceController {
     @ApiOperation("添加工作区")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<WorkSpace> add(@UserId final String userId, @Valid @JsonModel final AddWorkSpaceView vo) {
-        final WorkSpace workspace = vo.toEntity();
+        final WorkSpace workspace = WorkSpace.ofAdd(vo);
         workspace.setUserId(userId);
         return ApiResult.ok(this.workspaceRepository.save(workspace), "添加成功");
     }
@@ -72,7 +72,7 @@ public class WorkSpaceController {
         if (this.workspaceRepository.findByUserIdAndId(userId, vo.getId()).isEmpty()) {
             return ApiResult.notFound("工作区未找到无法更新").build();
         }
-        final WorkSpace workspace = vo.toEntity();
+        final WorkSpace workspace = WorkSpace.ofUpdate(vo);
         return ApiResult.ok(this.workspaceRepository.update(workspace), "更新工作区成功");
     }
 

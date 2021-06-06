@@ -2,14 +2,12 @@
  * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
  */
 
-package me.ixk.hoshi.note.view;
+package me.ixk.hoshi.api.view.request.note;
 
-import java.time.OffsetDateTime;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.ixk.hoshi.note.entity.Note;
 
 /**
  * @author Otstar Lin
@@ -32,16 +30,4 @@ public class UpdateNoteView {
     private String content;
     private String type;
     private Integer status;
-
-    public Note toEntity() {
-        return Note
-            .builder()
-            .id(this.getId())
-            .name(this.getName())
-            .content(this.getContent())
-            .type(this.getType())
-            .status(this.getStatus())
-            .updatedTime(OffsetDateTime.now())
-            .build();
-    }
 }

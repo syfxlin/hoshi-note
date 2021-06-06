@@ -2,14 +2,13 @@
  * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
  */
 
-package me.ixk.hoshi.note.view;
+package me.ixk.hoshi.api.view.request.note;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.ixk.hoshi.note.entity.WorkSpace;
 
 /**
  * @author Otstar Lin
@@ -32,14 +31,4 @@ public class UpdateWorkSpaceView {
     private String domain;
 
     private String icon;
-
-    public WorkSpace toEntity() {
-        final WorkSpace workspace = new WorkSpace();
-        workspace.setId(this.getId());
-        workspace.setName(this.getName());
-        workspace.setDescription(this.getDescription());
-        workspace.setDomain(this.getDomain());
-        workspace.setIcon(this.getIcon());
-        return workspace;
-    }
 }

@@ -12,6 +12,10 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import me.ixk.hoshi.api.view.request.note.AddNoteView;
+import me.ixk.hoshi.api.view.request.note.UpdateNoteView;
+import me.ixk.hoshi.api.view.response.note.NoteView;
+import me.ixk.hoshi.api.view.response.note.NoteView.NoContent;
 import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.json.JsonActive;
 import me.ixk.hoshi.common.result.ApiPage;
@@ -22,10 +26,6 @@ import me.ixk.hoshi.note.entity.WorkSpace;
 import me.ixk.hoshi.note.repository.NoteHistoryRepository;
 import me.ixk.hoshi.note.repository.NoteRepository;
 import me.ixk.hoshi.note.repository.WorkSpaceRepository;
-import me.ixk.hoshi.note.view.AddNoteView;
-import me.ixk.hoshi.note.view.NoteView;
-import me.ixk.hoshi.note.view.NoteView.NoContent;
-import me.ixk.hoshi.note.view.UpdateNoteView;
 import me.ixk.hoshi.security.annotation.UserId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,7 +56,7 @@ public class NoteController {
         final Pageable page
     ) {
         return ApiResult.page(
-            this.noteRepository.findByUserIdAndWorkspaceId(userId, workspaceId, page).map(NoteView::of),
+            this.noteRepository.findByUserIdAndWorkspaceId(userId, workspaceId, page).map(Note::toView),
             "获取笔记列表成功"
         );
     }
@@ -73,7 +73,7 @@ public class NoteController {
         if (note.isEmpty()) {
             return ApiResult.notFound("指定笔记未找到").build();
         }
-        return ApiResult.ok(NoteView.of(note.get()), "获取笔记成功");
+        return ApiResult.ok(note.get().toView(), "获取笔记成功");
     }
 
     @PostMapping("/{workspace}")
@@ -85,7 +85,7 @@ public class NoteController {
         if (workspace.isEmpty()) {
             return ApiResult.notFound("指定工作区未找到").build();
         }
-        final Note note = vo.toEntity();
+        final Note note = Note.ofAdd(vo);
         note.setWorkspace(workspace.get());
         if (vo.getParent() != null) {
             final Optional<Note> parent =
@@ -95,7 +95,7 @@ public class NoteController {
             }
             note.setParent(parent.get());
         }
-        return ApiResult.ok(NoteView.of(this.noteRepository.save(note)), "添加笔记成功");
+        return ApiResult.ok(this.noteRepository.save(note).toView(), "添加笔记成功");
     }
 
     @PutMapping("/{workspace}/{id}")
@@ -112,7 +112,7 @@ public class NoteController {
         if (origin.isEmpty()) {
             return ApiResult.notFound("原始笔记未找到").build();
         }
-        final Note note = vo.toEntity();
+        final Note note = Note.ofUpdate(vo);
         note.setWorkspace(workspace.get());
         if (vo.getParent() != null) {
             final Optional<Note> parent =
@@ -131,7 +131,7 @@ public class NoteController {
         ) {
             this.noteHistoryRepository.save(NoteHistory.of(originNote));
         }
-        return ApiResult.ok(NoteView.of(this.noteRepository.update(note)), "更新成功");
+        return ApiResult.ok(this.noteRepository.update(note).toView(), "更新成功");
     }
 
     @DeleteMapping("/{workspace}/{note}")

@@ -20,5 +20,9 @@
       <groupId>me.ixk.hoshi</groupId>
       <artifactId>hoshi-swagger</artifactId>
     </dependency>
+    <dependency>
+      <groupId>me.ixk.hoshi</groupId>
+      <artifactId>hoshi-common</artifactId>
+    </dependency>
   </dependencies>
 </project>

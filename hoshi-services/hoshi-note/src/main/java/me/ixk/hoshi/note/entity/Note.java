@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,9 @@ import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
+import me.ixk.hoshi.api.view.request.note.AddNoteView;
+import me.ixk.hoshi.api.view.request.note.UpdateNoteView;
+import me.ixk.hoshi.api.view.response.note.NoteView;
 
 /**
  * @author Otstar Lin
@@ -96,7 +100,57 @@ public class Note {
     @OneToOne(mappedBy = "note", cascade = CascadeType.ALL)
     private NoteConfig config;
 
+    public NoteView toView() {
+        final Note parent = this.getParent();
+        final List<Note> children = this.getChildren();
+        return NoteView
+            .builder()
+            .id(this.getId())
+            .parent(parent == null ? null : parent.getId())
+            .children(children == null ? null : children.stream().map(Note::getId).collect(Collectors.toList()))
+            .workspace(this.getWorkspace().getId())
+            .name(this.getName())
+            .content(this.getContent())
+            .version(this.getVersion())
+            .type(this.getType())
+            .status(this.getStatus())
+            .createdTime(this.getCreatedTime())
+            .updatedTime(this.getUpdatedTime())
+            .config(this.getConfig().toView())
+            .build();
+    }
+
     public static String generateId() {
         return RandomUtil.randomString(10);
+    }
+
+    public static Note ofAdd(final AddNoteView vo) {
+        final NoteConfig config = new NoteConfig();
+        final Note note = Note
+            .builder()
+            .id(Note.generateId())
+            .name(vo.getName())
+            .content(vo.getContent())
+            .version(1L)
+            .type(vo.getType())
+            .status(1)
+            .createdTime(OffsetDateTime.now())
+            .updatedTime(OffsetDateTime.now())
+            .config(config)
+            .build();
+        config.setNote(note);
+        return note;
+    }
+
+    public static Note ofUpdate(final UpdateNoteView vo) {
+        return Note
+            .builder()
+            .id(vo.getId())
+            .name(vo.getName())
+            .content(vo.getContent())
+            .type(vo.getType())
+            .status(vo.getStatus())
+            .updatedTime(OffsetDateTime.now())
+            .build();
     }
 }
