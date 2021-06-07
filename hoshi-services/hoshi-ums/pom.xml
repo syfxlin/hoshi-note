@@ -14,20 +14,9 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>hoshi-ums</artifactId>
-
-  <dependencies>
-    <dependency>
-      <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-security</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-mysql</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  <packaging>pom</packaging>
+  <modules>
+    <module>hoshi-ums-service</module>
+    <module>hoshi-ums-api</module>
+  </modules>
 </project>

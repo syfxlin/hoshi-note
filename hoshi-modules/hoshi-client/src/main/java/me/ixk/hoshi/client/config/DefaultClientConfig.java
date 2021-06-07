@@ -5,9 +5,7 @@
 package me.ixk.hoshi.client.config;
 
 import me.ixk.hoshi.client.util.Request;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -17,8 +15,6 @@ import org.springframework.web.client.RestTemplate;
  * @date 2021/5/6 下午 2:32
  */
 @Configuration
-@EnableFeignClients(defaultConfiguration = { DefaultFeignConfig.class }, basePackages = { "me.ixk.hoshi" })
-@EnableDiscoveryClient
 public class DefaultClientConfig {
 
     /**

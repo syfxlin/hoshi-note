@@ -14,25 +14,9 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>hoshi-note</artifactId>
-
-  <dependencies>
-    <dependency>
-      <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-security</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-mysql</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.github.java-diff-utils</groupId>
-      <artifactId>java-diff-utils</artifactId>
-      <version>4.10</version>
-    </dependency>
-  </dependencies>
+  <packaging>pom</packaging>
+  <modules>
+    <module>hoshi-note-service</module>
+    <module>hoshi-note-api</module>
+  </modules>
 </project>

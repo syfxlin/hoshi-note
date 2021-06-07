@@ -18,10 +18,6 @@
   <dependencies>
     <dependency>
       <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>me.ixk.hoshi</groupId>
       <artifactId>hoshi-swagger</artifactId>
     </dependency>
     <dependency>

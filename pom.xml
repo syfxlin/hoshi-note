@@ -117,47 +117,7 @@
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-security</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-config</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-gateway</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-registry</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-ums</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-admin</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-swagger</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-session</artifactId>
+        <artifactId>hoshi-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -167,22 +127,7 @@
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-test</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-file</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-note</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-mysql</artifactId>
+        <artifactId>hoshi-common</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -192,7 +137,48 @@
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-api</artifactId>
+        <artifactId>hoshi-mysql</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-security</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-session</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-swagger</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-test</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-file-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-log-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-note-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-ums-api</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
