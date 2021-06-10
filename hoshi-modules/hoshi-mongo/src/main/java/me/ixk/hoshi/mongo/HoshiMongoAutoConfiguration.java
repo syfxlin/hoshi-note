@@ -12,5 +12,5 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/5/6 下午 2:33
  */
 @Configuration
-@ComponentScan("me.ixk.hoshi.mongo")
+@ComponentScan
 public class HoshiMongoAutoConfiguration {}

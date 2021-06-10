@@ -6,6 +6,7 @@ package me.ixk.hoshi.note.view.request;
 
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UpdateNoteView {
 
     @NotNull(message = "更新笔记时必须设置 ID")

@@ -21,19 +21,39 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(basePackages = "me.ixk.hoshi")
 public class ApiResultAdvice {
 
+    /**
+     * 异常默认处理器
+     *
+     * @param e 异常
+     * @return 处理后的响应
+     * @throws Exception 再次抛出的异常
+     */
     @ExceptionHandler(Exception.class)
     public Object globalException(final Exception e) throws Exception {
+        // 忽略 Spring Security 认证异常，否则 Spring Security 配置的处理器将失效
         if (e instanceof AccessDeniedException || e instanceof AuthenticationException) {
             throw e;
         }
         return ApiResult.error(e.getMessage()).build().toResponseEntity();
     }
 
+    /**
+     * 参数绑定异常处理器
+     *
+     * @param e 参数绑定异常
+     * @return 处理后的响应
+     */
     @ExceptionHandler(BindException.class)
     public Object validateException(final BindException e) {
         return ApiResult.bindException(e).toResponseEntity();
     }
 
+    /**
+     * Api 参数绑定异常处理器
+     *
+     * @param e 参数绑定异常
+     * @return 处理后的响应
+     */
     @ExceptionHandler(ApiBindException.class)
     public Object validateException(final ApiBindException e) {
         final String message = e.getMessage();

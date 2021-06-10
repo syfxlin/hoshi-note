@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import me.ixk.hoshi.common.exception.JsonException;
-import me.ixk.hoshi.common.json.DynamicFilter;
 import me.ixk.hoshi.common.json.DynamicFilterProvider;
+import me.ixk.hoshi.common.json.JsonModelDynamicFilter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -77,7 +77,9 @@ public class Json {
 
     public static String toJson(final Object object, final Class<?> active) {
         try {
-            return mapper.writer(new DynamicFilterProvider(new DynamicFilter(active))).writeValueAsString(object);
+            return mapper
+                .writer(new DynamicFilterProvider(new JsonModelDynamicFilter(active)))
+                .writeValueAsString(object);
         } catch (final JsonProcessingException e) {
             throw new JsonException(e);
         }

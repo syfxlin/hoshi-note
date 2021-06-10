@@ -7,6 +7,8 @@ package me.ixk.hoshi.common.exception;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * Json 处理异常
+ *
  * @author Otstar Lin
  * @date 2021/5/15 下午 11:40
  */

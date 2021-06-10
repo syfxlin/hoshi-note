@@ -4,6 +4,7 @@
 
 package me.ixk.hoshi.common;
 
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -14,5 +15,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  */
 @Configuration
 @EnableAspectJAutoProxy
-@ComponentScan("me.ixk.hoshi.common")
+@EnableDiscoveryClient
+@ComponentScan
 public class HoshiCommonAutoConfiguration {}

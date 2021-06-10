@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 /**
+ * 默认客户端配置
+ *
  * @author Otstar Lin
  * @date 2021/5/6 下午 2:32
  */
@@ -25,6 +27,7 @@ public class DefaultClientConfig {
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
+        // 默认添加认证 Token，从 HttpServletRequest 读取
         return Request.addToken(new RestTemplate());
     }
 }

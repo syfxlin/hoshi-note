@@ -11,16 +11,25 @@ import java.util.Arrays;
 import me.ixk.hoshi.common.json.JsonMode.Include;
 
 /**
+ * {@link JsonMode} 动态过滤器
+ *
  * @author Otstar Lin
  * @date 2021/6/1 15:22
  */
-public class DynamicFilter extends SimpleBeanPropertyFilter {
+public class JsonModelDynamicFilter extends SimpleBeanPropertyFilter {
 
+    /**
+     * 激活的过滤器模式
+     */
     private final Class<?> active;
+    /**
+     * 是否是排除模式，默认为排除模式
+     */
     private final boolean exclude;
 
-    public DynamicFilter(final Class<?> active) {
+    public JsonModelDynamicFilter(final Class<?> active) {
         this.active = active;
+        // 当模式类上标注 Include 注解则设置为非排除模式
         this.exclude = this.active.getAnnotation(Include.class) == null;
     }
 
@@ -36,8 +45,10 @@ public class DynamicFilter extends SimpleBeanPropertyFilter {
             return this.exclude;
         }
         if (this.exclude) {
+            // 排除模式下，所有设置的模式都必须不能为当前激活模式或子类，否则就过滤掉该字段
             return Arrays.stream(mode.value()).noneMatch(clazz -> clazz.isAssignableFrom(this.active));
         } else {
+            // 包含模式下，需要是设置的模式的其中一个的子类，否则就过滤掉该字段
             return Arrays.stream(mode.value()).anyMatch(clazz -> clazz.isAssignableFrom(this.active));
         }
     }

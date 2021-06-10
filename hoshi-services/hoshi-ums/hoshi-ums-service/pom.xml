@@ -33,5 +33,9 @@
       <artifactId>hoshi-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>me.ixk.hoshi</groupId>
+      <artifactId>hoshi-log-api</artifactId>
+    </dependency>
   </dependencies>
 </project>

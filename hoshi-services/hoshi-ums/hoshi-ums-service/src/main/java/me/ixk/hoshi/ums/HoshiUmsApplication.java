@@ -4,10 +4,12 @@
 
 package me.ixk.hoshi.ums;
 
+import me.ixk.hoshi.client.annotation.EnableHoshiClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+@EnableHoshiClient
 public class HoshiUmsApplication {
 
     public static void main(final String[] args) {

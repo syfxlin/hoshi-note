@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import java.util.Objects;
 
 /**
+ * 动态过滤器的提供者
+ *
  * @author Otstar Lin
  * @date 2021/6/1 13:46
  */
@@ -27,6 +29,7 @@ public class DynamicFilterProvider extends SimpleFilterProvider implements Prope
     private final PropertyFilter delegate;
 
     public DynamicFilterProvider() {
+        // 默认包含全部字段
         this(SimpleBeanPropertyFilter.serializeAll());
     }
 

@@ -12,6 +12,10 @@ import java.util.function.BiFunction;
 import org.springframework.core.MethodParameter;
 
 /**
+ * 动态过滤器解析器
+ * <p>
+ * 用于解析方法上的注解然后设置对应的 {@link PropertyFilter}
+ *
  * @author Otstar Lin
  * @date 2021/6/1 13:53
  */

@@ -4,9 +4,14 @@
 
 package me.ixk.hoshi.common.json;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.lang.annotation.*;
 
 /**
+ * Json 字段模式
+ * <p>
+ * 与 {@link JsonView} 类似，用于过滤字段
+ *
  * @author Otstar Lin
  * @date 2021/6/1 14:27
  */

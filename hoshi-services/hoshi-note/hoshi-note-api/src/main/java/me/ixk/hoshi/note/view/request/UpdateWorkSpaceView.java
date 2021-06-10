@@ -7,6 +7,7 @@ package me.ixk.hoshi.note.view.request;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UpdateWorkSpaceView {
 
     @NotNull(message = "更新工作区的时候必须设置工作区 ID")

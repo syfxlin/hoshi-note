@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.ixk.hoshi.common.resolver.ApiResultReturnValueHandler;
 import me.ixk.hoshi.common.resolver.ModelArgumentResolver;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,16 +19,26 @@ import org.springframework.web.method.ControllerAdviceBean;
 import org.springframework.web.servlet.mvc.method.annotation.*;
 
 /**
+ * 配置 {@link ModelArgumentResolver} 和 {@link ApiResultReturnValueHandler}
+ * <p>
+ * 由于部分请求处理器需要使用 {@link HttpMessageConverter} 等依赖，必须在 {@link RequestMappingHandlerAdapter} 初始化完毕才可添加
+ *
  * @author Otstar Lin
  * @date 2021/5/26 16:57
  */
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class AfterInjectResolverConfig implements InitializingBean {
 
     private final RequestMappingHandlerAdapter requestMappingHandlerAdapter;
     private final ApplicationContext applicationContext;
 
+    /**
+     * 获取 {@link RequestBodyAdvice} 和 {@link ResponseBodyAdvice} 实例列表
+     *
+     * @return 实例列表
+     */
     private List<Object> requestResponseBodyAdvice() {
         final ApplicationContext applicationContext = this.requestMappingHandlerAdapter.getApplicationContext();
         if (applicationContext == null) {
@@ -59,7 +70,7 @@ public class AfterInjectResolverConfig implements InitializingBean {
         this.requestMappingHandlerAdapter.setArgumentResolvers(
                 this.insert(
                         this.requestMappingHandlerAdapter.getArgumentResolvers(),
-                        new ModelArgumentResolver(converters, responseBodyAdvice, this.applicationContext)
+                        new ModelArgumentResolver(converters, responseBodyAdvice)
                     )
             );
         this.requestMappingHandlerAdapter.setReturnValueHandlers(
@@ -68,6 +79,9 @@ public class AfterInjectResolverConfig implements InitializingBean {
                         new ApiResultReturnValueHandler(converters, responseBodyAdvice)
                     )
             );
+        if (log.isTraceEnabled()) {
+            log.trace("添加 ModelArgumentResolver 和 ApiResultReturnValueHandler");
+        }
     }
 
     private <T> List<T> insert(final List<T> list, final T items) {

@@ -15,6 +15,6 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
  * @date 2021/5/20 20:34
  */
 @Configuration
-@ComponentScan("me.ixk.hoshi.session")
+@ComponentScan
 @EnableRedisRepositories
 public class HoshiSessionAutoConfiguration {}

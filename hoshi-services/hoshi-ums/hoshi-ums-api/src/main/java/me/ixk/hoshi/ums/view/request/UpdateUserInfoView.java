@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
@@ -19,6 +20,7 @@ import org.hibernate.validator.constraints.URL;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @ApiModel("更新用户信息")
 public class UpdateUserInfoView {
 

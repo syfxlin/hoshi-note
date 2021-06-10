@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @ApiModel("添加日志")
 public class AddLogView {
 
@@ -43,7 +45,7 @@ public class AddLogView {
     @ApiModelProperty("IP 地址")
     private String ip;
 
-    @ApiModelProperty("请求方式")
+    @ApiModelProperty("请求方法")
     private String method;
 
     @ApiModelProperty("用户")

@@ -33,7 +33,7 @@ public class Log {
     @ApiModelProperty("日志类型")
     private String type;
 
-    @ApiModelProperty("请求方式")
+    @ApiModelProperty("请求方法")
     private String method;
 
     @ApiModelProperty("IP 地址")

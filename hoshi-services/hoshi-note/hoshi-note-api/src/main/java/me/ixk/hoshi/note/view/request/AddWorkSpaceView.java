@@ -7,6 +7,7 @@ package me.ixk.hoshi.note.view.request;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AddWorkSpaceView {
 
     @Size(min = 1, max = 50, message = "工作区的名称长度应在 1-50 之间")

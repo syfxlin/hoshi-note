@@ -7,6 +7,8 @@ package me.ixk.hoshi.common.json;
 import java.lang.annotation.*;
 
 /**
+ * 激活 {@link JsonMode}
+ *
  * @author Otstar Lin
  * @date 2021/6/1 14:33
  */

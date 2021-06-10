@@ -15,6 +15,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
+ * 默认 Web 配置
+ *
  * @author Otstar Lin
  * @date 2021/5/22 19:16
  */
@@ -26,16 +28,31 @@ public class DefaultWebConfig implements WebMvcConfigurer {
     private final List<HandlerMethodReturnValueHandler> returnValueHandlers;
     private final List<HandlerInterceptor> interceptors;
 
+    /**
+     * 取出所有 {@link HandlerMethodArgumentResolver} Bean 并设置
+     *
+     * @param resolvers 处理器列表
+     */
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.addAll(this.argumentResolvers);
     }
 
+    /**
+     * 取出所有 {@link HandlerMethodReturnValueHandler} Bean 并设置
+     *
+     * @param handlers 处理器列表
+     */
     @Override
     public void addReturnValueHandlers(final List<HandlerMethodReturnValueHandler> handlers) {
         handlers.addAll(this.returnValueHandlers);
     }
 
+    /**
+     * 取出所有 {@link HandlerInterceptor} Bean 并设置
+     *
+     * @param registry 处理器列表
+     */
     @Override
     public void addInterceptors(@NotNull final InterceptorRegistry registry) {
         this.interceptors.forEach(registry::addInterceptor);

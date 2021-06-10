@@ -15,6 +15,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
  * @date 2021/5/3 下午 10:12
  */
 @Configuration
-@ComponentScan("me.ixk.hoshi.security")
+@ComponentScan
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class HoshiSecurityAutoConfiguration {}

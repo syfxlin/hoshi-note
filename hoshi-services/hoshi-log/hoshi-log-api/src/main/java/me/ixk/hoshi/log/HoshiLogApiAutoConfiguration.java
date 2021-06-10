@@ -1,16 +1,14 @@
-/*
- * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
- */
+package me.ixk.hoshi.log;
 
-package me.ixk.hoshi.mysql;
-
+import me.ixk.hoshi.client.annotation.EnableHoshiClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Otstar Lin
- * @date 2021/6/5 13:56
+ * @date 2021/6/8 16:20
  */
 @Configuration
 @ComponentScan
-public class HoshiMysqlAutoConfiguration {}
+@EnableHoshiClient
+public class HoshiLogApiAutoConfiguration {}
