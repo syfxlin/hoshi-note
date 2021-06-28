@@ -43,7 +43,7 @@ public class SecurityConfig extends SecurityConfigAdapter {
                     if (user.isEmpty()) {
                         ApiResult.unauthorized("用户 ID 不存在").build().toResponse(response);
                     } else {
-                        ApiResult.ok(user.get()).toResponse(response);
+                        ApiResult.ok(user.get(), "登录成功").toResponse(response);
                     }
                 }
             )

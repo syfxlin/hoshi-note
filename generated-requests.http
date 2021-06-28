@@ -21,26 +21,30 @@ username=admin&password=password
 
 > {% client.global.set("token", response.headers.valueOf("X-Auth-Token")); %}
 
+### Token 登录
+POST http://localhost:8000/api/login
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+token=1706b23c-daaa-4ff5-bd50-54643d63aa7e
+
+> {% client.global.set("token", response.headers.valueOf("X-Auth-Token")); %}
+
 ### 获取当前登录的用户信息
 GET http://localhost:8000/api/users
 Accept: application/json
-Authorization: Bearer session.{{token}}
-
-### 获取当前登录的用户信息（Token）
-GET http://localhost:8000/api/users
-Accept: application/json
-Authorization: Bearer token.1706b23c-daaa-4ff5-bd50-54643d63aa7e
+Authorization: Bearer {{token}}
 
 ### 获取所有用户
 GET http://localhost:8000/api/admin/users?page=0&size=1&sort=id,desc
 Accept: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 添加用户
 POST http://localhost:8000/api/admin/users
 Accept: application/json
 Content-Type: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 {
     "username": "test",
@@ -57,7 +61,7 @@ X-Auth-Token: {{token}}
 PUT http://localhost:8000/api/admin/users
 Accept: application/json
 Content-Type: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 {
   "id": {{test_user_id}},
@@ -68,7 +72,7 @@ X-Auth-Token: {{token}}
 POST http://localhost:8000/api/admin/users/role
 Accept: application/json
 Content-Type: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 {
   "id": {{test_user_id}},
@@ -79,7 +83,7 @@ X-Auth-Token: {{token}}
 PUT http://localhost:8000/api/admin/users/role
 Accept: application/json
 Content-Type: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 {
   "id": {{test_user_id}},
@@ -90,22 +94,22 @@ X-Auth-Token: {{token}}
 DELETE http://localhost:8000/api/admin/users/role?id={{test_user_id}}&roles=USER
 Accept: application/json
 Content-Type: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 删除用户
 DELETE http://localhost:8000/api/admin/users?id={{test_user_id}}
 Accept: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 获取所有权限
 GET http://localhost:8000/api/admin/roles
 Accept: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 添加一个权限
 POST http://localhost:8000/api/admin/roles
 Accept: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -117,7 +121,7 @@ Content-Type: application/json
 ### 更新权限
 PUT http://localhost:8000/api/admin/roles
 Accept: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -128,12 +132,12 @@ Content-Type: application/json
 ### 删除权限
 DELETE http://localhost:8000/api/admin/roles?id=TEST
 Accept: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 更改用户信息
 PUT http://localhost:8000/api/users/info
 Accept: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -143,7 +147,7 @@ Content-Type: application/json
 ### 添加关注
 POST http://localhost:8000/api/follows
 Accept: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -153,7 +157,7 @@ Content-Type: application/json
 ### 取消关注
 DELETE http://localhost:8000/api/follows?user=3
 Accept: application/json
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 获取关注列表
 GET http://localhost:8000/api/follows/1/following
@@ -167,7 +171,7 @@ Accept: application/json
 POST http://localhost:8001/api/files
 Accept: application/json
 Content-Type: multipart/form-data; boundary=WebAppBoundary
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 --WebAppBoundary
 Content-Disposition: form-data; name="file"; filename="pom.xml"
@@ -194,27 +198,27 @@ Content-Type: application/json
 
 ### 下载图片
 GET http://localhost:8001/api/images/909356d9-e642-4a3f-a396-37e7a7382aac.jpg
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 列出文件
 GET http://localhost:8001/api/files?page=1&size=1
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ###
 GET http://localhost:8000/api/users/logged
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ###
 DELETE http://localhost:8000/api/users/exclude/8e6746fa-92f4-4d17-841d-3d40384220df
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 获取工作区
 GET http://localhost:8001/api/workspace
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 增加工作区
 POST http://localhost:8001/api/workspace
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -228,7 +232,7 @@ Content-Type: application/json
 
 ### 修改工作区
 PUT http://localhost:8001/api/workspace/{{test_workspace_id}}
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -237,19 +241,19 @@ Content-Type: application/json
 
 ### 删除工作区
 DELETE http://localhost:8001/api/workspace/{{test_workspace_id}}
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 获取笔记列表
 GET http://localhost:8001/api/notes/elxu2uz71y
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 获取笔记
 GET http://localhost:8001/api/notes/elxu2uz71y/fe4o0pf0dd
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 
 ### 添加笔记
 POST http://localhost:8001/api/notes/elxu2uz71y
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -261,7 +265,7 @@ Content-Type: application/json
 
 ### 更新笔记
 PUT http://localhost:8001/api/notes/elxu2uz71y/fe4o0pf0dd
-X-Auth-Token: {{token}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {

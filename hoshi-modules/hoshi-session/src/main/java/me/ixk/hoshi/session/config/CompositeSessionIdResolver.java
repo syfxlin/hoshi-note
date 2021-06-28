@@ -32,8 +32,6 @@ public class CompositeSessionIdResolver implements HttpSessionIdResolver {
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
-    public static final String SESSION_MARK = "session.";
-    public static final String TOKEN_MARK = "token.";
 
     @Override
     public List<String> resolveSessionIds(final HttpServletRequest request) {
@@ -41,10 +39,7 @@ public class CompositeSessionIdResolver implements HttpSessionIdResolver {
         if (token == null) {
             return Collections.emptyList();
         }
-        if (token.startsWith(SESSION_MARK)) {
-            return Collections.singletonList(token.replace(SESSION_MARK, ""));
-        }
-        return Collections.emptyList();
+        return Collections.singletonList(token);
     }
 
     @Override
@@ -53,7 +48,7 @@ public class CompositeSessionIdResolver implements HttpSessionIdResolver {
         final HttpServletResponse response,
         final String sessionId
     ) {
-        response.setHeader(X_AUTH_TOKEN, SESSION_MARK + sessionId);
+        response.setHeader(X_AUTH_TOKEN, sessionId);
     }
 
     @Override
