@@ -10,6 +10,12 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 
+/**
+ * 服务网关
+ *
+ * @author Otstar Lin
+ * @date 2021/6/24 19:39
+ */
 @SpringBootApplication
 public class HoshiGatewayApplication {
 

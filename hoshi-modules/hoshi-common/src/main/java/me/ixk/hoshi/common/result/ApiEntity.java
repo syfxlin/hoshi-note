@@ -16,6 +16,10 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 统一响应实体
+ * <p>
+ * 规范服务间通讯即 Api 响应
+ *
  * @author Otstar Lin
  * @date 2021/5/18 下午 2:33
  */

@@ -8,6 +8,12 @@ import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * 监控中心
+ *
+ * @author Otstar Lin
+ * @date 2021/6/24 19:37
+ */
 @SpringBootApplication
 @EnableAdminServer
 public class HoshiAdminApplication {

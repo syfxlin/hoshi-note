@@ -11,6 +11,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 
 /**
+ * 保留用户登录的信息
+ * <p>
+ * 保留了用户登录时的 IP，UA 等
+ *
  * @author Otstar Lin
  * @date 2021/5/27 22:57
  */

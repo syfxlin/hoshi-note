@@ -6,7 +6,6 @@ package me.ixk.hoshi.session;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 /**
  * 自动配置
@@ -16,5 +15,4 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
  */
 @Configuration
 @ComponentScan
-@EnableRedisRepositories
 public class HoshiSessionAutoConfiguration {}

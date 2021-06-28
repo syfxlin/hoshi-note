@@ -12,6 +12,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
+ * 默认跨域配置
+ *
  * @author Otstar Lin
  * @date 2021/5/16 上午 10:27
  */

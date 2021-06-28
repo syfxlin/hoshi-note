@@ -8,6 +8,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * 自动配置
+ *
  * @author Otstar Lin
  * @date 2021/5/6 下午 2:33
  */

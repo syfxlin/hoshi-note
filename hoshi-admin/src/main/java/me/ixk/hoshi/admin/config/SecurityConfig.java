@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
+ * 安全配置，需要 BOOT_ADMIN 权限才能访问
+ *
  * @author Otstar Lin
  * @date 2021/5/15 下午 2:00
  */

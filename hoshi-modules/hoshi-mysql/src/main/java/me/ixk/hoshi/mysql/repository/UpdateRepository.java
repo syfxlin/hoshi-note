@@ -8,9 +8,14 @@ import java.util.Optional;
 import java.util.function.Function;
 import me.ixk.hoshi.mysql.util.Jpa;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.Repository;
 import org.springframework.util.Assert;
 
 /**
+ * 更新功能的 {@link Repository}
+ * <p>
+ * 进行一级判断，将新的实体赋值到旧实体上，为 <code>null</code> 则代表未设置，保留原值
+ *
  * @author Otstar Lin
  * @date 2021/6/5 14:31
  */

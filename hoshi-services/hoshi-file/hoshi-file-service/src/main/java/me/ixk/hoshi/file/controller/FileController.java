@@ -92,7 +92,7 @@ public class FileController {
     }
 
     @ApiOperation("下载文件")
-    @GetMapping("/{userId}/{filename:[a-zA-Z0-9]+}/download")
+    @GetMapping("/{userId}/{filename}/download")
     public ResponseEntity<?> download(
         @PathVariable("userId") final String userId,
         @PathVariable("filename") final String filename
@@ -116,7 +116,7 @@ public class FileController {
     }
 
     @ApiOperation("读取文件")
-    @GetMapping("/{userId}/{filename:[a-zA-Z0-9]+}")
+    @GetMapping("/{userId}/{filename}")
     public ResponseEntity<?> get(
         @PathVariable("userId") final String userId,
         @PathVariable("filename") final String filename
@@ -138,7 +138,7 @@ public class FileController {
     }
 
     @ApiOperation("删除文件")
-    @DeleteMapping("/{filename:[a-zA-Z0-9]+}")
+    @DeleteMapping("/{filename}")
     @PreAuthorize("hasRole('USER')")
     public ApiResult<Object> delete(@PathVariable("filename") final String filename, @UserId final String userId) {
         if (!this.storageService.exist(filename, FILE_DIR, userId)) {

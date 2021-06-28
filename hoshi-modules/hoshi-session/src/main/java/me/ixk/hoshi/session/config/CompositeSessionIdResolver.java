@@ -6,16 +6,22 @@ package me.ixk.hoshi.session.config;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import me.ixk.hoshi.session.entity.TokenSession;
-import me.ixk.hoshi.session.repository.TokenSessionRepository;
 import org.springframework.session.web.http.HttpSessionIdResolver;
 import org.springframework.stereotype.Component;
 
 /**
+ * Token 解析器
+ * <p>
+ * 请求通过 <code>Authorization</code> 请求头传入 Token
+ * <p>
+ * Token 有两种类型：
+ * <ul>
+ *     <li>Session Token：即 Session ID，该 Token 是临时的，一旦</li>
+ * </ul>
+ *
  * @author Otstar Lin
  * @date 2021/5/3 下午 9:49
  */
@@ -29,24 +35,16 @@ public class CompositeSessionIdResolver implements HttpSessionIdResolver {
     public static final String SESSION_MARK = "session.";
     public static final String TOKEN_MARK = "token.";
 
-    private final TokenSessionRepository tokenSessionRepository;
-
     @Override
     public List<String> resolveSessionIds(final HttpServletRequest request) {
         final String token = getToken(request);
         if (token == null) {
             return Collections.emptyList();
         }
-        if (token.startsWith(TOKEN_MARK)) {
-            final Optional<TokenSession> session = this.tokenSessionRepository.findById(token.replace(TOKEN_MARK, ""));
-            if (session.isEmpty()) {
-                return Collections.emptyList();
-            }
-            return Collections.singletonList(session.get().getSession());
-        } else if (token.startsWith(SESSION_MARK)) {
+        if (token.startsWith(SESSION_MARK)) {
             return Collections.singletonList(token.replace(SESSION_MARK, ""));
         }
-        return Collections.singletonList(token);
+        return Collections.emptyList();
     }
 
     @Override

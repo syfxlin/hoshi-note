@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;
 
 /**
+ * {@link Date} 到 {@link OffsetDateTime} 转换器
+ *
  * @author Otstar Lin
  * @date 2021/6/4 22:38
  */

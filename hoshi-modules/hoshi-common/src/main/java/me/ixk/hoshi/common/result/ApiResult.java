@@ -27,23 +27,38 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor;
 
 /**
- * 统一响应
+ * 统一响应（构造器）
+ * <p>
+ * 用于构造统一响应，可以设置 HttpHeader 或响应码，响应信息等等
  *
  * @author Otstar Lin
  * @date 2021/5/17 下午 9:46
  */
 public class ApiResult<T> {
 
+    /**
+     * 响应状态码或者 Api 信息实体，必须不能为空
+     */
     @NotNull
     private final Object status;
 
+    /**
+     * 响应信息，可以为空，若未设置则使用响应码对应的 {@link ApiMessage} 信息
+     */
     @Nullable
     private final String message;
 
+    /**
+     * 响应头
+     */
     private final HttpHeaders headers;
 
+    /**
+     * 响应数据
+     */
     @Nullable
     private final T data;
 
@@ -98,7 +113,12 @@ public class ApiResult<T> {
         this.headers = HttpHeaders.readOnlyHttpHeaders(headers != null ? headers : new HttpHeaders());
     }
 
-    public ApiMessage getStatusCode() {
+    /**
+     * 获取 {@link ApiMessage}
+     *
+     * @return {@link ApiMessage}
+     */
+    public ApiMessage getApiMessage() {
         if (this.status instanceof ApiMessage) {
             return (ApiMessage) this.status;
         } else {
@@ -106,7 +126,16 @@ public class ApiResult<T> {
         }
     }
 
-    public int getStatusCodeValue() {
+    /**
+     * 获取状态码
+     * <p>
+     * 若是 {@link ApiMessage} 则取出对应的状态码 {@link ApiMessage#value()}
+     * <p>
+     * 否则就是 {@link Integer} 类型的状态码，直接返回
+     *
+     * @return 状态码
+     */
+    public int getStatus() {
         if (this.status instanceof ApiMessage) {
             return ((ApiMessage) this.status).value();
         } else {
@@ -114,8 +143,17 @@ public class ApiResult<T> {
         }
     }
 
+    /**
+     * 获取响应信息
+     * <p>
+     * 如果响应信息已设置，则返回设置的响应信息
+     * <p>
+     * 如果没有设置则获取对应状态码对应的响应信息
+     *
+     * @return 响应信息
+     */
     public String getMessage() {
-        return this.message == null ? this.getStatusCode().message() : this.message;
+        return this.message == null ? this.getApiMessage().message() : this.message;
     }
 
     public HttpHeaders getHeaders() {
@@ -176,21 +214,47 @@ public class ApiResult<T> {
         return builder.toString();
     }
 
+    /**
+     * 转换为 {@link ApiEntity}
+     *
+     * @return
+     */
     public ApiEntity<T> toEntity() {
-        return new ApiEntity<>(this.getStatusCodeValue(), this.getMessage(), this.getData());
+        return new ApiEntity<>(this.getStatus(), this.getMessage(), this.getData());
     }
 
+    /**
+     * 转换为 {@link JsonNode}
+     *
+     * @return
+     */
     public JsonNode toJsonNode() {
         return Json.convertToNode(this.toEntity());
     }
 
+    /**
+     * 转换为 {@link ResponseEntity}
+     * <p>
+     * 为了避免重复造轮子，只需要将 {@link ApiResult} 直接转换成 {@link ResponseEntity}，Spring 会调用 {@link HttpEntityMethodProcessor} 将其写入响应中
+     *
+     * @return
+     */
     public ResponseEntity<ApiEntity<T>> toResponseEntity() {
-        return ResponseEntity.status(this.getStatusCodeValue()).headers(this.getHeaders()).body(this.toEntity());
+        return ResponseEntity.status(this.getStatus()).headers(this.getHeaders()).body(this.toEntity());
     }
 
+    /**
+     * 写入 {@link HttpServletResponse}
+     * <p>
+     * 部分情况下需要直接写入 {@link HttpServletResponse}，则调用对应的方法进行写入操作
+     *
+     * @param response {@link HttpServletResponse}
+     * @return {@link HttpServletResponse}
+     * @throws IOException 异常
+     */
     public HttpServletResponse toResponse(final HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=utf-8");
-        response.setStatus(this.getStatusCodeValue());
+        response.setStatus(this.getStatus());
         this.getHeaders().forEach((key, value) -> value.forEach(v -> response.addHeader(key, v)));
         response.getWriter().write(this.toJsonNode().toString());
         return response;

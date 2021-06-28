@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Api 异常，抛出该异常可以返回多个绑定错误信息，同时自动将响应码设为 400
+ *
  * @author Otstar Lin
  * @date 2021/5/22 16:15
  */

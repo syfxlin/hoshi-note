@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
+ * 安全工具类
+ *
  * @author Otstar Lin
  * @date 2021/5/22 15:41
  */
@@ -31,7 +33,11 @@ public final class Security {
     }
 
     public static UserDetails principal() {
-        final Object principal = authentication().getPrincipal();
+        final Authentication authentication = authentication();
+        if (authentication == null) {
+            return null;
+        }
+        final Object principal = authentication.getPrincipal();
         if (ANONYMOUS_USER.equals(principal)) {
             return null;
         }

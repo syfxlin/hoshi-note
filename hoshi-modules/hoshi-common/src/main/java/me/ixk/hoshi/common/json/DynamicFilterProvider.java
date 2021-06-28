@@ -26,6 +26,9 @@ public class DynamicFilterProvider extends SimpleFilterProvider implements Prope
     public static final String FILTER_NAME = "DynamicFilterProvider$FILTER";
     private static final long serialVersionUID = 8283727865988072488L;
 
+    /**
+     * 委托字段过滤器
+     */
     private final PropertyFilter delegate;
 
     public DynamicFilterProvider() {

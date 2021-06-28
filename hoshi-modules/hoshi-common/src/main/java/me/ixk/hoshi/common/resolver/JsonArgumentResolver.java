@@ -63,6 +63,8 @@ public class JsonArgumentResolver implements HandlerMethodArgumentResolver {
         }
         if (value == null) {
             if (jsonParam != null) {
+                // 如果要求必须注入，同时值为空（代表未注入）则抛出异常
+                // 如果不要求必须注入则使用默认值
                 if (jsonParam.required()) {
                     throw new MissingServletRequestParameterException(
                         jsonParam.path(),

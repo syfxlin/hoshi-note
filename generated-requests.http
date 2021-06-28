@@ -177,14 +177,13 @@ Content-Type: application/json
 --WebAppBoundary--
 
 ### 读取文件
-GET http://localhost:8001/api/files/a91db416-46b1-40c0-ad79-9ce9b0306a4e.xml
-X-Auth-Token: {{token}}
+GET http://localhost:8001/api/files/1234567890/a91db416-46b1-40c0-ad79-9ce9b0306a4e.xml
 
 ### 上传图片
-POST http://localhost:8001/api/images
+POST http://localhost:8001/api/files
 Accept: application/json
 Content-Type: multipart/form-data; boundary=WebAppBoundary
-X-Auth-Token: {{token}}
+Authorization: Bearer token.1706b23c-daaa-4ff5-bd50-54643d63aa7e
 
 --WebAppBoundary
 Content-Disposition: form-data; name="file"; filename="1.png"

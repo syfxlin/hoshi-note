@@ -12,6 +12,8 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.Assert;
 
 /**
+ * JPA 工具类
+ *
  * @author Otstar Lin
  * @date 2021/6/5 13:57
  */

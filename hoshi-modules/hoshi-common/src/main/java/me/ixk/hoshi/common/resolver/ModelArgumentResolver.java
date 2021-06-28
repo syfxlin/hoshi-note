@@ -29,12 +29,20 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver;
+import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
 /**
+ * 注入请求实体
+ * <p>
+ * 和 {@link RequestBody} 功能相同，负责将请求内容转换为 Java 对象，同时解决了 {@link RequestBody} 不能将 {@link PathVariable} 等对象绑定到标准的对象上
+ * <p>
+ * 如果要使用这个处理器，则需要在参数上标记 {@link JsonModel}
+ *
  * @author Otstar Lin
  * @date 2021/5/26 15:59
  */
@@ -52,6 +60,16 @@ public class ModelArgumentResolver extends AbstractMessageConverterMethodArgumen
         return parameter.hasParameterAnnotation(JsonModel.class);
     }
 
+    /**
+     * 实现代码与 {@link RequestResponseBodyMethodProcessor} 类似，增加了 {@link WebDataBinder#bind} 的方法
+     *
+     * @param parameter     参数
+     * @param mavContainer  容器
+     * @param webRequest    请求
+     * @param binderFactory 工厂
+     * @return 解析后的参数
+     * @throws Exception 异常
+     */
     @Override
     public Object resolveArgument(
         @NotNull MethodParameter parameter,
@@ -66,10 +84,13 @@ public class ModelArgumentResolver extends AbstractMessageConverterMethodArgumen
         if (binderFactory != null) {
             final WebDataBinder binder = binderFactory.createBinder(webRequest, arg, name);
             if (arg != null) {
+                // 获取 JsonModel 注解
                 final JsonModel jsonModel = parameter.getParameterAnnotation(JsonModel.class);
+                // 如果有标记，同时不跳过 WebDataBinder 注入则进行绑定其他参数的操作
                 if (jsonModel != null && !jsonModel.skipBind()) {
                     final ServletRequest nativeRequest = webRequest.getNativeRequest(ServletRequest.class);
                     if (nativeRequest != null) {
+                        // ServletRequest 不为空，调用 WebDataBinder#bind 方法进行绑定
                         ((ServletRequestDataBinder) binder).bind(nativeRequest);
                     }
                 }

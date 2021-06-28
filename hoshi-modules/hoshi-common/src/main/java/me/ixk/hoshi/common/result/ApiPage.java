@@ -14,13 +14,17 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 
 /**
+ * Api 分页实体
+ * <p>
+ * 规范分页响应的格式
+ *
  * @author Otstar Lin
  * @date 2021/5/18 下午 2:10
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel("分页响应")
+@ApiModel("分页")
 public class ApiPage<T> {
 
     @ApiModelProperty("当前页")

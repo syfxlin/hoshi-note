@@ -8,6 +8,10 @@ import java.util.List;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 /**
+ * 用户描述信息
+ * <p>
+ * 继承自 {@link org.springframework.security.core.userdetails.User} 同时增加保存了用户 ID
+ *
  * @author Otstar Lin
  * @date 2021/5/15 下午 3:01
  */

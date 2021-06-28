@@ -16,5 +16,12 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface JsonActive {
+    /**
+     * 需要启用的模式
+     * <p>
+     * 会启用该类的所有子类
+     *
+     * @return 模式类
+     */
     Class<?> value();
 }

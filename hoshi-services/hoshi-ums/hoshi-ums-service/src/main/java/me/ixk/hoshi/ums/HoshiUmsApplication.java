@@ -5,11 +5,12 @@
 package me.ixk.hoshi.ums;
 
 import me.ixk.hoshi.client.annotation.EnableHoshiClient;
+import me.ixk.hoshi.log.HoshiLogApiAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@EnableHoshiClient
+@EnableHoshiClient(basePackageClasses = { HoshiLogApiAutoConfiguration.class, HoshiUmsApiAutoConfiguration.class })
 public class HoshiUmsApplication {
 
     public static void main(final String[] args) {

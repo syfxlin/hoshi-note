@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus.Series;
 import org.springframework.lang.Nullable;
 
 /**
+ * 常用的 Api 响应信息
+ *
  * @author Otstar Lin
  * @date 2021/5/17 下午 2:05
  */

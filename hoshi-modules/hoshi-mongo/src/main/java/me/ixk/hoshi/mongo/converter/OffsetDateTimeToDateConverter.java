@@ -9,6 +9,8 @@ import java.util.Date;
 import org.springframework.core.convert.converter.Converter;
 
 /**
+ * {@link OffsetDateTime} 到 {@link Date} 转换器
+ *
  * @author Otstar Lin
  * @date 2021/6/4 22:38
  */
