@@ -1,0 +1,35 @@
+#
+# Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
+#
+hoshi:
+  version: 1.0
+  name: Hoshi Note 接口文档
+  description: 一个集各种神奇功能的云笔记
+  author:
+    name: Otstar Lin
+    url: https://ixk.me
+    email: syfxlin@gmail.com
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+spring:
+  mail:
+    host: smtp.zoho.com.cn
+    port: 587
+    protocol: smtp
+    username: no-reply@ixk.me
+    password: ***REMOVED***
+    from: no-reply@ixk.me
+    properties:
+      mail.tls: true
+      mail.smtp.starttls.enable: true
+  rabbitmq:
+    username: guest
+    password: guest
+    host: localhost
+    port: 5672
+  output:
+    ansi:
+      enabled: always

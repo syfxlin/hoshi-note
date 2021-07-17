@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.ixk.hoshi.client.util.Request;
 import me.ixk.hoshi.log.annotation.Log;
-import me.ixk.hoshi.log.client.AsyncLogFeignService;
+import me.ixk.hoshi.log.client.AsyncLogRemoteService;
 import me.ixk.hoshi.log.view.request.AddLogView;
 import me.ixk.hoshi.log.view.request.AddLogView.AddLogViewBuilder;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -44,7 +44,7 @@ public class LogAspect {
         }
     }
 
-    private final AsyncLogFeignService logFeignService;
+    private final AsyncLogRemoteService logRemoteService;
     private final Environment environment;
 
     @Around("@annotation(me.ixk.hoshi.log.annotation.Log)")
@@ -78,7 +78,7 @@ public class LogAspect {
             builder.status(Boolean.FALSE);
         }
         final AddLogView logView = builder.endTime(OffsetDateTime.now()).build();
-        logFeignService.add(logView);
+        logRemoteService.add(logView);
         if (ex != null) {
             throw ex;
         }

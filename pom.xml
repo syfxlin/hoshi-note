@@ -181,6 +181,16 @@
         <artifactId>hoshi-ums-api</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-mail-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-rabbit</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

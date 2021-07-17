@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @date 2021/6/8 15:41
  */
 @FeignClient(name = "hoshi-log", fallbackFactory = LogFallbackFactory.class)
-public interface LogFeignService {
+public interface LogRemoteService {
     /**
      * 添加日志
      *

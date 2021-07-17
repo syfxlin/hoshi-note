@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class AsyncLogFeignService {
+public class AsyncLogRemoteService {
 
-    private final LogFeignService logFeignService;
+    private final LogRemoteService logRemoteService;
 
     @Async
     public void add(final AddLogView view) {
-        logFeignService.add(view);
+        logRemoteService.add(view);
     }
 }

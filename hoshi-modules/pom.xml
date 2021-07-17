@@ -28,5 +28,6 @@
     <module>hoshi-mysql</module>
     <module>hoshi-mongo</module>
     <module>hoshi-api</module>
+    <module>hoshi-rabbit</module>
   </modules>
 </project>

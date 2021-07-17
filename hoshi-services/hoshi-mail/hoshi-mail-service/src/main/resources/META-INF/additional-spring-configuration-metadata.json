@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "spring.mail.from",
+      "type": "java.lang.String",
+      "description": "发件邮箱."
+    }
+  ]
+}
