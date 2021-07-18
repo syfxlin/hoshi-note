@@ -2,7 +2,9 @@ package me.ixk.hoshi.mail.handler;
 
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.mail.service.MailService;
+import me.ixk.hoshi.mail.view.CodeMail;
 import me.ixk.hoshi.mail.view.Mail;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -12,12 +14,18 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
+@RabbitListener(queues = "email")
 public class MailHandler {
 
     private final MailService mailService;
 
-    @RabbitListener(queues = "email")
-    public void sendMail(final Mail mail) {
+    @RabbitHandler
+    public void send(final Mail mail) {
         mailService.send(mail);
+    }
+
+    @RabbitHandler
+    public void sendCode(final CodeMail mail) {
+        mailService.sendCode(mail);
     }
 }

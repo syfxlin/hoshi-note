@@ -10,13 +10,13 @@ max_line_length = 120
 tab_width = 4
 trim_trailing_whitespace = true
 
-[{*.ant,*.fxml,*.jhm,*.jnlp,*.jrxml,*.pom,*.rng,*.tld,*.wadl,*.wsdd,*.wsdl,*.xjb,*.xml,*.xsd,*.xsl,*.xslt,*.xul}]
+[{*.ant, *.fxml, *.jhm, *.jnlp, *.jrxml, *.pom, *.rng, *.tld, *.wadl, *.wsdd, *.wsdl, *.xjb, *.xml, *.xsd, *.xsl, *.xslt, *.xul, *html}]
 indent_size = 2
 tab_width = 2
 
-[{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.prettierc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
+[{*.har, *.jsb2, *.jsb3, *.json, .babelrc, .eslintrc, .prettierc, .prettierrc, .stylelintrc, bowerrc, jest.config}]
 indent_size = 2
 tab_width = 2
 
-[{*.yaml,*.yml}]
+[{*.yaml, *.yml}]
 indent_size = 2

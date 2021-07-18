@@ -1,7 +1,9 @@
 package me.ixk.hoshi.mail.handler;
 
+import cn.hutool.core.util.RandomUtil;
 import me.ixk.hoshi.mail.client.MailRemoteService;
 import me.ixk.hoshi.mail.view.Attachment;
+import me.ixk.hoshi.mail.view.CodeMail;
 import me.ixk.hoshi.mail.view.Mail;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +35,23 @@ class MailHandlerTest {
             .build();
         final Mail mail = Mail
             .builder()
-            .to("syfxlin@gmail.com")
+            .to("i@ixk.me")
             .subject("Test mail queue")
             .text("Test mail queue")
             .attachment(attachment)
             .build();
-        mailRemoteService.sendMail(mail);
+        mailRemoteService.send(mail);
+    }
+
+    @Test
+    void sendCode() {
+        final CodeMail mail = CodeMail
+            .builder()
+            .to("i@ixk.me")
+            .subject("验证您的邮箱账户")
+            .code(RandomUtil.randomString(6))
+            .expire(30)
+            .build();
+        mailRemoteService.sendCode(mail);
     }
 }
