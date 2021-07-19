@@ -6,6 +6,7 @@ package me.ixk.hoshi.log.view.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -23,7 +24,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @ApiModel("添加日志")
-public class AddLogView {
+public class AddLogView implements Serializable {
+
+    private static final long serialVersionUID = -3293210012295275706L;
 
     @NotNull(message = "日志类型不能为空")
     @Pattern(regexp = "[A-Z]+", message = "日志类型必须为全大写字符")

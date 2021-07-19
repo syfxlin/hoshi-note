@@ -7,11 +7,11 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.time.OffsetDateTime;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.ixk.hoshi.client.util.Request;
 import me.ixk.hoshi.log.annotation.Log;
-import me.ixk.hoshi.log.client.AsyncLogRemoteService;
+import me.ixk.hoshi.log.client.LogRemoteService;
 import me.ixk.hoshi.log.view.request.AddLogView;
 import me.ixk.hoshi.log.view.request.AddLogView.AddLogViewBuilder;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -20,6 +20,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * @author Otstar Lin
@@ -44,7 +46,7 @@ public class LogAspect {
         }
     }
 
-    private final AsyncLogRemoteService logRemoteService;
+    private final LogRemoteService logRemoteService;
     private final Environment environment;
 
     @Around("@annotation(me.ixk.hoshi.log.annotation.Log)")
@@ -64,7 +66,7 @@ public class LogAspect {
             .operate(annotation.operate())
             .message(annotation.message())
             .module(environment.getProperty("spring.application.name"))
-            .ip(Request.ip())
+            .ip(this.getIp())
             .method(method.toGenericString())
             .user(userId)
             .startTime(OffsetDateTime.now());
@@ -83,5 +85,14 @@ public class LogAspect {
             throw ex;
         }
         return result;
+    }
+
+    private String getIp() {
+        final ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            return null;
+        }
+        final HttpServletRequest request = attributes.getRequest();
+        return request.getRemoteAddr();
     }
 }
