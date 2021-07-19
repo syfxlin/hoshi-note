@@ -4,9 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.List;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Singular;
+import lombok.*;
 
 /**
  * 邮件
@@ -16,6 +14,8 @@ import lombok.Singular;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel("邮件")
 public class Mail implements Serializable {
 
@@ -43,7 +43,8 @@ public class Mail implements Serializable {
     private String text;
 
     @ApiModelProperty("是否是 HTML")
-    private boolean html;
+    @Builder.Default
+    private boolean html = true;
 
     @ApiModelProperty("附件")
     @Singular("attachment")

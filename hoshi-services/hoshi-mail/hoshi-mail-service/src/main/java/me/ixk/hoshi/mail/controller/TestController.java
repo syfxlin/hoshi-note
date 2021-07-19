@@ -16,7 +16,6 @@ public class TestController {
     public String code(final Model model) {
         model.addAttribute("subject", "验证您的邮箱账户");
         model.addAttribute("code", RandomUtil.randomString(6));
-        model.addAttribute("expire", 30);
         model.addAttribute("helpUrl", "https://github.com/syfxlin/hoshi-note");
         model.addAttribute("logoUrl", "https://note.ixk.me/logo.png");
         return "code";

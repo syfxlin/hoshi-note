@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import me.ixk.hoshi.ums.view.request.UpdateUserInfoView;
 
 /**
  * 用户信息表
@@ -67,4 +68,17 @@ public class UserInfo implements Serializable {
     @Column(name = "status")
     @ApiModelProperty("用户状态")
     private String status;
+
+    public static UserInfo ofUpdate(final UpdateUserInfoView vo, final Long id) {
+        return UserInfo
+            .builder()
+            .id(id)
+            .avatar(vo.getAvatar())
+            .bio(vo.getBio())
+            .address(vo.getAddress())
+            .url(vo.getUrl())
+            .company(vo.getCompany())
+            .status(vo.getStatus())
+            .build();
+    }
 }

@@ -44,7 +44,6 @@ public class MailService {
         final Map<String, Object> model = this.createModel();
         model.put("subject", mail.getSubject());
         model.put("code", mail.getCode());
-        model.put("expire", mail.getExpire());
         try {
             configuration.getTemplate("code.ftlh").process(model, writer);
         } catch (final TemplateException | IOException e) {

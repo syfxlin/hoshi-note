@@ -16,9 +16,7 @@ import javax.persistence.*;
 import lombok.*;
 import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
-import me.ixk.hoshi.ums.view.request.AddUserView;
-import me.ixk.hoshi.ums.view.request.RegisterUserView;
-import me.ixk.hoshi.ums.view.request.UpdateUserView;
+import me.ixk.hoshi.ums.view.request.*;
 
 /**
  * 用户表
@@ -149,5 +147,17 @@ public class User implements Serializable {
             .email(vo.getEmail())
             .status(vo.getStatus())
             .build();
+    }
+
+    public static User ofUpdateName(final UpdateNameView vo, final String userId) {
+        return User.builder().id(userId).username(vo.getUsername()).nickname(vo.getNickname()).build();
+    }
+
+    public static User ofUpdateEmail(final UpdateEmailView vo, final String userId) {
+        return User.builder().id(userId).email(vo.getEmail()).build();
+    }
+
+    public static User ofUpdatePassword(final UpdatePasswordView vo, final String userId) {
+        return User.builder().id(userId).password(vo.getNewPassword()).build();
     }
 }

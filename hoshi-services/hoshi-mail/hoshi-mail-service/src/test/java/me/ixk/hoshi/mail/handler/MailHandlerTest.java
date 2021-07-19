@@ -50,7 +50,6 @@ class MailHandlerTest {
             .to("i@ixk.me")
             .subject("验证您的邮箱账户")
             .code(RandomUtil.randomString(6))
-            .expire(30)
             .build();
         mailRemoteService.sendCode(mail);
     }

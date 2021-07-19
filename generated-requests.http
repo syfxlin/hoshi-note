@@ -144,6 +144,23 @@ Content-Type: application/json
     "avatar": "https://ixk.me/avatar-full.jpg"
 }
 
+### 发送验证码
+GET http://localhost:8000/api/users/email/code
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### 更改邮箱
+PUT http://localhost:8000/api/users/email
+Authorization: Bearer {{token}}
+Accept: application/json
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "code": "7NPCP86G",
+    "email": "admin@ixk.me"
+}
+
 ### 添加关注
 POST http://localhost:8000/api/follows
 Accept: application/json

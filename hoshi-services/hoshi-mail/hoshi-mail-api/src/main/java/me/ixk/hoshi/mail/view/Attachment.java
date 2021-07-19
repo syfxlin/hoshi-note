@@ -3,8 +3,10 @@ package me.ixk.hoshi.mail.view;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.core.io.InputStreamSource;
 
 /**
@@ -15,6 +17,8 @@ import org.springframework.core.io.InputStreamSource;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel("附件")
 public class Attachment implements Serializable {
 

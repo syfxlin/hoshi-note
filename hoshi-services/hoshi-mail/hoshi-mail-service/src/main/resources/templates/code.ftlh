@@ -198,7 +198,7 @@
                                         vertical-align: middle;
                                     "
                                 >
-                                    此验证码将于 ${expire} 分钟后失效，请您尽快完成验证。
+                                    此验证码将会失效，请您尽快完成验证。
                                 </div>
                             </div>
                             <div

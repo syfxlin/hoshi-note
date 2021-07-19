@@ -4,9 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.List;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Singular;
+import lombok.*;
 
 /**
  * 验证码邮件
@@ -16,6 +14,8 @@ import lombok.Singular;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel("验证码邮件")
 public class CodeMail implements Serializable {
 
@@ -38,9 +38,6 @@ public class CodeMail implements Serializable {
 
     @ApiModelProperty("主题")
     private String subject;
-
-    @ApiModelProperty("过期时间（分钟）")
-    private int expire;
 
     @ApiModelProperty("验证码")
     private String code;
