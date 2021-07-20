@@ -88,4 +88,9 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return ApiResult.ok(user, "登录成功");
     }
+    // @ApiOperation("发送找回密码验证码")
+    // @GetMapping("/api/rest-password/code")
+    // @PreAuthorize("isAnonymous()")
+    // @Transactional(rollbackFor = { Exception.class, Error.class })
+    // public ApiResult<Object> sendResetPasswordCode() {}
 }

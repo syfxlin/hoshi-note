@@ -2,6 +2,7 @@ package me.ixk.hoshi.mail;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 /**
  * @author Otstar Lin
@@ -9,4 +10,5 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan
+@EnableRedisRepositories
 public class HoshiMailApiAutoConfiguration {}

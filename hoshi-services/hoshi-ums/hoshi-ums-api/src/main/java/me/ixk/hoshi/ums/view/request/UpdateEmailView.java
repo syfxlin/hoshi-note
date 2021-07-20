@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @ApiModel("更新邮箱")
 public class UpdateEmailView {
 
-    @Size(min = 8, max = 8, message = "验证码的长度为 8 位")
+    @Size(min = 10, max = 10, message = "验证码的长度为 10 位")
     @ApiModelProperty("验证码")
     private String code;
 

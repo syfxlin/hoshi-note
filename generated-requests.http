@@ -157,7 +157,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "code": "7NPCP86G",
+    "code": "IBRC4UFNA3",
     "email": "admin@ixk.me"
 }
 

@@ -70,8 +70,8 @@ public class UserController {
 
     @ApiOperation("发送更新邮箱验证码")
     @GetMapping("/email/code")
-    public ApiResult<Object> sendEmailCode(@Autowired final User user, final HttpSession session) {
-        verifyCodeService.generate(user.getEmail(), "验证您的邮箱账户", session);
+    public ApiResult<Object> sendEmailCode(@Autowired final User user) {
+        verifyCodeService.generate(user.getEmail(), "验证您的邮箱账户", 60 * 30);
         return ApiResult.ok("验证码发送成功").build();
     }
 
@@ -82,7 +82,7 @@ public class UserController {
         @Valid @JsonModel final UpdateEmailView vo,
         final HttpSession session
     ) {
-        if (!verifyCodeService.verify("验证您的邮箱账户", vo.getCode(), session)) {
+        if (!verifyCodeService.verify("验证您的邮箱账户", vo.getCode())) {
             return ApiResult.bindException("验证码不匹配");
         }
         final User update = User.ofUpdateEmail(vo, user.getId());
