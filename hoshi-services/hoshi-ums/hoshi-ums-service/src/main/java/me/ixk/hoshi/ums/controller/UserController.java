@@ -69,23 +69,23 @@ public class UserController {
     }
 
     @ApiOperation("发送更新邮箱验证码")
-    @GetMapping("/email/code")
+    @PostMapping("/email")
     public ApiResult<Object> sendEmailCode(@Autowired final User user, final HttpServletRequest request) {
         verifyCodeService.generate(user.getEmail(), "验证您的邮箱账户", 60 * 30, request.getRemoteAddr());
         return ApiResult.ok("验证码发送成功").build();
     }
 
-    @ApiOperation("获取用户邮箱")
+    @ApiOperation("更新用户邮箱")
     @PutMapping("/email")
     public ApiResult<Object> updateEmail(@Autowired final User user, @Valid @JsonModel final UpdateEmailView vo) {
         if (!verifyCodeService.verify("验证您的邮箱账户", vo.getCode())) {
-            return ApiResult.bindException("验证码不匹配");
+            return ApiResult.bindException("验证码无效");
         }
         final User update = User.ofUpdateEmail(vo, user.getId());
         return ApiResult.ok(this.userRepository.update(update), "更新邮箱成功");
     }
 
-    @ApiOperation("获取用户密码")
+    @ApiOperation("更新用户密码")
     @PutMapping("/password")
     public ApiResult<Object> updatePassword(@Autowired final User user, @Valid @JsonModel final UpdatePasswordView vo) {
         if (!this.passwordEncoder.matches(vo.getOldPassword(), user.getPassword())) {

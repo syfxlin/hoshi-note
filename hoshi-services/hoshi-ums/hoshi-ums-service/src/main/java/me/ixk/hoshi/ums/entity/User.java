@@ -49,7 +49,7 @@ public class User implements Serializable {
      * 用户名
      */
     @ApiModelProperty("用户名")
-    @Column(name = "username", nullable = false, length = 50)
+    @Column(name = "username", nullable = false, length = 50, unique = true)
     private String username;
 
     /**
@@ -70,7 +70,7 @@ public class User implements Serializable {
      * 邮箱
      */
     @ApiModelProperty("邮箱")
-    @Column(name = "email", nullable = false, length = 75)
+    @Column(name = "email", nullable = false, length = 75, unique = true)
     private String email;
 
     /**

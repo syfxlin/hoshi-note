@@ -145,7 +145,7 @@ Content-Type: application/json
 }
 
 ### 发送验证码
-GET http://localhost:8000/api/users/email/code
+POST http://localhost:8000/api/users/email
 Accept: application/json
 Authorization: Bearer {{token}}
 
@@ -153,12 +153,25 @@ Authorization: Bearer {{token}}
 PUT http://localhost:8000/api/users/email
 Authorization: Bearer {{token}}
 Accept: application/json
-Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
     "code": "IBRC4UFNA3",
     "email": "admin@ixk.me"
+}
+
+### 发送找回密码验证码
+POST http://localhost:8000/api/reset-password/admin@ixk.me
+Accept: application/json
+
+### 找回密码
+PUT http://localhost:8000/api/reset-password
+Accept: application/json
+Content-Type: application/json
+
+{
+    "code": "9413aa77-027d-4aac-9e78-78bdaa9efb2b",
+    "password": "password"
 }
 
 ### 添加关注

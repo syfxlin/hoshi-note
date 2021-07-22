@@ -33,7 +33,7 @@ public class UpdateUserView {
     @ApiModelProperty("用户名")
     private String username;
 
-    @Size(min = 8, max = 50, message = "密码长度应在（3-50）之间")
+    @Size(min = 8, max = 50, message = "密码长度应在（8-50）之间")
     @ApiModelProperty("密码")
     private String password;
 

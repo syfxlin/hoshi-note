@@ -31,6 +31,7 @@ public class VerifyCode {
 
     @ApiModelProperty("验证码")
     @Id
+    @Indexed
     private String code;
 
     @ApiModelProperty("邮箱")

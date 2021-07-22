@@ -8,11 +8,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.annotation.JsonModel;
 import me.ixk.hoshi.common.result.ApiResult;
+import me.ixk.hoshi.mail.entity.VerifyCode;
+import me.ixk.hoshi.mail.service.VerifyCodeService;
 import me.ixk.hoshi.security.security.UserDetails;
 import me.ixk.hoshi.ums.entity.Role;
 import me.ixk.hoshi.ums.entity.Token;
@@ -21,15 +25,14 @@ import me.ixk.hoshi.ums.repository.RoleRepository;
 import me.ixk.hoshi.ums.repository.TokenRepository;
 import me.ixk.hoshi.ums.repository.UserRepository;
 import me.ixk.hoshi.ums.view.request.RegisterUserView;
+import me.ixk.hoshi.ums.view.request.ResetPasswordView;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 权限控制器
@@ -46,6 +49,7 @@ public class AuthController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenRepository tokenRepository;
+    private final VerifyCodeService verifyCodeService;
 
     @ApiOperation("注册")
     @PostMapping("/register")
@@ -88,9 +92,42 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return ApiResult.ok(user, "登录成功");
     }
-    // @ApiOperation("发送找回密码验证码")
-    // @GetMapping("/api/rest-password/code")
-    // @PreAuthorize("isAnonymous()")
-    // @Transactional(rollbackFor = { Exception.class, Error.class })
-    // public ApiResult<Object> sendResetPasswordCode() {}
+
+    @ApiOperation("发送找回密码验证码")
+    @PostMapping("/api/reset-password/{email}")
+    @PreAuthorize("isAnonymous()")
+    public ApiResult<Object> sendResetPasswordCode(
+        @PathVariable("email") final String email,
+        final HttpServletRequest request
+    ) {
+        final Optional<User> byEmail = userRepository.findByEmail(email);
+        if (byEmail.isEmpty()) {
+            return ApiResult.bindException("指定邮箱用户不存在");
+        }
+        verifyCodeService.generate(
+            email,
+            "找回密码",
+            60 * 30,
+            request.getRemoteAddr(),
+            e -> UUID.randomUUID().toString()
+        );
+        return ApiResult.ok("验证码发送成功").build();
+    }
+
+    @ApiOperation("找回密码")
+    @PutMapping("/api/reset-password")
+    @PreAuthorize("isAnonymous()")
+    public ApiResult<Object> resetPassword(@Valid @JsonModel final ResetPasswordView vo) {
+        final Optional<VerifyCode> verifyCode = verifyCodeService.find("找回密码", vo.getCode());
+        if (verifyCode.isEmpty()) {
+            return ApiResult.bindException("验证码无效");
+        }
+        final Optional<User> byEmail = userRepository.findByEmail(verifyCode.get().getEmail());
+        if (byEmail.isEmpty()) {
+            return ApiResult.bindException("指定邮箱用户不存在");
+        }
+        final User user = byEmail.get();
+        user.setPassword(passwordEncoder.encode(vo.getPassword()));
+        return ApiResult.ok(userRepository.save(user), "重置密码成功");
+    }
 }

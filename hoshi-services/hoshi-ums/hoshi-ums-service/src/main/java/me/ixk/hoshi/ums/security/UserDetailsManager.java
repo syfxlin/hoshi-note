@@ -25,9 +25,12 @@ public class UserDetailsManager implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        final Optional<User> optional = this.userRepository.findByUsername(username);
+        Optional<User> optional = this.userRepository.findByUsername(username);
         if (optional.isEmpty()) {
-            throw new UsernameNotFoundException("用户名不存在或已禁用");
+            optional = this.userRepository.findByEmail(username);
+        }
+        if (optional.isEmpty()) {
+            throw new UsernameNotFoundException("用户名不存在");
         }
         final User user = optional.get();
         return new me.ixk.hoshi.security.security.UserDetails(

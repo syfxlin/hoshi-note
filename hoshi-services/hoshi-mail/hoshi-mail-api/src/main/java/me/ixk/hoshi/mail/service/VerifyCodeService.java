@@ -3,6 +3,7 @@ package me.ixk.hoshi.mail.service;
 import cn.hutool.core.util.RandomUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.mail.client.MailRemoteService;
 import me.ixk.hoshi.mail.entity.RateLimit;
@@ -13,7 +14,6 @@ import me.ixk.hoshi.mail.repository.VerifyCodeRepository;
 import me.ixk.hoshi.mail.view.CodeMail;
 import me.ixk.hoshi.mail.view.CodeMail.CodeMailBuilder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 /**
@@ -30,8 +30,17 @@ public class VerifyCodeService {
     private final VerifyCodeRepository verifyCodeRepository;
     private final RateLimitRepository rateLimitRepository;
 
-    @Transactional(rollbackFor = { Exception.class, Error.class })
     public void generate(final String email, final String subject, final long timeout, final String ip) {
+        this.generate(email, subject, timeout, ip, e -> RandomUtil.randomString(10).toUpperCase());
+    }
+
+    public void generate(
+        final String email,
+        final String subject,
+        final long timeout,
+        final String ip,
+        final Function<String, String> generator
+    ) {
         final Optional<RateLimit> rateLimitOptional = rateLimitRepository.findById(ip);
         final RateLimit rateLimit = rateLimitOptional.orElseGet(
             () -> RateLimit.builder().ip(ip).count(0).timeout(RATE_LIMIT_TIMEOUT).build()
@@ -46,7 +55,7 @@ public class VerifyCodeService {
         if (verifyCode.isPresent()) {
             mailBuilder.code(verifyCode.get().getCode());
         } else {
-            final String code = RandomUtil.randomString(10).toUpperCase();
+            final String code = generator.apply(email);
             verifyCodeRepository.save(VerifyCode.builder().hash(hash).code(code).email(email).timeout(timeout).build());
             mailBuilder.code(code);
         }
@@ -55,7 +64,16 @@ public class VerifyCodeService {
     }
 
     public boolean verify(final String subject, final String code) {
-        return verifyCodeRepository.findByHashAndCode(createHash(subject), code).isPresent();
+        final Optional<VerifyCode> verifyCode = this.find(subject, code);
+        if (verifyCode.isEmpty()) {
+            return false;
+        }
+        verifyCodeRepository.deleteById(verifyCode.get().getCode());
+        return true;
+    }
+
+    public Optional<VerifyCode> find(final String subject, final String code) {
+        return verifyCodeRepository.findByHashAndCode(createHash(subject), code);
     }
 
     private String createHash(final String subject) {

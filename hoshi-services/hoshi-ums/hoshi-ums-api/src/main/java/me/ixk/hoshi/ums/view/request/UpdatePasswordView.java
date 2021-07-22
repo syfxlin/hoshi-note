@@ -2,6 +2,7 @@ package me.ixk.hoshi.ums.view.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,11 +20,13 @@ import lombok.NoArgsConstructor;
 @ApiModel("更新密码")
 public class UpdatePasswordView {
 
-    @Size(min = 8, max = 50, message = "密码长度应在（3-50）之间")
-    @ApiModelProperty("密码")
+    @NotNull(message = "旧密码不能为空")
+    @Size(min = 8, max = 50, message = "密码长度应在（8-50）之间")
+    @ApiModelProperty("旧密码")
     private String oldPassword;
 
-    @Size(min = 8, max = 50, message = "密码长度应在（3-50）之间")
-    @ApiModelProperty("密码")
+    @NotNull(message = "新密码不能为空")
+    @Size(min = 8, max = 50, message = "密码长度应在（8-50）之间")
+    @ApiModelProperty("新密码")
     private String newPassword;
 }
