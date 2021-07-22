@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
+import org.springframework.data.redis.core.index.Indexed;
 
 /**
  * 验证码
@@ -25,6 +26,7 @@ import org.springframework.data.redis.core.TimeToLive;
 public class VerifyCode {
 
     @ApiModelProperty("主题区分")
+    @Indexed
     private String hash;
 
     @ApiModelProperty("验证码")
@@ -32,6 +34,7 @@ public class VerifyCode {
     private String code;
 
     @ApiModelProperty("邮箱")
+    @Indexed
     private String email;
 
     @ApiModelProperty("过期时间")

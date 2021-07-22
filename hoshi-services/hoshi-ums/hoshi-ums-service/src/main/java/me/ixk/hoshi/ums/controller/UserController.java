@@ -11,7 +11,7 @@ import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.annotation.JsonModel;
@@ -70,18 +70,14 @@ public class UserController {
 
     @ApiOperation("发送更新邮箱验证码")
     @GetMapping("/email/code")
-    public ApiResult<Object> sendEmailCode(@Autowired final User user) {
-        verifyCodeService.generate(user.getEmail(), "验证您的邮箱账户", 60 * 30);
+    public ApiResult<Object> sendEmailCode(@Autowired final User user, final HttpServletRequest request) {
+        verifyCodeService.generate(user.getEmail(), "验证您的邮箱账户", 60 * 30, request.getRemoteAddr());
         return ApiResult.ok("验证码发送成功").build();
     }
 
     @ApiOperation("获取用户邮箱")
     @PutMapping("/email")
-    public ApiResult<Object> updateEmail(
-        @Autowired final User user,
-        @Valid @JsonModel final UpdateEmailView vo,
-        final HttpSession session
-    ) {
+    public ApiResult<Object> updateEmail(@Autowired final User user, @Valid @JsonModel final UpdateEmailView vo) {
         if (!verifyCodeService.verify("验证您的邮箱账户", vo.getCode())) {
             return ApiResult.bindException("验证码不匹配");
         }
