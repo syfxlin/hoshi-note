@@ -6,9 +6,13 @@ package me.ixk.hoshi.ums.view.request;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -16,23 +20,35 @@ import lombok.NoArgsConstructor;
  * @date 2021/5/16 下午 9:41
  */
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@Builder
 @ApiModel("添加用户")
-public class AddUserView extends RegisterUserView {
+public class AddUserView {
 
     @NotNull(message = "状态值不能为空")
     @ApiModelProperty("状态")
     private Boolean status;
 
-    public AddUserView(
-        final String username,
-        final String password,
-        final String nickname,
-        final String email,
-        final Boolean status
-    ) {
-        super(username, password, nickname, email);
-        this.status = status;
-    }
+    @Size(min = 3, max = 50, message = "用户名长度应在（3-50）之间")
+    @NotNull(message = "用户名不能为空")
+    @Pattern(regexp = "[^0-9]+", message = "用户名必须包含非数字")
+    @ApiModelProperty("用户名")
+    private String username;
+
+    @Size(min = 8, max = 50, message = "密码长度应在（8-50）之间")
+    @NotNull(message = "密码不能为空")
+    @ApiModelProperty("密码")
+    private String password;
+
+    @Size(min = 3, max = 50, message = "昵称长度应在（3-50）之间")
+    @NotNull(message = "昵称不能为空")
+    @ApiModelProperty("昵称")
+    private String nickname;
+
+    @Size(max = 75, message = "邮箱的长度不能超过 75")
+    @NotNull(message = "邮箱不能为空")
+    @Email(message = "邮箱格式有误")
+    @ApiModelProperty("邮箱")
+    private String email;
 }

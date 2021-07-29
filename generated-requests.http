@@ -1,3 +1,7 @@
+### 注册验证码
+POST http://localhost:8000/register/i@ixk.me
+Accept: application/json
+
 ### 注册
 POST http://localhost:8000/register
 Accept: application/json
@@ -7,9 +11,10 @@ Content-Type: application/json
     "username": "test",
     "password": "password",
     "nickname": "Test",
-    "email": "email@ixk.me",
+    "email": "i@ixk.me",
     "status": 1,
-    "avatar": null
+    "avatar": null,
+    "code": "EHD3HEN1ZT"
 }
 
 ### 登录
@@ -161,11 +166,11 @@ Content-Type: application/json
 }
 
 ### 发送找回密码验证码
-POST http://localhost:8000/api/reset-password/admin@ixk.me
+POST http://localhost:8000/reset-password/admin@ixk.me
 Accept: application/json
 
 ### 找回密码
-PUT http://localhost:8000/api/reset-password
+PUT http://localhost:8000/reset-password
 Accept: application/json
 Content-Type: application/json
 

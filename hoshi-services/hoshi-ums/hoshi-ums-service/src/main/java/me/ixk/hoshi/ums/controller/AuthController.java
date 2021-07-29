@@ -51,13 +51,32 @@ public class AuthController {
     private final TokenRepository tokenRepository;
     private final VerifyCodeService verifyCodeService;
 
+    @ApiOperation("发送注册验证码")
+    @PostMapping("/register/{email}")
+    @PreAuthorize("isAnonymous()")
+    public ApiResult<Object> sendRegisterCode(
+        @PathVariable("email") final String email,
+        final HttpServletRequest request
+    ) {
+        final Optional<User> byEmail = userRepository.findByEmail(email);
+        if (byEmail.isPresent()) {
+            return ApiResult.bindException("已经有用户绑定了该邮箱");
+        }
+        verifyCodeService.generate(email, "验证您注册的邮箱", 60 * 30, request.getRemoteAddr());
+        return ApiResult.ok("验证码发送成功").build();
+    }
+
     @ApiOperation("注册")
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> register(@Valid @JsonModel final RegisterUserView vo) {
-        if (this.userRepository.findByUsername(vo.getUsername()).isPresent()) {
-            return ApiResult.bindException("用户名已存在");
+        final Optional<VerifyCode> verifyCode = verifyCodeService.find("验证您注册的邮箱", vo.getCode());
+        if (verifyCode.isEmpty() || !verifyCode.get().getEmail().equals(vo.getEmail())) {
+            return ApiResult.bindException("验证码无效");
+        }
+        if (this.userRepository.findByUsernameOrEmail(vo.getUsername(), vo.getEmail()).isPresent()) {
+            return ApiResult.bindException("用户名或邮箱已存在");
         }
         final User user = User.ofRegister(vo);
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
@@ -94,7 +113,7 @@ public class AuthController {
     }
 
     @ApiOperation("发送找回密码验证码")
-    @PostMapping("/api/reset-password/{email}")
+    @PostMapping("/reset-password/{email}")
     @PreAuthorize("isAnonymous()")
     public ApiResult<Object> sendResetPasswordCode(
         @PathVariable("email") final String email,
@@ -115,7 +134,7 @@ public class AuthController {
     }
 
     @ApiOperation("找回密码")
-    @PutMapping("/api/reset-password")
+    @PutMapping("/reset-password")
     @PreAuthorize("isAnonymous()")
     public ApiResult<Object> resetPassword(@Valid @JsonModel final ResetPasswordView vo) {
         final Optional<VerifyCode> verifyCode = verifyCodeService.find("找回密码", vo.getCode());

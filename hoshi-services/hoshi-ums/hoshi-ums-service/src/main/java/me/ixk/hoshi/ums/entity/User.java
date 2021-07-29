@@ -132,9 +132,18 @@ public class User implements Serializable {
     }
 
     public static User ofAdd(final AddUserView vo) {
-        final User user = ofRegister(vo);
-        user.setStatus(vo.getStatus());
-        return user;
+        return User
+            .builder()
+            .id(User.generateId())
+            .username(vo.getUsername())
+            .password(vo.getPassword())
+            .nickname(vo.getNickname())
+            .email(vo.getEmail())
+            .status(true)
+            .createdTime(OffsetDateTime.now())
+            .info(new UserInfo())
+            .status(vo.getStatus())
+            .build();
     }
 
     public static User ofUpdate(final UpdateUserView vo) {

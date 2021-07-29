@@ -35,6 +35,15 @@ public interface UserRepository
     Optional<User> findByEmail(String email);
 
     /**
+     * 通过用户名或邮箱查找用户
+     *
+     * @param username 用户名
+     * @param email    邮箱
+     * @return 用户
+     */
+    Optional<User> findByUsernameOrEmail(String username, String email);
+
+    /**
      * 更新用户
      *
      * @param user 用户

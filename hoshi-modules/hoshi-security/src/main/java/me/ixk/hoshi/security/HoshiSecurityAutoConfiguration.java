@@ -6,7 +6,6 @@ package me.ixk.hoshi.security;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 /**
@@ -18,5 +17,4 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @Configuration
 @ComponentScan
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableRedisRepositories
 public class HoshiSecurityAutoConfiguration {}

@@ -26,6 +26,11 @@ import lombok.NoArgsConstructor;
 @ApiModel("注册用户")
 public class RegisterUserView {
 
+    @NotNull(message = "验证码不能为空")
+    @Size(min = 10, max = 10, message = "验证码的长度为 10 位")
+    @ApiModelProperty("验证码")
+    private String code;
+
     @Size(min = 3, max = 50, message = "用户名长度应在（3-50）之间")
     @NotNull(message = "用户名不能为空")
     @Pattern(regexp = "[^0-9]+", message = "用户名必须包含非数字")

@@ -96,8 +96,8 @@ public class UserManagerController {
     @PostMapping("")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> add(@Valid @JsonModel final AddUserView vo) {
-        if (this.userRepository.findByUsername(vo.getUsername()).isPresent()) {
-            return ApiResult.bindException("用户名已存在");
+        if (this.userRepository.findByUsernameOrEmail(vo.getUsername(), vo.getEmail()).isPresent()) {
+            return ApiResult.bindException("用户名或邮箱已存在");
         }
         final User user = User.ofAdd(vo);
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
@@ -126,9 +126,10 @@ public class UserManagerController {
             return ApiResult.bindException("用户 ID 不存在");
         }
         if (vo.getUsername() != null) {
-            final Optional<User> byUsername = this.userRepository.findByUsername(vo.getUsername());
+            final Optional<User> byUsername =
+                this.userRepository.findByUsernameOrEmail(vo.getUsername(), vo.getEmail());
             if (byUsername.isPresent() && !byUsername.get().getId().equals(vo.getUserId())) {
-                return ApiResult.bindException("用户名已存在");
+                return ApiResult.bindException("用户名或邮箱已存在");
             }
         }
         final User user = User.ofUpdate(vo);
