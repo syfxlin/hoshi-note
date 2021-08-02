@@ -6,6 +6,7 @@ package me.ixk.hoshi.ums.entity;
 
 import cn.hutool.core.util.RandomUtil;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
@@ -17,6 +18,8 @@ import lombok.*;
 import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.ums.view.request.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  * 用户表
@@ -57,6 +60,8 @@ public class User implements Serializable {
      */
     @ApiModelProperty("密码")
     @Column(name = "password", nullable = false)
+    @Exclude
+    @JsonBackReference
     private String password;
 
     /**
@@ -90,8 +95,12 @@ public class User implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_role_relation",
-        joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
-        inverseJoinColumns = { @JoinColumn(name = "role_name", referencedColumnName = "name") }
+        joinColumns = {
+            @JoinColumn(name = "user_id", referencedColumnName = "id"),
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "role_name", referencedColumnName = "name"),
+        }
     )
     @ApiModelProperty("用户权限列表")
     private List<Role> roles;
@@ -103,15 +112,29 @@ public class User implements Serializable {
 
     @JsonBackReference
     @OneToMany(mappedBy = "follower", targetEntity = Follow.class)
+    @LazyCollection(LazyCollectionOption.EXTRA)
     @ApiModelProperty("用户关注了")
     @Exclude
     private List<Follow> following = new ArrayList<>();
 
     @JsonBackReference
     @OneToMany(mappedBy = "following", targetEntity = Follow.class)
+    @LazyCollection(LazyCollectionOption.EXTRA)
     @ApiModelProperty("用户关注者")
     @Exclude
     private List<Follow> followers = new ArrayList<>();
+
+    @JsonProperty("followingCount")
+    @ApiModelProperty("用户关注了数量")
+    private int getFollowingCont() {
+        return this.getFollowing().size();
+    }
+
+    @JsonProperty("followersCount")
+    @ApiModelProperty("用户关注者数量")
+    public int getFollowersCount() {
+        return this.getFollowers().size();
+    }
 
     public static String generateId() {
         return RandomUtil.randomString(10);
@@ -158,15 +181,29 @@ public class User implements Serializable {
             .build();
     }
 
-    public static User ofUpdateName(final UpdateNameView vo, final String userId) {
-        return User.builder().id(userId).username(vo.getUsername()).nickname(vo.getNickname()).build();
+    public static User ofUpdateName(
+        final UpdateNameView vo,
+        final String userId
+    ) {
+        return User
+            .builder()
+            .id(userId)
+            .username(vo.getUsername())
+            .nickname(vo.getNickname())
+            .build();
     }
 
-    public static User ofUpdateEmail(final UpdateEmailView vo, final String userId) {
+    public static User ofUpdateEmail(
+        final UpdateEmailView vo,
+        final String userId
+    ) {
         return User.builder().id(userId).email(vo.getEmail()).build();
     }
 
-    public static User ofUpdatePassword(final UpdatePasswordView vo, final String userId) {
+    public static User ofUpdatePassword(
+        final UpdatePasswordView vo,
+        final String userId
+    ) {
         return User.builder().id(userId).password(vo.getNewPassword()).build();
     }
 }

@@ -4,14 +4,11 @@
 
 package me.ixk.hoshi.ums.config;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.security.config.DefaultSecurityConfig.SecurityConfigAdapter;
-import me.ixk.hoshi.security.security.UserDetails;
 import me.ixk.hoshi.security.security.WebAuthenticationDetails;
-import me.ixk.hoshi.ums.entity.User;
 import me.ixk.hoshi.ums.repository.UserRepository;
+import me.ixk.hoshi.ums.security.AuthenticationHandler;
 import me.ixk.hoshi.ums.security.UserDetailsManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public class SecurityConfig extends SecurityConfigAdapter {
 
     private final UserRepository userRepository;
+    private final AuthenticationHandler authenticationHandler;
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -36,27 +34,10 @@ public class SecurityConfig extends SecurityConfigAdapter {
         http.authorizeRequests().anyRequest().permitAll();
         http
             .formLogin()
-            .successHandler(
-                (request, response, authentication) -> {
-                    final UserDetails details = (UserDetails) authentication.getPrincipal();
-                    final Optional<User> user = this.userRepository.findById(details.getId());
-                    if (user.isEmpty()) {
-                        ApiResult.unauthorized("用户 ID 不存在").build().toResponse(response);
-                    } else {
-                        ApiResult.ok(user.get(), "登录成功").toResponse(response);
-                    }
-                }
-            )
-            .failureHandler(
-                (request, response, exception) ->
-                    ApiResult.unauthorized(exception.getMessage()).build().toResponse(response)
-            )
+            .successHandler(this.authenticationHandler)
+            .failureHandler(this.authenticationHandler)
             .authenticationDetailsSource(WebAuthenticationDetails::new);
-        http
-            .logout()
-            .logoutSuccessHandler(
-                (request, response, authentication) -> ApiResult.ok("注销成功").build().toResponse(response)
-            );
+        http.logout().logoutSuccessHandler(this.authenticationHandler);
     }
 
     @Bean

@@ -199,7 +199,7 @@ GET http://localhost:8000/api/follows/1/following
 Accept: application/json
 
 ### 获取被关注列表
-GET http://localhost:8000/api/follows/3/follower
+GET http://localhost:8000/api/follows/3/followers
 Accept: application/json
 
 ### 上传文件

@@ -2,21 +2,76 @@ root = true
 
 [*]
 charset = utf-8
-end_of_line = crlf
+end_of_line = lf
 indent_size = 4
 indent_style = space
 insert_final_newline = true
-max_line_length = 120
+max_line_length = 80
 tab_width = 4
 trim_trailing_whitespace = true
 
-[{*.ant, *.fxml, *.jhm, *.jnlp, *.jrxml, *.pom, *.rng, *.tld, *.wadl, *.wsdd, *.wsdl, *.xjb, *.xml, *.xsd, *.xsl, *.xslt, *.xul, *html}]
+[*.css]
 indent_size = 2
 tab_width = 2
 
-[{*.har, *.jsb2, *.jsb3, *.json, .babelrc, .eslintrc, .prettierc, .prettierrc, .stylelintrc, bowerrc, jest.config}]
+[*.haml]
 indent_size = 2
 tab_width = 2
 
-[{*.yaml, *.yml}]
+[*.less]
+indent_size = 2
+tab_width = 2
+
+[*.sass]
+indent_size = 2
+tab_width = 2
+
+[*.scss]
+indent_size = 2
+tab_width = 2
+
+[*.styl]
+indent_size = 2
+tab_width = 2
+
+[*.vue]
+indent_size = 2
+tab_width = 2
+
+[{*.ant,*.fxml,*.jhm,*.jnlp,*.jrxml,*.pom,*.rng,*.tld,*.wadl,*.wsdd,*.wsdl,*.xjb,*.xml,*.xsd,*.xsl,*.xslt,*.xul}]
+indent_size = 2
+tab_width = 2
+
+[{*.ats,*.ts,*.tsx}]
+indent_size = 2
+tab_width = 2
+
+[{*.bash,*.sh,*.zsh}]
+indent_size = 2
+tab_width = 2
+
+[{*.cjs,*.js,*.jsx}]
+indent_size = 2
+tab_width = 2
+
+[{*.graphqlconfig,*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.prettierc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
+indent_size = 2
+tab_width = 2
+
+[{*.htm,*.html,*.ng,*.sht,*.shtm,*.shtml}]
+indent_size = 2
+tab_width = 2
+
+[{*.jsf,*.jsp,*.jspf,*.tag,*.tagf,*.xjsp}]
+indent_size = 2
+tab_width = 2
+
+[{*.jspx,*.tagx}]
+indent_size = 2
+tab_width = 2
+
+[{*.ps1,*.psd1,*.psm1}]
+max_line_length = 115
+
+[{*.yaml,*.yml}]
 indent_size = 2
