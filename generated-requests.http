@@ -14,7 +14,7 @@ Content-Type: application/json
     "email": "i@ixk.me",
     "status": 1,
     "avatar": null,
-    "code": "EHD3HEN1ZT"
+    "code": "RGA0UNSUR5"
 }
 
 ### 登录
@@ -41,7 +41,7 @@ Accept: application/json
 Authorization: Bearer {{token}}
 
 ### 获取所有用户
-GET http://localhost:8000/api/admin/users?page=0&size=1&sort=id,desc
+GET http://localhost:8000/api/admin/users?page=0&size=2&sort=createdTime,desc&search=admin
 Accept: application/json
 Authorization: Bearer {{token}}
 
@@ -54,10 +54,9 @@ Authorization: Bearer {{token}}
 {
     "username": "test",
     "password": "password",
-    "nickname": "Test",
-    "email": "email@ixk.me",
-    "status": 1,
-    "avatar": null
+    "nickname": "test",
+    "email": "test@ixk.me",
+    "status": 1
 }
 
 > {% client.global.set("test_user_id", response.body.data.id); %}
@@ -195,7 +194,7 @@ Accept: application/json
 Authorization: Bearer {{token}}
 
 ### 获取关注列表
-GET http://localhost:8000/api/follows/1/following
+GET http://localhost:8000/api/follows/20gwrxi9bc/following?page=1
 Accept: application/json
 
 ### 获取被关注列表

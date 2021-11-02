@@ -6,13 +6,11 @@ package me.ixk.hoshi.ums.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +24,6 @@ import me.ixk.hoshi.ums.repository.RoleRepository;
 import me.ixk.hoshi.ums.repository.UserRepository;
 import me.ixk.hoshi.ums.view.request.AddUserView;
 import me.ixk.hoshi.ums.view.request.EditUserRoleView;
-import me.ixk.hoshi.ums.view.request.FilterUserView;
 import me.ixk.hoshi.ums.view.request.UpdateUserView;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -58,27 +55,18 @@ public class UserManagerController {
 
     @ApiOperation("列出用户（查询用户）")
     @GetMapping("")
-    public ApiResult<ApiPage<User>> list(final Pageable page, final FilterUserView user) {
-        final String username = user.getUsername();
-        final String nickname = user.getNickname();
-        final String email = user.getEmail();
-        final Integer status = user.getStatus();
-        final Specification<User> specification = (root, query, criteriaBuilder) -> {
-            final List<Predicate> predicates = new ArrayList<>();
-            if (username != null) {
-                predicates.add(criteriaBuilder.like(root.get("username"), Jpa.like(username)));
-            }
-            if (nickname != null) {
-                predicates.add(criteriaBuilder.like(root.get("nickname"), Jpa.like(nickname)));
-            }
-            if (email != null) {
-                predicates.add(criteriaBuilder.like(root.get("email"), Jpa.like(email)));
-            }
-            if (status != null) {
-                predicates.add(criteriaBuilder.equal(root.get("status"), status));
-            }
-            return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
-        };
+    public ApiResult<ApiPage<User>> list(
+        final Pageable page,
+        @RequestParam(value = "search", required = false) final String search
+    ) {
+        final Specification<User> specification = search == null
+            ? null
+            : (root, query, cb) ->
+                cb.or(
+                    cb.like(root.get("username"), Jpa.like(search)),
+                    cb.like(root.get("nickname"), Jpa.like(search)),
+                    cb.like(root.get("email"), Jpa.like(search))
+                );
         return ApiResult.page(this.userRepository.findAll(specification, page), "获取用户成功");
     }
 

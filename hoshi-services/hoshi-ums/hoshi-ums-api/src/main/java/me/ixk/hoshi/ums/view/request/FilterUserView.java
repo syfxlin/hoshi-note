@@ -7,8 +7,6 @@ package me.ixk.hoshi.ums.view.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,8 +37,6 @@ public class FilterUserView {
     @ApiModelProperty("邮箱")
     private String email;
 
-    @Min(value = 0, message = "状态值最小不能小于 0")
-    @Max(value = 127, message = "状态值最大不能超过 127")
     @ApiModelProperty("状态")
-    private Integer status;
+    private Boolean status;
 }

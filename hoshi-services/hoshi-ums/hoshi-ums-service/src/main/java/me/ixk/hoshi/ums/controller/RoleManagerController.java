@@ -67,7 +67,10 @@ public class RoleManagerController {
     @ApiOperation("删除权限")
     @DeleteMapping("/{roleName}")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Void> remove(@PathVariable("roleName") final String roleName) {
+    public ApiResult<Object> remove(@PathVariable("roleName") final String roleName) {
+        if (List.of("USER", "ADMIN").contains(roleName)) {
+            return ApiResult.bindException("不能删除 USER, ADMIN 权限");
+        }
         this.roleRepository.deleteById(roleName);
         return ApiResult.ok("删除权限成功").build();
     }

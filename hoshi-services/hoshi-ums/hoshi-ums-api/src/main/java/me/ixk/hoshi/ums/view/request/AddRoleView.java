@@ -27,7 +27,7 @@ public class AddRoleView {
 
     @NotNull(message = "权限名称不能为空")
     @Size(min = 1, max = 50, message = "权限名称的长度应在 1-50 之内")
-    @Pattern(regexp = "[A-Z]+", message = "权限名称必须是全大写的英文字符")
+    @Pattern(regexp = "[A-Z_]+", message = "权限名称必须是全大写的英文字符")
     @ApiModelProperty("权限名称")
     private String name;
 

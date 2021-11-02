@@ -35,7 +35,7 @@
     <dependency>
       <groupId>cn.hutool</groupId>
       <artifactId>hutool-crypto</artifactId>
-      <version>5.6.5</version>
+      <version>5.7.14</version>
     </dependency>
   </dependencies>
 </project>

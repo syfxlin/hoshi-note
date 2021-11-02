@@ -29,7 +29,7 @@ public class AddLogView implements Serializable {
     private static final long serialVersionUID = -3293210012295275706L;
 
     @NotNull(message = "日志类型不能为空")
-    @Pattern(regexp = "[A-Z]+", message = "日志类型必须为全大写字符")
+    @Pattern(regexp = "[A-Z_]+", message = "日志类型必须为全大写字符")
     @ApiModelProperty("日志类型")
     private String type;
 

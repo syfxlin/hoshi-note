@@ -127,13 +127,15 @@ public class User implements Serializable {
     @JsonProperty("followingCount")
     @ApiModelProperty("用户关注了数量")
     private int getFollowingCont() {
-        return this.getFollowing().size();
+        final List<Follow> following = this.getFollowing();
+        return following == null ? 0 : following.size();
     }
 
     @JsonProperty("followersCount")
     @ApiModelProperty("用户关注者数量")
     public int getFollowersCount() {
-        return this.getFollowers().size();
+        final List<Follow> followers = this.getFollowers();
+        return followers == null ? 0 : followers.size();
     }
 
     public static String generateId() {

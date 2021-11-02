@@ -73,7 +73,12 @@ public class VerifyCodeService {
     }
 
     public Optional<VerifyCode> find(final String subject, final String code) {
-        return verifyCodeRepository.findByHashAndCode(createHash(subject), code);
+        Optional<VerifyCode> verifyCode = verifyCodeRepository.findByHashAndCode(createHash(subject), code);
+        if (verifyCode.isEmpty()) {
+            return verifyCode;
+        }
+        verifyCodeRepository.deleteById(verifyCode.get().getCode());
+        return verifyCode;
     }
 
     private String createHash(final String subject) {
