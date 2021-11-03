@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +31,6 @@ public class AddUserView {
 
     @Size(min = 3, max = 50, message = "用户名长度应在（3-50）之间")
     @NotNull(message = "用户名不能为空")
-    @Pattern(regexp = "[^0-9]+", message = "用户名必须包含非数字")
     @ApiModelProperty("用户名")
     private String username;
 

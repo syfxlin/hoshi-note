@@ -22,13 +22,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ApiModel("编辑用户权限")
+@ApiModel("编辑用户角色")
 public class EditUserRoleView {
 
-    @NotNull(message = "修改权限时必须设置用户 id")
+    @NotNull(message = "修改角色时必须设置用户 id")
     @ApiModelProperty("用户 ID")
     private String userId;
 
-    @ApiModelProperty("权限列表")
+    @ApiModelProperty("角色列表")
     private List<String> roles = new ArrayList<>();
 }

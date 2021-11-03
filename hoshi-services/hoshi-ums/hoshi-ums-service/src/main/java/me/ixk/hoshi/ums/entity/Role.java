@@ -6,16 +6,17 @@ package me.ixk.hoshi.ums.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.List;
+import java.util.Objects;
+import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.ums.view.request.AddRoleView;
 import me.ixk.hoshi.ums.view.request.UpdateRoleView;
+import org.hibernate.Hibernate;
 
 /**
  * 权限表
@@ -26,21 +27,23 @@ import me.ixk.hoshi.ums.view.request.UpdateRoleView;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
-@ApiModel("权限表")
+@ApiModel("角色表")
 @Accessors(chain = true)
 @Table(name = "role")
-@EqualsAndHashCode(of = "name")
 public class Role implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 9130459786615925142L;
 
     /**
-     * 权限名称，必须是大写英文
+     * 角色名称，必须是大写英文
      */
     @Id
-    @ApiModelProperty("权限名称，必须是大写英文")
+    @ApiModelProperty("角色名称，必须是大写英文")
     @Column(name = "name", nullable = false, unique = true, length = 50)
     private String name;
 
@@ -59,23 +62,54 @@ public class Role implements Serializable {
     private Boolean status;
 
     /**
-     * 权限的描述
+     * 角色的描述
      */
-    @ApiModelProperty("权限的描述")
+    @ApiModelProperty("角色的描述")
     @Column(name = "description", columnDefinition = "text")
     private String description;
+
+    /**
+     * 权限列表
+     */
+    @ApiModelProperty("权限列表")
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> permissions;
 
     public static Role ofAdd(final AddRoleView vo) {
         return Role
             .builder()
             .name(vo.getName())
             .description(vo.getDescription())
+            .permissions(vo.getPermissions())
             .status(vo.getStatus())
             .createdTime(OffsetDateTime.now())
             .build();
     }
 
     public static Role ofUpdate(final UpdateRoleView vo) {
-        return Role.builder().name(vo.getRoleName()).description(vo.getDescription()).status(vo.getStatus()).build();
+        return Role
+            .builder()
+            .name(vo.getRoleName())
+            .description(vo.getDescription())
+            .permissions(vo.getPermissions())
+            .status(vo.getStatus())
+            .build();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        final Role role = (Role) o;
+        return name != null && Objects.equals(name, role.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 }

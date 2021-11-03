@@ -15,7 +15,6 @@ import java.util.List;
  */
 public class ApiBindException extends RuntimeException {
 
-    private static final long serialVersionUID = -811998334758938014L;
     private final List<String> errors;
 
     public ApiBindException(final String message) {

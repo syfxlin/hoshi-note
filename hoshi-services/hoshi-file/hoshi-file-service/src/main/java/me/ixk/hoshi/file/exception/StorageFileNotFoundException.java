@@ -10,8 +10,6 @@ package me.ixk.hoshi.file.exception;
  */
 public class StorageFileNotFoundException extends StorageException {
 
-    private static final long serialVersionUID = -67328973917300245L;
-
     public StorageFileNotFoundException(final String message) {
         super(message);
     }

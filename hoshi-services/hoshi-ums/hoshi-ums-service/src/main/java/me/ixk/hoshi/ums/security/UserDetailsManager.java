@@ -4,6 +4,7 @@
 
 package me.ixk.hoshi.ums.security;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,13 @@ public class UserDetailsManager implements UserDetailsService {
             throw new UsernameNotFoundException("用户不存在");
         }
         final User user = optional.get();
+        List<Role> roles = user.getRoles().stream().filter(Role::getStatus).collect(Collectors.toList());
         return new me.ixk.hoshi.security.security.UserDetails(
             user.getId(),
             user.getUsername(),
             user.getPassword(),
-            user.getRoles().stream().filter(Role::getStatus).map(Role::getName).collect(Collectors.toList()),
+            roles.stream().map(Role::getName).collect(Collectors.toList()),
+            roles.stream().flatMap(role -> role.getPermissions().stream()).distinct().collect(Collectors.toList()),
             user.getStatus()
         );
     }

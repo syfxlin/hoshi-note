@@ -13,11 +13,13 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.ums.view.request.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -30,15 +32,14 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @ApiModel("用户表")
 @Accessors(chain = true)
 @Table(name = "user")
-@EqualsAndHashCode(of = { "id" })
 public class User implements Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * 用户 ID
@@ -95,14 +96,10 @@ public class User implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_role_relation",
-        joinColumns = {
-            @JoinColumn(name = "user_id", referencedColumnName = "id"),
-        },
-        inverseJoinColumns = {
-            @JoinColumn(name = "role_name", referencedColumnName = "name"),
-        }
+        joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "role_name", referencedColumnName = "name") }
     )
-    @ApiModelProperty("用户权限列表")
+    @ApiModelProperty("用户角色列表")
     private List<Role> roles;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -183,29 +180,32 @@ public class User implements Serializable {
             .build();
     }
 
-    public static User ofUpdateName(
-        final UpdateNameView vo,
-        final String userId
-    ) {
-        return User
-            .builder()
-            .id(userId)
-            .username(vo.getUsername())
-            .nickname(vo.getNickname())
-            .build();
+    public static User ofUpdateName(final UpdateNameView vo, final String userId) {
+        return User.builder().id(userId).username(vo.getUsername()).nickname(vo.getNickname()).build();
     }
 
-    public static User ofUpdateEmail(
-        final UpdateEmailView vo,
-        final String userId
-    ) {
+    public static User ofUpdateEmail(final UpdateEmailView vo, final String userId) {
         return User.builder().id(userId).email(vo.getEmail()).build();
     }
 
-    public static User ofUpdatePassword(
-        final UpdatePasswordView vo,
-        final String userId
-    ) {
+    public static User ofUpdatePassword(final UpdatePasswordView vo, final String userId) {
         return User.builder().id(userId).password(vo.getNewPassword()).build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

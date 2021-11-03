@@ -66,7 +66,7 @@ public class DefaultSecurityConfig {
                 .requestMatcher(EndpointRequest.toAnyEndpoint())
                 .authorizeRequests()
                 .anyRequest()
-                .hasRole("ACTUATOR")
+                .hasAuthority("ACTUATOR")
                 .and()
                 .httpBasic();
         }

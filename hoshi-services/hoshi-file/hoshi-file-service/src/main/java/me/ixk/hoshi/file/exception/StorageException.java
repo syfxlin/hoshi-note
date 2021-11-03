@@ -10,8 +10,6 @@ package me.ixk.hoshi.file.exception;
  */
 public class StorageException extends RuntimeException {
 
-    private static final long serialVersionUID = 2872097101589585064L;
-
     public StorageException(final String message) {
         super(message);
     }

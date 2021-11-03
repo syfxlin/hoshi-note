@@ -44,7 +44,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
 @Api(value = "用户管理控制器")
 public class UserManagerController {
 
@@ -55,6 +54,7 @@ public class UserManagerController {
 
     @ApiOperation("列出用户（查询用户）")
     @GetMapping("")
+    @PreAuthorize("hasAuthority('USER_MANAGER')")
     public ApiResult<ApiPage<User>> list(
         final Pageable page,
         @RequestParam(value = "search", required = false) final String search
@@ -72,6 +72,7 @@ public class UserManagerController {
 
     @ApiOperation("获取用户")
     @GetMapping("/{userId}")
+    @PreAuthorize("hasAuthority('USER_MANAGER')")
     public ApiResult<Object> get(@PathVariable("userId") final String userId) {
         final Optional<User> user = this.userRepository.findById(userId);
         if (user.isEmpty()) {
@@ -82,6 +83,7 @@ public class UserManagerController {
 
     @ApiOperation("添加用户")
     @PostMapping("")
+    @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> add(@Valid @JsonModel final AddUserView vo) {
         if (this.userRepository.findByUsernameOrEmail(vo.getUsername(), vo.getEmail()).isPresent()) {
@@ -95,6 +97,7 @@ public class UserManagerController {
 
     @ApiOperation("删除用户")
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> remove(@PathVariable("userId") final String userId) {
         final Optional<User> user = this.userRepository.findById(userId);
@@ -108,6 +111,7 @@ public class UserManagerController {
 
     @ApiOperation("更新用户")
     @PutMapping("/{userId}")
+    @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> update(@Valid @JsonModel final UpdateUserView vo) {
         if (this.userRepository.findById(vo.getUserId()).isEmpty()) {
@@ -132,8 +136,9 @@ public class UserManagerController {
         return ApiResult.ok(newUser, "更新用户成功");
     }
 
-    @ApiOperation("添加用户权限")
+    @ApiOperation("添加用户角色")
     @PostMapping("/{userId}/role")
+    @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<User> addRoles(@Valid @JsonModel final EditUserRoleView vo) {
         final Optional<User> optional = this.userRepository.findById(vo.getUserId());
@@ -145,14 +150,15 @@ public class UserManagerController {
         final User newUser = this.userRepository.save(user);
         this.invalidSession(newUser.getUsername());
         if (size == vo.getRoles().size()) {
-            return ApiResult.ok(newUser, "所有权限均添加成功");
+            return ApiResult.ok(newUser, "所有角色均添加成功");
         } else {
-            return ApiResult.ok(newUser, "部分权限添加成功（可能添加了不存在的权限）");
+            return ApiResult.ok(newUser, "部分角色添加成功（可能添加了不存在的角色）");
         }
     }
 
-    @ApiOperation("更改用户权限")
+    @ApiOperation("更改用户角色")
     @PutMapping("/{userId}/role")
+    @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<User> updateRoles(@Valid @JsonModel final EditUserRoleView vo) {
         final Optional<User> optional = this.userRepository.findById(vo.getUserId());
@@ -171,14 +177,15 @@ public class UserManagerController {
         final User newUser = this.userRepository.save(user);
         this.invalidSession(newUser.getUsername());
         if (roles.size() != vo.getRoles().size()) {
-            return ApiResult.ok(newUser, "所有权限均修改成功");
+            return ApiResult.ok(newUser, "所有角色均修改成功");
         } else {
-            return ApiResult.ok(newUser, "部分权限修改成功（可能添加了或删除了不存在的权限）");
+            return ApiResult.ok(newUser, "部分角色修改成功（可能添加了或删除了不存在的角色）");
         }
     }
 
-    @ApiOperation("删除用户权限")
+    @ApiOperation("删除用户角色")
     @DeleteMapping("/{userId}/role")
+    @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> removeRoles(
         @PathVariable("userId") @NotNull final String id,
@@ -193,9 +200,9 @@ public class UserManagerController {
         final User newUser = this.userRepository.save(user);
         this.invalidSession(newUser.getUsername());
         if (size == roles.size()) {
-            return ApiResult.ok(newUser, "所有权限均删除成功");
+            return ApiResult.ok(newUser, "所有角色均删除成功");
         } else {
-            return ApiResult.ok(newUser, "部分权限删除成功（可能删除了不存在的权限）");
+            return ApiResult.ok(newUser, "部分角色删除成功（可能删除了不存在的角色）");
         }
     }
 

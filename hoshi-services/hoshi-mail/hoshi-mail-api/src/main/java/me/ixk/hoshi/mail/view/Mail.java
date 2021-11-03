@@ -19,8 +19,6 @@ import lombok.*;
 @ApiModel("邮件")
 public class Mail implements Serializable {
 
-    private static final long serialVersionUID = 8424241406721320553L;
-
     @ApiModelProperty("回复邮箱")
     private String replyTo;
 

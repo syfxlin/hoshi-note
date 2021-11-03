@@ -22,7 +22,6 @@ import org.springframework.core.io.InputStreamSource;
 @ApiModel("附件")
 public class Attachment implements Serializable {
 
-    private static final long serialVersionUID = 557979623139017279L;
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
     @ApiModelProperty("附件名称")

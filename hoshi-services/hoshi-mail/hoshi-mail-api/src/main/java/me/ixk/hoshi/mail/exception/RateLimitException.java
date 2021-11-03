@@ -6,8 +6,6 @@ package me.ixk.hoshi.mail.exception;
  */
 public class RateLimitException extends RuntimeException {
 
-    private static final long serialVersionUID = -618724454181779908L;
-
     public RateLimitException(final String message) {
         super(message);
     }

@@ -6,12 +6,11 @@ package me.ixk.hoshi.ums.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.Hibernate;
 
 /**
  * 关注表
@@ -22,7 +21,9 @@ import lombok.experimental.Accessors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @ApiModel("关注表")
 @Accessors(chain = true)
@@ -47,4 +48,21 @@ public class Follow {
     @JoinColumn(name = "following_id", referencedColumnName = "id")
     @ApiModelProperty("关注对象 ID")
     private User following;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        Follow follow = (Follow) o;
+        return id != null && Objects.equals(id, follow.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

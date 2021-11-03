@@ -14,8 +14,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class JsonException extends RuntimeException {
 
-    private static final long serialVersionUID = -702953254862741906L;
-
     public JsonException(@NotNull final Throwable cause) {
         super(cause);
     }

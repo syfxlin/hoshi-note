@@ -28,50 +28,54 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/admin/roles")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
-@Api(value = "权限管理控制器")
+@Api(value = "角色管理控制器")
 public class RoleManagerController {
 
     private final RoleRepository roleRepository;
 
-    @ApiOperation("列出所有权限")
+    @ApiOperation("列出所有角色")
     @GetMapping("")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ApiResult<List<Role>> list() {
-        return ApiResult.ok(this.roleRepository.findAll((Specification<Role>) null), "获取所有权限成功");
+        return ApiResult.ok(this.roleRepository.findAll((Specification<Role>) null), "获取所有角色成功");
     }
 
-    @ApiOperation("获取权限")
+    @ApiOperation("获取角色")
     @GetMapping("/{roleName}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ApiResult<Object> get(@PathVariable("roleName") final String roleName) {
         final Optional<Role> role = this.roleRepository.findById(roleName);
         if (role.isEmpty()) {
-            return ApiResult.notFound("权限未找到").build();
+            return ApiResult.notFound("角色未找到").build();
         }
-        return ApiResult.ok(role.get(), "获取权限成功");
+        return ApiResult.ok(role.get(), "获取角色成功");
     }
 
-    @ApiOperation("添加权限")
+    @ApiOperation("添加角色")
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Role> add(@Valid @JsonModel final AddRoleView vo) {
-        return ApiResult.ok(this.roleRepository.save(Role.ofAdd(vo)), "添加权限成功");
+        return ApiResult.ok(this.roleRepository.save(Role.ofAdd(vo)), "添加角色成功");
     }
 
-    @ApiOperation("更新权限")
+    @ApiOperation("更新角色")
     @PutMapping("/{roleName}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Role> update(@Valid @JsonModel final UpdateRoleView vo) {
-        return ApiResult.ok(this.roleRepository.update(Role.ofUpdate(vo)), "更新权限成功");
+        return ApiResult.ok(this.roleRepository.update(Role.ofUpdate(vo)), "更新角色成功");
     }
 
-    @ApiOperation("删除权限")
+    @ApiOperation("删除角色")
     @DeleteMapping("/{roleName}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> remove(@PathVariable("roleName") final String roleName) {
         if (List.of("USER", "ADMIN").contains(roleName)) {
-            return ApiResult.bindException("不能删除 USER, ADMIN 权限");
+            return ApiResult.bindException("不能删除 USER, ADMIN 角色");
         }
         this.roleRepository.deleteById(roleName);
-        return ApiResult.ok("删除权限成功").build();
+        return ApiResult.ok("删除角色成功").build();
     }
 }

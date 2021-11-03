@@ -55,7 +55,7 @@ public class FollowController {
 
     @ApiOperation("添加关注")
     @PostMapping("/{followId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('FOLLOW_USER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> add(@PathVariable("followId") final String id, @Autowired final User user) {
         final Optional<User> optional = this.userRepository.findById(id);
@@ -71,7 +71,7 @@ public class FollowController {
 
     @ApiOperation("取消关注")
     @DeleteMapping("/{followId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('FOLLOW_USER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<Object> delete(@PathVariable("followId") final String id, @Autowired final User user) {
         this.followRepository.findByFollowerIdAndFollowingId(user.getId(), id)

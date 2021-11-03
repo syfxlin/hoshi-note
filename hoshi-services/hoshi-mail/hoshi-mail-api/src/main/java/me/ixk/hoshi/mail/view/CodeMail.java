@@ -19,8 +19,6 @@ import lombok.*;
 @ApiModel("验证码邮件")
 public class CodeMail implements Serializable {
 
-    private static final long serialVersionUID = -5218637746336425247L;
-
     @ApiModelProperty("回复邮箱")
     private String replyTo;
 

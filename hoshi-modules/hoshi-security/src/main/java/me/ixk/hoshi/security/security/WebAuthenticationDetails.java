@@ -8,7 +8,6 @@ import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Data;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.SpringSecurityCoreVersion;
 
 /**
  * 保留用户登录的信息
@@ -20,8 +19,6 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
  */
 @Data
 public class WebAuthenticationDetails implements Serializable {
-
-    private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
     private final String address;
     private final String userAgent;

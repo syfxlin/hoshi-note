@@ -4,7 +4,9 @@
 
 package me.ixk.hoshi.security.security;
 
+import java.io.Serial;
 import java.util.List;
+import java.util.stream.Stream;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 /**
@@ -17,7 +19,9 @@ import org.springframework.security.core.authority.AuthorityUtils;
  */
 public class UserDetails extends org.springframework.security.core.userdetails.User {
 
-    private static final long serialVersionUID = -7340031375619260648L;
+    @Serial
+    private static final long serialVersionUID = -2561229044344332205L;
+
     private final String userId;
 
     public UserDetails(
@@ -25,6 +29,7 @@ public class UserDetails extends org.springframework.security.core.userdetails.U
         final String username,
         final String password,
         final List<String> roles,
+        final List<String> permissions,
         final boolean status
     ) {
         super(
@@ -35,7 +40,9 @@ public class UserDetails extends org.springframework.security.core.userdetails.U
             true,
             true,
             AuthorityUtils.createAuthorityList(
-                roles.stream().map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r).toArray(String[]::new)
+                Stream
+                    .concat(roles.stream().map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r), permissions.stream())
+                    .toArray(String[]::new)
             )
         );
         this.userId = userId;

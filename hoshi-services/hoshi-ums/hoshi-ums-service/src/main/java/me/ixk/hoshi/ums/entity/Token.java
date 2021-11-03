@@ -6,12 +6,11 @@ package me.ixk.hoshi.ums.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
+import org.hibernate.Hibernate;
 
 /**
  * @author Otstar Lin
@@ -20,7 +19,9 @@ import lombok.experimental.Accessors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @ApiModel("Token 表")
 @Accessors(chain = true)
@@ -36,4 +37,21 @@ public class Token {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ApiModelProperty("用户")
     private User user;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        Token token1 = (Token) o;
+        return token != null && Objects.equals(token, token1.token);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(token);
+    }
 }

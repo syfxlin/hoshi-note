@@ -6,8 +6,6 @@ package me.ixk.hoshi.mail.exception;
  */
 public class SendException extends RuntimeException {
 
-    private static final long serialVersionUID = 2058030610979167789L;
-
     public SendException(final Throwable cause) {
         super(cause);
     }

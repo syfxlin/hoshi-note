@@ -26,8 +26,6 @@ import lombok.NoArgsConstructor;
 @ApiModel("添加日志")
 public class AddLogView implements Serializable {
 
-    private static final long serialVersionUID = -3293210012295275706L;
-
     @NotNull(message = "日志类型不能为空")
     @Pattern(regexp = "[A-Z_]+", message = "日志类型必须为全大写字符")
     @ApiModelProperty("日志类型")

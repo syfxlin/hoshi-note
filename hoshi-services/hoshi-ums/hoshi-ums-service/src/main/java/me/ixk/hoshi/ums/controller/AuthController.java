@@ -7,6 +7,7 @@ package me.ixk.hoshi.ums.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,14 +36,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 权限控制器
+ * 验证控制器
  *
  * @author Otstar Lin
  * @date 2021/5/15 下午 4:53
  */
 @RestController
 @RequiredArgsConstructor
-@Api("权限控制器")
+@Api("验证控制器")
 public class AuthController {
 
     private final UserRepository userRepository;
@@ -94,11 +95,13 @@ public class AuthController {
             return ApiResult.unauthorized("Token 无效").build();
         }
         final User user = tokenOptional.get().getUser();
+        List<Role> roles = user.getRoles().stream().filter(Role::getStatus).collect(Collectors.toList());
         final UserDetails details = new UserDetails(
             user.getId(),
             user.getUsername(),
             user.getPassword(),
-            user.getRoles().stream().filter(Role::getStatus).map(Role::getName).collect(Collectors.toList()),
+            roles.stream().map(Role::getName).collect(Collectors.toList()),
+            roles.stream().flatMap(role -> role.getPermissions().stream()).distinct().collect(Collectors.toList()),
             user.getStatus()
         );
         final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

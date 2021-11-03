@@ -18,10 +18,10 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface RoleRepository
     extends PagingAndSortingRepository<Role, String>, UpdateRepository<Role, String>, JpaSpecificationExecutor<Role> {
     /**
-     * 更新权限
+     * 更新角色
      *
-     * @param role 权限
-     * @return 权限
+     * @param role 角色
+     * @return 角色
      */
     default Role update(final Role role) {
         return this.update(role, Role::getName);

@@ -72,7 +72,7 @@ Authorization: Bearer {{token}}
   "nickname": "Test1"
 }
 
-### 添加用户权限
+### 添加用户角色
 POST http://localhost:8000/api/admin/users/role
 Accept: application/json
 Content-Type: application/json
@@ -83,7 +83,7 @@ Authorization: Bearer {{token}}
   "roles": ["TEST"]
 }
 
-### 修改用户权限
+### 修改用户角色
 PUT http://localhost:8000/api/admin/users/role
 Accept: application/json
 Content-Type: application/json
@@ -94,7 +94,7 @@ Authorization: Bearer {{token}}
   "roles": ["USER"]
 }
 
-### 删除用户权限
+### 删除用户角色
 DELETE http://localhost:8000/api/admin/users/role?id={{test_user_id}}&roles=USER
 Accept: application/json
 Content-Type: application/json
@@ -105,12 +105,12 @@ DELETE http://localhost:8000/api/admin/users?id={{test_user_id}}
 Accept: application/json
 Authorization: Bearer {{token}}
 
-### 获取所有权限
+### 获取所有角色
 GET http://localhost:8000/api/admin/roles
 Accept: application/json
 Authorization: Bearer {{token}}
 
-### 添加一个权限
+### 添加一个角色
 POST http://localhost:8000/api/admin/roles
 Accept: application/json
 Authorization: Bearer {{token}}
@@ -118,11 +118,14 @@ Content-Type: application/json
 
 {
     "name": "TEST",
-    "description": "测试权限",
-    "status": 1
+    "description": "测试角色",
+    "status": 1,
+    "permissions": [
+        "FOLLOW"
+    ]
 }
 
-### 更新权限
+### 更新角色
 PUT http://localhost:8000/api/admin/roles
 Accept: application/json
 Authorization: Bearer {{token}}
@@ -130,11 +133,11 @@ Content-Type: application/json
 
 {
     "name": "TEST",
-    "description": "更新权限"
+    "description": "更新角色"
 }
 
-### 删除权限
-DELETE http://localhost:8000/api/admin/roles?id=TEST
+### 删除角色
+DELETE http://localhost:8000/api/admin/roles/TEST
 Accept: application/json
 Authorization: Bearer {{token}}
 

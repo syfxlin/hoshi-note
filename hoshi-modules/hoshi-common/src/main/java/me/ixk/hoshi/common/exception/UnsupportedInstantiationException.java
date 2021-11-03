@@ -16,8 +16,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class UnsupportedInstantiationException extends Exception {
 
-    private static final long serialVersionUID = 1028147039710816203L;
-
     public UnsupportedInstantiationException(@NotNull final Class<?> target) {
         super(target.getName());
     }

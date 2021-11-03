@@ -47,7 +47,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 @RequestMapping("/api/users")
 @Api("用户控制器")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('USER')")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -57,44 +56,31 @@ public class UserController {
 
     @ApiOperation("获取用户")
     @GetMapping("")
+    @PreAuthorize("hasAuthority('ME')")
     public final ApiResult<Object> user(@Autowired final User user) {
         return ApiResult.ok(user, "获取当前用户成功");
     }
 
     @ApiOperation("更新用户名")
     @PutMapping("/name")
-    public ApiResult<Object> updateName(
-        @Autowired final User user,
-        @Valid @JsonModel final UpdateNameView vo
-    ) {
+    @PreAuthorize("hasAuthority('ME')")
+    public ApiResult<Object> updateName(@Autowired final User user, @Valid @JsonModel final UpdateNameView vo) {
         final User update = User.ofUpdateName(vo, user.getId());
-        return ApiResult.ok(
-            this.userRepository.update(update),
-            "更新用户名成功"
-        );
+        return ApiResult.ok(this.userRepository.update(update), "更新用户名成功");
     }
 
     @ApiOperation("发送更新邮箱验证码")
     @PostMapping("/email")
-    public ApiResult<Object> sendEmailCode(
-        @Autowired final User user,
-        final HttpServletRequest request
-    ) {
-        verifyCodeService.generate(
-            user.getEmail(),
-            "验证您的邮箱账户",
-            60 * 30,
-            request.getRemoteAddr()
-        );
+    @PreAuthorize("hasAuthority('ME')")
+    public ApiResult<Object> sendEmailCode(@Autowired final User user, final HttpServletRequest request) {
+        verifyCodeService.generate(user.getEmail(), "验证您的邮箱账户", 60 * 30, request.getRemoteAddr());
         return ApiResult.ok("验证码发送成功").build();
     }
 
     @ApiOperation("更新用户邮箱")
     @PutMapping("/email")
-    public ApiResult<Object> updateEmail(
-        @Autowired final User user,
-        @Valid @JsonModel final UpdateEmailView vo
-    ) {
+    @PreAuthorize("hasAuthority('ME')")
+    public ApiResult<Object> updateEmail(@Autowired final User user, @Valid @JsonModel final UpdateEmailView vo) {
         if (!verifyCodeService.verify("验证您的邮箱账户", vo.getCode())) {
             return ApiResult.bindException("验证码无效");
         }
@@ -104,16 +90,9 @@ public class UserController {
 
     @ApiOperation("更新用户密码")
     @PutMapping("/password")
-    public ApiResult<Object> updatePassword(
-        @Autowired final User user,
-        @Valid @JsonModel final UpdatePasswordView vo
-    ) {
-        if (
-            !this.passwordEncoder.matches(
-                    vo.getOldPassword(),
-                    user.getPassword()
-                )
-        ) {
+    @PreAuthorize("hasAuthority('ME')")
+    public ApiResult<Object> updatePassword(@Autowired final User user, @Valid @JsonModel final UpdatePasswordView vo) {
+        if (!this.passwordEncoder.matches(vo.getOldPassword(), user.getPassword())) {
             return ApiResult.bindException("旧密码不匹配");
         }
         final User update = User.ofUpdatePassword(vo, user.getId());
@@ -123,31 +102,23 @@ public class UserController {
 
     @ApiOperation("获取用户信息")
     @GetMapping("/info")
+    @PreAuthorize("hasAuthority('ME')")
     public ApiResult<UserInfo> getInfo(@Autowired final User user) {
         return ApiResult.ok(user.getInfo(), "获取当前用户信息成功");
     }
 
     @ApiOperation("更新用户信息")
     @PutMapping("/info")
+    @PreAuthorize("hasAuthority('ME')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<UserInfo> updateInfo(
-        @Autowired final User user,
-        @Valid @JsonModel final UpdateUserInfoView vo
-    ) {
-        user.setInfo(
-            Jpa.merge(
-                UserInfo.ofUpdate(vo, user.getInfo().getId()),
-                user.getInfo()
-            )
-        );
-        return ApiResult.ok(
-            this.userRepository.save(user).getInfo(),
-            "更新用户成功"
-        );
+    public ApiResult<UserInfo> updateInfo(@Autowired final User user, @Valid @JsonModel final UpdateUserInfoView vo) {
+        user.setInfo(Jpa.merge(UserInfo.ofUpdate(vo, user.getInfo().getId()), user.getInfo()));
+        return ApiResult.ok(this.userRepository.save(user).getInfo(), "更新用户成功");
     }
 
     @ApiOperation("获取当前用户登录信息")
     @GetMapping("/logged")
+    @PreAuthorize("hasAuthority('ME_LOGGED_MANAGER')")
     public ApiResult<List<LoggedView>> logged(@Autowired final User user) {
         return ApiResult.ok(
             this.sessionRepository.findByPrincipalName(user.getUsername())
@@ -156,9 +127,7 @@ public class UserController {
                 .map(
                     e -> {
                         final Session session = e.getValue();
-                        final SecurityContext securityContext = session.getAttribute(
-                            "SPRING_SECURITY_CONTEXT"
-                        );
+                        final SecurityContext securityContext = session.getAttribute("SPRING_SECURITY_CONTEXT");
                         final WebAuthenticationDetails details = (WebAuthenticationDetails) securityContext
                             .getAuthentication()
                             .getDetails();
@@ -180,9 +149,7 @@ public class UserController {
                             .build();
                     }
                 )
-                .sorted(
-                    Comparator.comparing(LoggedView::getCreationTime).reversed()
-                )
+                .sorted(Comparator.comparing(LoggedView::getCreationTime).reversed())
                 .collect(Collectors.toList()),
             "获取当前用户登录信息成功"
         );
@@ -190,20 +157,12 @@ public class UserController {
 
     @ApiOperation("踢出用户")
     @DeleteMapping("/exclude/{sessionId}")
-    public ApiResult<Object> exclude(
-        @Autowired final User user,
-        @PathVariable("sessionId") final String sessionId
-    ) {
-        if (
-            sessionId.equals(
-                RequestContextHolder.currentRequestAttributes().getSessionId()
-            )
-        ) {
+    @PreAuthorize("hasAuthority('ME_LOGGED_MANAGER')")
+    public ApiResult<Object> exclude(@Autowired final User user, @PathVariable("sessionId") final String sessionId) {
+        if (sessionId.equals(RequestContextHolder.currentRequestAttributes().getSessionId())) {
             return ApiResult.bindException("不能踢出自己");
         }
-        final Session session =
-            this.sessionRepository.findByPrincipalName(user.getUsername())
-                .get(sessionId);
+        final Session session = this.sessionRepository.findByPrincipalName(user.getUsername()).get(sessionId);
         if (session == null) {
             return ApiResult.ok("指定的登录已失效，无须踢出").build();
         }

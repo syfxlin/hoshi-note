@@ -7,13 +7,12 @@ package me.ixk.hoshi.ums.entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.ums.view.request.UpdateUserInfoView;
+import org.hibernate.Hibernate;
 
 /**
  * 用户信息表
@@ -24,14 +23,14 @@ import me.ixk.hoshi.ums.view.request.UpdateUserInfoView;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @ApiModel("用户信息表")
 @Accessors(chain = true)
 @Table(name = "user_info")
 public class UserInfo implements Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * ID
@@ -80,5 +79,22 @@ public class UserInfo implements Serializable {
             .company(vo.getCompany())
             .status(vo.getStatus())
             .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        UserInfo userInfo = (UserInfo) o;
+        return id != null && Objects.equals(id, userInfo.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
