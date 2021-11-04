@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -61,6 +62,16 @@ public class UserController {
         return ApiResult.ok(user, "获取当前用户成功");
     }
 
+    @ApiOperation("通过用户名获取用户")
+    @GetMapping("/{username}")
+    public ApiResult<Object> user(@PathVariable("username") final String username) {
+        final Optional<User> byUsername = userRepository.findByUsername(username);
+        if (byUsername.isEmpty()) {
+            return ApiResult.bindException("用户不存在");
+        }
+        return ApiResult.ok(byUsername.get(), "获取用户成功");
+    }
+
     @ApiOperation("更新用户名")
     @PutMapping("/name")
     @PreAuthorize("hasAuthority('ME')")
@@ -70,10 +81,16 @@ public class UserController {
     }
 
     @ApiOperation("发送更新邮箱验证码")
-    @PostMapping("/email")
+    @PostMapping("/email/{email}")
     @PreAuthorize("hasAuthority('ME')")
-    public ApiResult<Object> sendEmailCode(@Autowired final User user, final HttpServletRequest request) {
-        verifyCodeService.generate(user.getEmail(), "验证您的邮箱账户", 60 * 30, request.getRemoteAddr());
+    public ApiResult<Object> sendEmailCode(
+        @PathVariable("email") final String email,
+        final HttpServletRequest request
+    ) {
+        if (this.userRepository.findByEmail(email).isPresent()) {
+            return ApiResult.bindException("已经有用户绑定了该邮箱");
+        }
+        verifyCodeService.generate(email, "验证您的邮箱账户", 60 * 30, request.getRemoteAddr());
         return ApiResult.ok("验证码发送成功").build();
     }
 
@@ -120,6 +137,7 @@ public class UserController {
     @GetMapping("/logged")
     @PreAuthorize("hasAuthority('ME_LOGGED_MANAGER')")
     public ApiResult<List<LoggedView>> logged(@Autowired final User user) {
+        String sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
         return ApiResult.ok(
             this.sessionRepository.findByPrincipalName(user.getUsername())
                 .entrySet()
@@ -146,6 +164,7 @@ public class UserController {
                             .userAgent(details.getUserAgent())
                             .creationTime(creationTime)
                             .lastAccessedTime(lastAccessedTime)
+                            .current(e.getKey().equals(sessionId))
                             .build();
                     }
                 )

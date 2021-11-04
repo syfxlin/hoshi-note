@@ -152,7 +152,7 @@ Content-Type: application/json
 }
 
 ### 发送验证码
-POST http://localhost:8000/api/users/email
+POST http://localhost:8000/api/users/email/i@ixk.me
 Accept: application/json
 Authorization: Bearer {{token}}
 

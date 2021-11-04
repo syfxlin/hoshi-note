@@ -33,4 +33,7 @@ public class LoggedView {
 
     @ApiModelProperty("最后访问时间")
     private final OffsetDateTime lastAccessedTime;
+
+    @ApiModelProperty("是否是当前访问的设备")
+    private final Boolean current;
 }
