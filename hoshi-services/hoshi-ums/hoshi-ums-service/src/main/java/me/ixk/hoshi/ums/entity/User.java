@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
-import lombok.ToString.Exclude;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.ums.view.request.*;
 import org.hibernate.Hibernate;
@@ -61,7 +60,7 @@ public class User implements Serializable {
      */
     @ApiModelProperty("密码")
     @Column(name = "password", nullable = false)
-    @Exclude
+    @ToString.Exclude
     @JsonBackReference
     private String password;
 
@@ -111,14 +110,14 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "follower", targetEntity = Follow.class)
     @LazyCollection(LazyCollectionOption.EXTRA)
     @ApiModelProperty("用户关注了")
-    @Exclude
+    @ToString.Exclude
     private List<Follow> following = new ArrayList<>();
 
     @JsonBackReference
     @OneToMany(mappedBy = "following", targetEntity = Follow.class)
     @LazyCollection(LazyCollectionOption.EXTRA)
     @ApiModelProperty("用户关注者")
-    @Exclude
+    @ToString.Exclude
     private List<Follow> followers = new ArrayList<>();
 
     @JsonProperty("followingCount")

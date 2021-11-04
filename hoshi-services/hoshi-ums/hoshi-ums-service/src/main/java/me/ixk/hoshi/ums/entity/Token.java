@@ -4,6 +4,7 @@
 
 package me.ixk.hoshi.ums.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
@@ -33,9 +34,15 @@ public class Token {
     @Column(name = "token", nullable = false, unique = true)
     private String token;
 
+    @ApiModelProperty("名称")
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ApiModelProperty("用户")
+    @ToString.Exclude
+    @JsonBackReference
     private User user;
 
     @Override
