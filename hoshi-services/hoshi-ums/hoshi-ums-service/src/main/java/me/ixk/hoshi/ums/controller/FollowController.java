@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2021/5/22 16:55
  */
 @RestController
-@RequestMapping("/api/follows")
+@RequestMapping("/follows")
 @Api("关注控制器")
 @RequiredArgsConstructor
 public class FollowController {

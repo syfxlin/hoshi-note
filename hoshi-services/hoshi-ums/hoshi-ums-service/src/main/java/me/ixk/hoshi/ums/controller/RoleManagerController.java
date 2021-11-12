@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2021/5/18 下午 9:21
  */
 @RestController
-@RequestMapping("/api/admin/roles")
+@RequestMapping("/admin/roles")
 @RequiredArgsConstructor
 @Api(value = "角色管理控制器")
 public class RoleManagerController {

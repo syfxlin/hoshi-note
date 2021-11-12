@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2021/5/27 17:35
  */
 @RestController
-@RequestMapping("/api/workspace")
+@RequestMapping("/workspace")
 @Api("工作区控制器")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('USER')")

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2021/11/4 20:47
  */
 @RestController
-@RequestMapping("/api/tokens")
+@RequestMapping("/tokens")
 @Api("Token 控制器")
 @RequiredArgsConstructor
 public class TokenController {

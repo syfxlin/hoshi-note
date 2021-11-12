@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2021/5/30 16:26
  */
 @RestController
-@RequestMapping("/api/notes")
+@RequestMapping("/notes")
 @Api("笔记控制器")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('USER')")

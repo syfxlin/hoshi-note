@@ -1,5 +1,5 @@
 ### 注册验证码
-POST http://localhost:8000/register/i@ixk.me
+POST http://localhost:7000/register/i@ixk.me
 Accept: application/json
 
 ### 注册

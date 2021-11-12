@@ -35,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2021/5/23 9:08
  */
 @RestController
-@RequestMapping("/api/files")
+@RequestMapping("/files")
 @Api("文件控制器")
 @RequiredArgsConstructor
 public class FileController {
@@ -63,7 +63,7 @@ public class FileController {
                                 .builder()
                                 .fileName(r.getFilename())
                                 .size(r.contentLength())
-                                .url(String.format("/api/files/%s/%s", userId, r.getFilename()))
+                                .url(String.format("/files/%s/%s", userId, r.getFilename()))
                                 .build();
                         } catch (final IOException e) {
                             throw new StorageException("获取文件大小失败", e);
@@ -86,7 +86,7 @@ public class FileController {
             .mediaType(store.getMediaType())
             .fileName(store.getFileName())
             .size(store.getSize())
-            .url(String.format("/api/files/%s/%s", userId, store.getFileName()))
+            .url(String.format("/files/%s/%s", userId, store.getFileName()))
             .build();
         return ApiResult.ok(view, "上传成功");
     }
