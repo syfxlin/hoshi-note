@@ -7,6 +7,8 @@ package me.ixk.hoshi.web;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 /**
@@ -18,5 +20,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @Configuration
 @ComponentScan
 @EnableRedisHttpSession
-@EnableAspectJAutoProxy
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class HoshiWebAutoConfiguration {}

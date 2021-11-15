@@ -12,6 +12,12 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.file.response.FileView;
 
+/**
+ * 文件
+ *
+ * @author Otstar Lin
+ * @date 2021/11/15 19:50
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -49,6 +55,10 @@ public class File {
     @Column(name = "size")
     @ApiModelProperty("文件大小")
     private Long size;
+
+    @Column(name = "content_type")
+    @ApiModelProperty("文件类型")
+    private String contentType;
 
     @Column(name = "uploaded_time", nullable = false)
     @ApiModelProperty("上传时间")

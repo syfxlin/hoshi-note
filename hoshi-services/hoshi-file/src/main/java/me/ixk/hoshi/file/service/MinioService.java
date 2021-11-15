@@ -37,35 +37,31 @@ public class MinioService {
         final ListObjectsArgs args = ListObjectsArgs
             .builder()
             .bucket(properties.getBucket())
-            .prefix(path.toString())
+            .prefix(path)
             .recursive(true)
             .build();
         return getItems(client.listObjects(args));
     }
 
-    public InputStream read(final String path) {
+    public GetObjectResponse read(final String path) {
         try {
-            final GetObjectArgs args = GetObjectArgs
-                .builder()
-                .bucket(properties.getBucket())
-                .object(path.toString())
-                .build();
+            final GetObjectArgs args = GetObjectArgs.builder().bucket(properties.getBucket()).object(path).build();
             return client.getObject(args);
         } catch (Exception e) {
             throw new MinioException("Error while fetching files in Minio", e);
         }
     }
 
-    public void upload(String path, InputStream stream, Map<String, String> headers) {
+    public ObjectWriteResponse upload(String path, InputStream stream, Map<String, String> headers) {
         try {
             PutObjectArgs args = PutObjectArgs
                 .builder()
                 .bucket(properties.getBucket())
-                .object(path.toString())
+                .object(path)
                 .stream(stream, stream.available(), -1)
                 .headers(headers)
                 .build();
-            client.putObject(args);
+            return client.putObject(args);
         } catch (Exception e) {
             throw new MinioException("Error while fetching files in Minio", e);
         }
@@ -77,11 +73,7 @@ public class MinioService {
 
     public StatObjectResponse stat(String path) {
         try {
-            StatObjectArgs args = StatObjectArgs
-                .builder()
-                .bucket(properties.getBucket())
-                .object(path.toString())
-                .build();
+            StatObjectArgs args = StatObjectArgs.builder().bucket(properties.getBucket()).object(path).build();
             return client.statObject(args);
         } catch (Exception e) {
             throw new MinioException("Error while fetching files in Minio", e);

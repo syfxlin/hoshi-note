@@ -14,10 +14,10 @@ Content-Type: multipart/form-data; boundary=WebAppBoundary
 Authorization: Bearer {{session_token}}
 
 --WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="application.yml"
-Content-Type: application/json
+Content-Disposition: form-data; name="file"; filename="1.jpg"
+Content-Type: image/png
 
-< application.yml
+< 1.jpg
 --WebAppBoundary--
 
 ### 列出图片
