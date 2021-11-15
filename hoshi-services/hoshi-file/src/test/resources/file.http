@@ -20,7 +20,14 @@ Content-Type: image/png
 < 1.jpg
 --WebAppBoundary--
 
-### 列出图片
+### 列出文件
 GET http://localhost:8002/files
+Accept: application/json
+Authorization: Bearer {{session_token}}
+
+> {% client.global.set("disk", response.body.data.records[0].disk); %}
+
+### 删除文件
+DELETE http://localhost:8002/files/{{disk}}
 Accept: application/json
 Authorization: Bearer {{session_token}}

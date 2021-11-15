@@ -82,11 +82,7 @@ public class MinioService {
 
     public void remove(String path) {
         try {
-            RemoveObjectArgs args = RemoveObjectArgs
-                .builder()
-                .bucket(properties.getBucket())
-                .object(path.toString())
-                .build();
+            RemoveObjectArgs args = RemoveObjectArgs.builder().bucket(properties.getBucket()).object(path).build();
             client.removeObject(args);
         } catch (Exception e) {
             throw new MinioException("Error while fetching files in Minio", e);

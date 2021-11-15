@@ -76,4 +76,8 @@ public class File {
             .url(String.format("/files/%s/%s", this.userId, this.disk))
             .build();
     }
+
+    public String toPath() {
+        return String.format("%s/%s", this.getUserId(), this.getDisk());
+    }
 }

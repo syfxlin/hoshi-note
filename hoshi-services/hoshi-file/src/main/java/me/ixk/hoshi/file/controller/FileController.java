@@ -49,7 +49,7 @@ public class FileController {
 
     @ApiOperation("列出文件")
     @GetMapping("")
-    @PreAuthorize("hasRole('FILE')")
+    @PreAuthorize("hasAuthority('FILE')")
     public ApiResult<ApiPage<File>> list(
         @UserId final Long userId,
         @RequestParam(value = "search", required = false) final String search,
@@ -91,7 +91,7 @@ public class FileController {
 
     @ApiOperation("上传文件")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('FILE')")
+    @PreAuthorize("hasAuthority('FILE')")
     public ApiResult<FileView> upload(@UserId final Long userId, @RequestParam("file") final MultipartFile file) {
         final String filename = UUID.randomUUID().toString();
         final String extname = FileNameUtil.extName(file.getOriginalFilename());
@@ -136,6 +136,50 @@ public class FileController {
                 .body(new InputStreamResource(response));
         } catch (final Exception e) {
             return ApiResultUtil.toResponseEntity(ApiResult.error("获取文件异常").build());
+        }
+    }
+
+    @ApiOperation("下载文件")
+    @GetMapping("/{userId:\\d+}/{disk}/download")
+    public ResponseEntity<?> download(
+        @PathVariable("userId") final Long userId,
+        @PathVariable("disk") final String disk
+    ) {
+        final Optional<File> optionalFile = fileRepository.findByUserIdAndDisk(userId, disk);
+        if (optionalFile.isEmpty()) {
+            return ApiResultUtil.toResponseEntity(ApiResult.notFound("指定图片不存在").build());
+        }
+        final File file = optionalFile.get();
+        try {
+            GetObjectResponse response = minioService.read(file.toPath());
+            final HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", String.format("attachment;filename=\"%s\"", file.toPath()));
+            headers.add("Cache-Control", "no-cache,no-store,must-revalidate");
+            headers.add("Pragma", "no-cache");
+            headers.add("Expires", "0");
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentLength(file.getSize());
+            return ResponseEntity.ok().headers(headers).body(new InputStreamResource(response));
+        } catch (final Exception e) {
+            return ApiResultUtil.toResponseEntity(ApiResult.error("获取文件异常").build());
+        }
+    }
+
+    @ApiOperation("删除文件")
+    @DeleteMapping("/{disk}")
+    @PreAuthorize("hasAuthority('FILE')")
+    public ApiResult<Object> delete(@UserId final Long userId, @PathVariable("disk") final String disk) {
+        final Optional<File> optionalFile = fileRepository.findByUserIdAndDisk(userId, disk);
+        if (optionalFile.isEmpty()) {
+            return ApiResult.notFound("文件不存在，无法删除").build();
+        }
+        final File file = optionalFile.get();
+        try {
+            fileRepository.deleteById(file.getId());
+            minioService.remove(file.toPath());
+            return ApiResult.ok("删除成功").build();
+        } catch (Exception e) {
+            return ApiResult.error("删除文件失败").build();
         }
     }
 }
