@@ -4,8 +4,6 @@
 
 package me.ixk.hoshi.common.result;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -15,8 +13,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
-import me.ixk.hoshi.common.util.Json;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -27,7 +23,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor;
 
 /**
  * 统一响应（构造器）
@@ -217,47 +212,10 @@ public class ApiResult<T> {
     /**
      * 转换为 {@link ApiEntity}
      *
-     * @return
+     * @return ApiEntity
      */
     public ApiEntity<T> toEntity() {
         return new ApiEntity<>(this.getStatus(), this.getMessage(), this.getData());
-    }
-
-    /**
-     * 转换为 {@link JsonNode}
-     *
-     * @return
-     */
-    public JsonNode toJsonNode() {
-        return Json.convertToNode(this.toEntity());
-    }
-
-    /**
-     * 转换为 {@link ResponseEntity}
-     * <p>
-     * 为了避免重复造轮子，只需要将 {@link ApiResult} 直接转换成 {@link ResponseEntity}，Spring 会调用 {@link HttpEntityMethodProcessor} 将其写入响应中
-     *
-     * @return
-     */
-    public ResponseEntity<ApiEntity<T>> toResponseEntity() {
-        return ResponseEntity.status(this.getStatus()).headers(this.getHeaders()).body(this.toEntity());
-    }
-
-    /**
-     * 写入 {@link HttpServletResponse}
-     * <p>
-     * 部分情况下需要直接写入 {@link HttpServletResponse}，则调用对应的方法进行写入操作
-     *
-     * @param response {@link HttpServletResponse}
-     * @return {@link HttpServletResponse}
-     * @throws IOException 异常
-     */
-    public HttpServletResponse toResponse(final HttpServletResponse response) throws IOException {
-        response.setContentType("application/json;charset=utf-8");
-        response.setStatus(this.getStatus());
-        this.getHeaders().forEach((key, value) -> value.forEach(v -> response.addHeader(key, v)));
-        response.getWriter().write(this.toJsonNode().toString());
-        return response;
     }
 
     // Static builder methods

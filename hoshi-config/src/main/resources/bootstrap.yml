@@ -1,16 +1,15 @@
-#
-# Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
-#
 server:
   port: 0
 spring:
+  profiles:
+    active: native
   application:
     name: hoshi-config
   cloud:
     config:
       server:
-        git:
-          uri: file:///${user.dir}/static/config
+        native:
+          search-locations: file:///${user.dir}/static/config
   security:
     user:
       name: hoshi-config
@@ -23,10 +22,15 @@ eureka:
       user.password: ${spring.security.user.password}
   client:
     service-url:
-      defaultZone: http://hoshi-peer1:7001/eureka/,http://hoshi-peer2:7002/eureka/
+      defaultZone: http://hoshi-peer1:7001/eureka/
 encrypt:
   key-store:
     location: classpath:/key.jks
     alias: hoshi-key
     password: kudgJi8jj5adWu
     secret: kudgJi8jj5adWu
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

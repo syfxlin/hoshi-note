@@ -53,16 +53,4 @@ public final class Jpa {
         BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
         return target;
     }
-
-    public static String like(final Object object) {
-        return "%" + object + "%";
-    }
-
-    public static String leftLike(final Object object) {
-        return "%" + object;
-    }
-
-    public static String rightLike(final Object object) {
-        return object + "%";
-    }
 }

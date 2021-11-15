@@ -8,6 +8,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
+/**
+ * @author Otstar Lin
+ * @date 2021/11/13 19:18
+ */
 @SpringBootApplication
 @EnableEurekaServer
 public class HoshiRegistryApplication {

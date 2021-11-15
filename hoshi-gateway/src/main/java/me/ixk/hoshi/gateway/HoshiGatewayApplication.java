@@ -6,6 +6,7 @@ package me.ixk.hoshi.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * 服务网关
@@ -14,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2021/6/24 19:39
  */
 @SpringBootApplication
+@EnableDiscoveryClient
 public class HoshiGatewayApplication {
 
     public static void main(final String[] args) {

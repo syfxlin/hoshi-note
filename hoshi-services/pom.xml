@@ -8,21 +8,20 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 >
   <parent>
-    <artifactId>hoshi</artifactId>
+    <artifactId>hoshi-note</artifactId>
     <groupId>me.ixk</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>me.ixk.hoshi</groupId>
   <artifactId>hoshi-services</artifactId>
   <packaging>pom</packaging>
-
   <modules>
-    <module>hoshi-file</module>
-    <module>hoshi-note</module>
     <module>hoshi-ums</module>
-    <module>hoshi-log</module>
+    <module>hoshi-ums-api</module>
     <module>hoshi-mail</module>
+    <module>hoshi-mail-api</module>
+    <module>hoshi-file</module>
+    <module>hoshi-file-api</module>
   </modules>
 </project>

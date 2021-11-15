@@ -1,1 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=me.ixk.hoshi.mysql.HoshiMysqlAutoConfiguration

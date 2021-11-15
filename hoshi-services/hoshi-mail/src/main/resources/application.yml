@@ -1,0 +1,18 @@
+spring:
+  mail:
+    host: smtp.zoho.com.cn
+    port: 587
+    protocol: smtp
+    username: no-reply@ixk.me
+    password: ***REMOVED***
+    properties:
+      mail.tls: true
+      mail.smtp.starttls.enable: true
+  rabbitmq:
+    username: guest
+    password: guest
+    host: localhost
+    port: 5672
+  output:
+    ansi:
+      enabled: always

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
   ~ Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
   -->
@@ -17,9 +17,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.github.xiaoymin</groupId>
-      <artifactId>knife4j-spring-boot-starter</artifactId>
-      <version>3.0.3</version>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-boot-starter</artifactId>
+      <version>3.0.0</version>
     </dependency>
   </dependencies>
 </project>

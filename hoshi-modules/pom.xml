@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
-  ~ Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
-  -->
 <project
   xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 >
   <parent>
-    <artifactId>hoshi</artifactId>
+    <artifactId>hoshi-note</artifactId>
     <groupId>me.ixk</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
@@ -19,15 +16,11 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>hoshi-client</module>
     <module>hoshi-common</module>
-    <module>hoshi-security</module>
-    <module>hoshi-session</module>
-    <module>hoshi-swagger</module>
-    <module>hoshi-test</module>
     <module>hoshi-mysql</module>
-    <module>hoshi-mongo</module>
-    <module>hoshi-api</module>
+    <module>hoshi-web</module>
+    <module>hoshi-swagger</module>
     <module>hoshi-rabbit</module>
+    <module>hoshi-api</module>
   </modules>
 </project>

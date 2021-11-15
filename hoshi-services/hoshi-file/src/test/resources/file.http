@@ -1,0 +1,26 @@
+### Token 登录
+POST http://localhost:8000/api/login
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+token={{token}}
+
+> {% client.global.set("session_token", response.headers.valueOf("X-Auth-Token")); %}
+
+### 上传文件
+POST http://localhost:8002/files
+Accept: application/json
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+Authorization: Bearer {{session_token}}
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="application.yml"
+Content-Type: application/json
+
+< application.yml
+--WebAppBoundary--
+
+### 列出图片
+GET http://localhost:8002/files
+Accept: application/json
+Authorization: Bearer {{session_token}}

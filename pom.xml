@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<!--
-  ~ Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
-  -->
+<?xml version="1.0" encoding="UTF-8" ?>
 <project
   xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -15,18 +12,17 @@
     <relativePath />
   </parent>
   <groupId>me.ixk</groupId>
-  <artifactId>hoshi</artifactId>
+  <artifactId>hoshi-note</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <description>一个集各种神奇功能的云笔记</description>
   <url>https://github.com/syfxlin/hoshi-note</url>
 
   <modules>
-    <module>hoshi-config</module>
-    <module>hoshi-gateway</module>
     <module>hoshi-registry</module>
-    <module>hoshi-admin</module>
+    <module>hoshi-gateway</module>
     <module>hoshi-modules</module>
+    <module>hoshi-config</module>
     <module>hoshi-services</module>
   </modules>
 
@@ -39,32 +35,26 @@
   </properties>
 
   <dependencies>
-    <!-- Cloud -->
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-bootstrap</artifactId>
-    </dependency>
+    <!-- Caffeine 缓存 -->
     <dependency>
       <groupId>com.github.ben-manes.caffeine</groupId>
       <artifactId>caffeine</artifactId>
     </dependency>
+    <!-- 启动配置 -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+      <artifactId>spring-cloud-starter-bootstrap</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-    </dependency>
-    <!-- Tools & Test -->
-    <dependency>
-      <groupId>cn.hutool</groupId>
-      <artifactId>hutool-core</artifactId>
-      <version>5.7.14</version>
-    </dependency>
+    <!-- 监控 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <!-- 工具 -->
+    <dependency>
+      <groupId>cn.hutool</groupId>
+      <artifactId>hutool-core</artifactId>
+      <version>5.7.16</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -90,11 +80,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
       <version>22.0.0</version>
@@ -117,81 +102,52 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- Hoshi -->
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-client</artifactId>
-        <version>${project.version}</version>
+        <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-mongo</artifactId>
-        <version>${project.version}</version>
+        <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-mysql</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-security</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-session</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-swagger</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-test</artifactId>
-        <version>${project.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-file-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-log-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-note-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-ums-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>me.ixk.hoshi</groupId>
-        <artifactId>hoshi-mail-api</artifactId>
-        <version>${project.version}</version>
+        <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>me.ixk.hoshi</groupId>
         <artifactId>hoshi-rabbit</artifactId>
-        <version>${project.version}</version>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-swagger</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-web</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+      <!-- Api -->
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-file-api</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-mail-api</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>me.ixk.hoshi</groupId>
+        <artifactId>hoshi-ums-api</artifactId>
+        <version>1.0-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -209,19 +165,6 @@
             </exclude>
           </excludes>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.gmavenplus</groupId>
-        <artifactId>gmavenplus-plugin</artifactId>
-        <version>1.12.1</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-              <goal>compileTests</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

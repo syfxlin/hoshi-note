@@ -18,11 +18,21 @@
   <dependencies>
     <dependency>
       <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-swagger</artifactId>
+      <artifactId>hoshi-common</artifactId>
+    </dependency>
+    <!-- 验证 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+    <!-- Feign 客户端 -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
     </dependency>
     <dependency>
-      <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-common</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
   </dependencies>
 </project>

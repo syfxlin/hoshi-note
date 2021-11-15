@@ -4,6 +4,7 @@
 
 package me.ixk.hoshi.common.result;
 
+import java.io.Serial;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,6 +15,9 @@ import java.util.List;
  * @date 2021/5/22 16:15
  */
 public class ApiBindException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 6508141886255977105L;
 
     private final List<String> errors;
 
