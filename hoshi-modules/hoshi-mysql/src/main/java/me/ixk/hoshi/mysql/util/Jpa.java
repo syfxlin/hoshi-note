@@ -40,17 +40,17 @@ public final class Jpa {
     }
 
     /**
-     * 合并 JPA Entity，src 的字段不为空说明有更新，有更新的字段会设置到 target 上
+     * 合并 JPA Entity，update 的字段不为空说明有更新，有更新的字段会设置到 target 上
      *
-     * @param src    更新来源对象，为空表示有更新
+     * @param update 更新来源对象，不为空表示有更新
      * @param target 原始对象，旧的 Entity 对象，要被更新的对象
      * @param <T>    类型
      * @return 更新后的对象
      */
-    public static <T> T merge(final T src, final T target) {
-        Assert.notNull(src, "原始元素必须不能为空");
+    public static <T> T merge(final T update, final T target) {
+        Assert.notNull(update, "原始元素必须不能为空");
         Assert.notNull(target, "要更新的元素必须不能为空");
-        BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
+        BeanUtils.copyProperties(update, target, getNullPropertyNames(update));
         return target;
     }
 }

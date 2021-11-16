@@ -11,14 +11,18 @@ import io.swagger.annotations.ApiOperation;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.file.entity.File;
 import me.ixk.hoshi.file.repository.FileRepository;
+import me.ixk.hoshi.file.request.UpdateFile;
 import me.ixk.hoshi.file.response.FileView;
 import me.ixk.hoshi.file.service.MinioService;
+import me.ixk.hoshi.mysql.util.Jpa;
+import me.ixk.hoshi.web.annotation.JsonModel;
 import me.ixk.hoshi.web.annotation.UserId;
 import me.ixk.hoshi.web.result.ApiResultUtil;
 import org.springframework.core.io.InputStreamResource;
@@ -50,7 +54,7 @@ public class FileController {
     @ApiOperation("列出文件")
     @GetMapping("")
     @PreAuthorize("hasAuthority('FILE')")
-    public ApiResult<ApiPage<File>> list(
+    public ApiResult<ApiPage<FileView>> list(
         @UserId final Long userId,
         @RequestParam(value = "search", required = false) final String search,
         final Pageable page
@@ -65,29 +69,8 @@ public class FileController {
                         cb.like(root.get("description"), String.format("%%%s%%", search))
                     )
                 );
-        return ApiResult.page(fileRepository.findAll(specification, page), "获取文件列表成功");
+        return ApiResult.page(fileRepository.findAll(specification, page).map(File::toView), "获取文件列表成功");
     }
-
-    //    public ApiResult<Object> list(@UserId final Long userId, final Pageable page) {
-    //        Stream<Item> stream = minioService
-    //            .list(Path.of(String.format("user_%s", userId)))
-    //            .filter(item -> !item.isDir());
-    //        if (page.isPaged()) {
-    //            stream = stream.skip(page.getOffset()).limit(page.getPageSize());
-    //        }
-    //        final List<FileView> list = stream
-    //            .map(item -> {
-    //                final String name = Path.of(item.objectName()).getFileName().toString();
-    //                return FileView
-    //                    .builder()
-    //                    .name(name)
-    //                    .size(item.size())
-    //                    .url(String.format("/files/%s/%s", userId, name))
-    //                    .build();
-    //            })
-    //            .collect(Collectors.toList());
-    //        return ApiResult.ok(list, "获取所有文件信息成功");
-    //    }
 
     @ApiOperation("上传文件")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -116,6 +99,20 @@ public class FileController {
         }
     }
 
+    @ApiOperation("修改文件信息")
+    @PutMapping("/{fileId:\\d+}")
+    @PreAuthorize("hasAuthority('FILE')")
+    public ApiResult<Object> update(@UserId final Long userId, @JsonModel @Valid final UpdateFile file) {
+        final Optional<File> optionalFile = fileRepository.findByUserIdAndId(userId, file.getFileId());
+        if (optionalFile.isEmpty()) {
+            return ApiResult.notFound("指定图片不存在").build();
+        }
+        return ApiResult.ok(
+            this.fileRepository.save(Jpa.merge(File.ofUpdate(file), optionalFile.get())),
+            "修改文件信息成功"
+        );
+    }
+
     @ApiOperation("查看文件")
     @GetMapping("/{userId:\\d+}/{disk}")
     public ResponseEntity<?> get(@PathVariable("userId") final Long userId, @PathVariable("disk") final String disk) {
@@ -129,7 +126,7 @@ public class FileController {
             if (contentType == null) {
                 contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
             }
-            GetObjectResponse response = minioService.read(String.format("%s/%s", userId, disk));
+            final GetObjectResponse response = minioService.read(String.format("%s/%s", userId, disk));
             return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
@@ -151,7 +148,7 @@ public class FileController {
         }
         final File file = optionalFile.get();
         try {
-            GetObjectResponse response = minioService.read(file.toPath());
+            final GetObjectResponse response = minioService.read(file.toPath());
             final HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", String.format("attachment;filename=\"%s\"", file.toPath()));
             headers.add("Cache-Control", "no-cache,no-store,must-revalidate");
@@ -166,10 +163,10 @@ public class FileController {
     }
 
     @ApiOperation("删除文件")
-    @DeleteMapping("/{disk}")
+    @DeleteMapping("/{id:\\d+}")
     @PreAuthorize("hasAuthority('FILE')")
-    public ApiResult<Object> delete(@UserId final Long userId, @PathVariable("disk") final String disk) {
-        final Optional<File> optionalFile = fileRepository.findByUserIdAndDisk(userId, disk);
+    public ApiResult<Object> delete(@UserId final Long userId, @PathVariable("id") final Long id) {
+        final Optional<File> optionalFile = fileRepository.findByUserIdAndId(userId, id);
         if (optionalFile.isEmpty()) {
             return ApiResult.notFound("文件不存在，无法删除").build();
         }
@@ -178,7 +175,7 @@ public class FileController {
             fileRepository.deleteById(file.getId());
             minioService.remove(file.toPath());
             return ApiResult.ok("删除成功").build();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return ApiResult.error("删除文件失败").build();
         }
     }

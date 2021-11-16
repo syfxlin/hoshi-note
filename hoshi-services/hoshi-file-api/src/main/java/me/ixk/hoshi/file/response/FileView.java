@@ -22,22 +22,25 @@ import lombok.Data;
 public class FileView {
 
     @ApiModelProperty("文件 ID")
-    private Long id;
+    private final Long id;
 
     @ApiModelProperty("存储文件名")
-    private String disk;
+    private final String disk;
 
     @ApiModelProperty("文件名")
     private final String name;
 
     @ApiModelProperty("文件描述")
-    private String description;
+    private final String description;
 
     @ApiModelProperty("文件大小")
     private final Long size;
 
+    @ApiModelProperty("文件类型")
+    private final String contentType;
+
     @ApiModelProperty("上传时间")
-    private OffsetDateTime uploadedTime;
+    private final OffsetDateTime uploadedTime;
 
     @ApiModelProperty("文件 URL")
     private final String url;

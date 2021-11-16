@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import me.ixk.hoshi.file.request.UpdateFile;
 import me.ixk.hoshi.file.response.FileView;
 
 /**
@@ -44,7 +45,7 @@ public class File {
     @ApiModelProperty("存储文件名")
     private String disk;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     @ApiModelProperty("文件名称")
     private String name;
 
@@ -52,7 +53,7 @@ public class File {
     @ApiModelProperty("文件描述")
     private String description;
 
-    @Column(name = "size")
+    @Column(name = "size", nullable = false)
     @ApiModelProperty("文件大小")
     private Long size;
 
@@ -64,6 +65,10 @@ public class File {
     @ApiModelProperty("上传时间")
     private OffsetDateTime uploadedTime;
 
+    public static File ofUpdate(final UpdateFile file) {
+        return File.builder().id(file.getFileId()).name(file.getName()).description(file.getDescription()).build();
+    }
+
     public FileView toView() {
         return FileView
             .builder()
@@ -72,6 +77,7 @@ public class File {
             .name(this.name)
             .description(this.description)
             .size(this.size)
+            .contentType(this.contentType)
             .uploadedTime(this.uploadedTime)
             .url(String.format("/files/%s/%s", this.userId, this.disk))
             .build();
