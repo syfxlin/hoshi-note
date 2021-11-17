@@ -32,7 +32,13 @@ import org.hibernate.Hibernate;
 @Accessors(chain = true)
 @ApiModel("用户表")
 @Entity
-@Table(name = "user")
+@Table(
+    name = "user",
+    indexes = {
+        @Index(name = "idx_user_username_unq", columnList = "username", unique = true),
+        @Index(name = "idx_user_email_unq", columnList = "email", unique = true),
+    }
+)
 public class User implements Serializable {
 
     /**

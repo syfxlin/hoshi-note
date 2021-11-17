@@ -23,5 +23,7 @@
     <module>hoshi-mail-api</module>
     <module>hoshi-file</module>
     <module>hoshi-file-api</module>
+    <module>hoshi-note</module>
+    <module>hoshi-note-api</module>
   </modules>
 </project>

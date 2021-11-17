@@ -28,7 +28,7 @@ import org.hibernate.Hibernate;
 @Accessors(chain = true)
 @ApiModel("Token 表")
 @Entity
-@Table(name = "token")
+@Table(name = "token", indexes = { @Index(name = "idx_token_token_unq", columnList = "token", unique = true) })
 public class Token {
 
     @Id
