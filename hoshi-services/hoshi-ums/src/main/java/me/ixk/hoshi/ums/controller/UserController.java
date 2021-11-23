@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -59,35 +58,32 @@ public class UserController {
     @ApiOperation("获取用户")
     @GetMapping("")
     @PreAuthorize("hasAuthority('ME')")
-    public final ApiResult<Object> user(@Autowired final User user) {
-        return ApiResult.ok(user, "获取当前用户成功");
+    public final ApiResult<?> user(@Autowired final User user) {
+        return ApiResult.ok(user.toView(), "获取当前用户成功");
     }
 
     @ApiOperation("通过用户名获取用户")
     @GetMapping("/{username}")
-    public ApiResult<Object> user(@PathVariable("username") final String username) {
+    public ApiResult<?> user(@PathVariable("username") final String username) {
         final Optional<User> byUsername = userRepository.findByUsername(username);
         if (byUsername.isEmpty()) {
             return ApiResult.bindException("用户不存在");
         }
-        return ApiResult.ok(byUsername.get(), "获取用户成功");
+        return ApiResult.ok(byUsername.get().toView(), "获取用户成功");
     }
 
     @ApiOperation("更新用户名")
     @PutMapping("/name")
     @PreAuthorize("hasAuthority('ME')")
-    public ApiResult<Object> updateName(@Autowired final User user, @Valid @JsonModel final UpdateNameView vo) {
+    public ApiResult<?> updateName(@Autowired final User user, @Valid @JsonModel final UpdateNameView vo) {
         final User update = User.ofUpdateName(vo, user.getId());
-        return ApiResult.ok(this.userRepository.update(update), "更新用户名成功");
+        return ApiResult.ok(this.userRepository.update(update).toView(), "更新用户名成功");
     }
 
     @ApiOperation("发送更新邮箱验证码")
     @PostMapping("/email/{email}")
     @PreAuthorize("hasAuthority('ME')")
-    public ApiResult<Object> sendEmailCode(
-        @PathVariable("email") final String email,
-        final HttpServletRequest request
-    ) {
+    public ApiResult<?> sendEmailCode(@PathVariable("email") final String email, final HttpServletRequest request) {
         if (this.userRepository.findByEmail(email).isPresent()) {
             return ApiResult.bindException("已经有用户绑定了该邮箱");
         }
@@ -104,46 +100,46 @@ public class UserController {
     @ApiOperation("更新用户邮箱")
     @PutMapping("/email")
     @PreAuthorize("hasAuthority('ME')")
-    public ApiResult<Object> updateEmail(@Autowired final User user, @Valid @JsonModel final UpdateEmailView vo) {
+    public ApiResult<?> updateEmail(@Autowired final User user, @Valid @JsonModel final UpdateEmailView vo) {
         if (!verifyCodeService.verify("验证您的邮箱账户", vo.getCode())) {
             return ApiResult.bindException("验证码无效");
         }
         final User update = User.ofUpdateEmail(vo, user.getId());
-        return ApiResult.ok(this.userRepository.update(update), "更新邮箱成功");
+        return ApiResult.ok(this.userRepository.update(update).toView(), "更新邮箱成功");
     }
 
     @ApiOperation("更新用户密码")
     @PutMapping("/password")
     @PreAuthorize("hasAuthority('ME')")
-    public ApiResult<Object> updatePassword(@Autowired final User user, @Valid @JsonModel final UpdatePasswordView vo) {
+    public ApiResult<?> updatePassword(@Autowired final User user, @Valid @JsonModel final UpdatePasswordView vo) {
         if (!this.passwordEncoder.matches(vo.getOldPassword(), user.getPassword())) {
             return ApiResult.bindException("旧密码不匹配");
         }
         final User update = User.ofUpdatePassword(vo, user.getId());
         update.setPassword(passwordEncoder.encode(update.getPassword()));
-        return ApiResult.ok(this.userRepository.update(update), "更新密码成功");
+        return ApiResult.ok(this.userRepository.update(update).toView(), "更新密码成功");
     }
 
     @ApiOperation("获取用户信息")
     @GetMapping("/info")
     @PreAuthorize("hasAuthority('ME')")
-    public ApiResult<UserInfo> getInfo(@Autowired final User user) {
-        return ApiResult.ok(user.getInfo(), "获取当前用户信息成功");
+    public ApiResult<?> getInfo(@Autowired final User user) {
+        return ApiResult.ok(user.getInfo().toView(), "获取当前用户信息成功");
     }
 
     @ApiOperation("更新用户信息")
     @PutMapping("/info")
     @PreAuthorize("hasAuthority('ME')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<UserInfo> updateInfo(@Autowired final User user, @Valid @JsonModel final UpdateUserInfoView vo) {
+    public ApiResult<?> updateInfo(@Autowired final User user, @Valid @JsonModel final UpdateUserInfoView vo) {
         user.setInfo(Jpa.merge(UserInfo.ofUpdate(vo, user.getInfo().getId()), user.getInfo()));
-        return ApiResult.ok(this.userRepository.save(user).getInfo(), "更新用户成功");
+        return ApiResult.ok(this.userRepository.save(user).getInfo().toView(), "更新用户成功");
     }
 
     @ApiOperation("获取当前用户登录信息")
     @GetMapping("/logged")
     @PreAuthorize("hasAuthority('ME_LOGGED_MANAGER')")
-    public ApiResult<List<LoggedView>> logged(@Autowired final User user) {
+    public ApiResult<?> logged(@Autowired final User user) {
         String sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
         return ApiResult.ok(
             this.sessionRepository.findByPrincipalName(user.getUsername())
@@ -182,7 +178,7 @@ public class UserController {
     @ApiOperation("踢出用户")
     @DeleteMapping("/exclude/{sessionId}")
     @PreAuthorize("hasAuthority('ME_LOGGED_MANAGER')")
-    public ApiResult<Object> exclude(@Autowired final User user, @PathVariable("sessionId") final String sessionId) {
+    public ApiResult<?> exclude(@Autowired final User user, @PathVariable("sessionId") final String sessionId) {
         if (sessionId.equals(RequestContextHolder.currentRequestAttributes().getSessionId())) {
             return ApiResult.bindException("不能踢出自己");
         }

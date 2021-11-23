@@ -15,4 +15,10 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>hoshi-note-api</artifactId>
 
+  <dependencies>
+    <dependency>
+      <groupId>me.ixk.hoshi</groupId>
+      <artifactId>hoshi-api</artifactId>
+    </dependency>
+  </dependencies>
 </project>

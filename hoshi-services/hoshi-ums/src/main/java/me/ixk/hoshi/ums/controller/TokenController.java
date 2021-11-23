@@ -6,9 +6,9 @@ package me.ixk.hoshi.ums.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.ums.entity.Token;
@@ -34,30 +34,32 @@ public class TokenController {
 
     @ApiOperation("获取所有 Token")
     @GetMapping("")
-    @PreAuthorize("hasAuthority('ME')")
-    public ApiResult<List<Token>> list(@Autowired final User user) {
-        return ApiResult.ok(this.tokenRepository.findByUserId(user.getId()), "获取所有 Token 成功");
+    @PreAuthorize("hasAuthority('TOKEN')")
+    public ApiResult<?> list(@Autowired final User user) {
+        return ApiResult.ok(
+            this.tokenRepository.findByUserId(user.getId()).stream().map(Token::toView).collect(Collectors.toList()),
+            "获取所有 Token 成功"
+        );
     }
 
     @ApiOperation("新增 Token")
     @PostMapping("/{name}")
-    @PreAuthorize("hasAuthority('ME')")
-    public ApiResult<Object> add(@Autowired final User user, @PathVariable("name") final String name) {
+    @PreAuthorize("hasAuthority('TOKEN')")
+    public ApiResult<?> add(@Autowired final User user, @PathVariable("name") final String name) {
         if (this.tokenRepository.findByNameAndUserId(name, user.getId()).isPresent()) {
             return ApiResult.bindException("Token 已存在");
         }
         return ApiResult.ok(
-            this.tokenRepository.save(
-                    Token.builder().name(name).token(UUID.randomUUID().toString()).user(user).build()
-                ),
+            this.tokenRepository.save(Token.builder().name(name).token(UUID.randomUUID().toString()).user(user).build())
+                .toView(),
             "添加 Token 成功"
         );
     }
 
     @ApiOperation("撤销 Token")
     @DeleteMapping("/{token}")
-    @PreAuthorize("hasAuthority('ME')")
-    public ApiResult<Object> revoke(@Autowired final User user, @PathVariable("token") final String token) {
+    @PreAuthorize("hasAuthority('TOKEN')")
+    public ApiResult<?> revoke(@Autowired final User user, @PathVariable("token") final String token) {
         final Optional<Token> optionalToken = this.tokenRepository.findByTokenAndUserId(token, user.getId());
         if (optionalToken.isEmpty()) {
             return ApiResult.bindException("Token 未找到");

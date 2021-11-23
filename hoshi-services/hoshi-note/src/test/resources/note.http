@@ -1,0 +1,79 @@
+### Token 登录
+POST http://localhost:8000/api/login
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+token={{token}}
+
+> {% client.global.set("session_token", response.headers.valueOf("X-Auth-Token")); %}
+
+### 列出文件
+GET http://localhost:8001/workspaces
+Accept: application/json
+Authorization: Bearer {{session_token}}
+
+### 添加工作区
+POST http://localhost:8001/workspaces
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{session_token}}
+
+{
+    "name": "Test",
+    "description": "这是一段描述",
+    "domain": "test",
+    "icon": null,
+    "disclose": false
+}
+
+> {% client.global.set("workspace_id", response.body.data.id); %}
+
+### 修改工作区
+PUT http://localhost:8001/workspaces/{{workspace_id}}
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{session_token}}
+
+{
+    "description": "这是一段修改后的描述"
+}
+
+### 删除工作区
+DELETE http://localhost:8001/workspaces/{{workspace_id}}
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{session_token}}
+
+### 获取笔记列表
+GET http://localhost:8001/notes/{{workspace_id}}
+Accept: application/json
+Authorization: Bearer {{session_token}}
+
+### 获取笔记列表
+GET http://localhost:8001/notes/{{workspace_id}}/{{parent_id}}
+Accept: application/json
+Authorization: Bearer {{session_token}}
+
+### 添加笔记
+POST http://localhost:8001/notes/{{workspace_id}}
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{session_token}}
+
+{
+    "name": "Test1",
+    "type": "markdown"
+}
+
+> {% client.global.set("parent_id", response.body.data.id); %}
+
+### 添加笔记
+POST http://localhost:8001/notes/{{workspace_id}}/{{parent_id}}
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{session_token}}
+
+{
+    "name": "Test2",
+    "type": "markdown"
+}

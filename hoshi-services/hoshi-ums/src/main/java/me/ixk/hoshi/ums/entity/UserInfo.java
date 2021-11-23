@@ -12,6 +12,7 @@ import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.ums.request.UpdateUserInfoView;
+import me.ixk.hoshi.ums.response.UserInfoView;
 import org.hibernate.Hibernate;
 
 /**
@@ -78,6 +79,18 @@ public class UserInfo implements Serializable {
             .url(vo.getUrl())
             .company(vo.getCompany())
             .status(vo.getStatus())
+            .build();
+    }
+
+    public UserInfoView toView() {
+        return UserInfoView
+            .builder()
+            .avatar(this.avatar)
+            .bio(this.bio)
+            .address(this.address)
+            .url(this.url)
+            .company(this.company)
+            .status(this.status)
             .build();
     }
 

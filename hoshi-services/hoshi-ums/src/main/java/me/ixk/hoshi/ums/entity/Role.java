@@ -16,6 +16,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.ums.request.AddRoleView;
 import me.ixk.hoshi.ums.request.UpdateRoleView;
+import me.ixk.hoshi.ums.response.RoleView;
 import org.hibernate.Hibernate;
 
 /**
@@ -37,7 +38,7 @@ import org.hibernate.Hibernate;
 public class Role implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 9130459786615925142L;
+    private static final long serialVersionUID = 1210070802160893598L;
 
     /**
      * 角色名称，必须是大写英文
@@ -65,7 +66,7 @@ public class Role implements Serializable {
      * 角色的描述
      */
     @ApiModelProperty("角色的描述")
-    @Column(name = "description", columnDefinition = "text")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     /**
@@ -93,6 +94,17 @@ public class Role implements Serializable {
             .description(vo.getDescription())
             .permissions(vo.getPermissions())
             .status(vo.getStatus())
+            .build();
+    }
+
+    public RoleView toView() {
+        return RoleView
+            .builder()
+            .name(this.name)
+            .createdTime(this.createdTime)
+            .status(this.status)
+            .description(this.description)
+            .permissions(this.permissions)
             .build();
     }
 

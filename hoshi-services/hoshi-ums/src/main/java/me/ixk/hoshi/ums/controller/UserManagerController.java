@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.ums.entity.Role;
 import me.ixk.hoshi.ums.entity.User;
@@ -55,7 +54,7 @@ public class UserManagerController {
     @ApiOperation("列出用户（查询用户）")
     @GetMapping("")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
-    public ApiResult<ApiPage<User>> list(
+    public ApiResult<?> list(
         final Pageable page,
         @RequestParam(value = "search", required = false) final String search
     ) {
@@ -67,42 +66,42 @@ public class UserManagerController {
                     cb.like(root.get("nickname"), String.format("%%%s%%", search)),
                     cb.like(root.get("email"), String.format("%%%s%%", search))
                 );
-        return ApiResult.page(this.userRepository.findAll(specification, page), "获取用户成功");
+        return ApiResult.page(this.userRepository.findAll(specification, page).map(User::toView), "获取用户成功");
     }
 
     @ApiOperation("获取用户")
     @GetMapping("/{userId:\\d+}")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
-    public ApiResult<Object> get(@PathVariable("userId") final Long userId) {
+    public ApiResult<?> get(@PathVariable("userId") final Long userId) {
         final Optional<User> user = this.userRepository.findById(userId);
         if (user.isEmpty()) {
-            return ApiResult.notFound("用户未找到").build();
+            return ApiResult.bindException("用户未找到");
         }
-        return ApiResult.ok(user.get(), "获取用户成功");
+        return ApiResult.ok(user.get().toView(), "获取用户成功");
     }
 
     @ApiOperation("添加用户")
     @PostMapping("")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> add(@Valid @JsonModel final AddUserView vo) {
+    public ApiResult<?> add(@Valid @JsonModel final AddUserView vo) {
         if (this.userRepository.findByUsernameOrEmail(vo.getUsername(), vo.getEmail()).isPresent()) {
             return ApiResult.bindException("用户名或邮箱已存在");
         }
         final User user = User.ofAdd(vo);
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(this.roleRepository.findById("USER").get()));
-        return ApiResult.ok(this.userRepository.save(user), "添加用户成功");
+        return ApiResult.ok(this.userRepository.save(user).toView(), "添加用户成功");
     }
 
     @ApiOperation("删除用户")
     @DeleteMapping("/{userId:\\d+}")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> remove(@PathVariable("userId") final Long userId) {
+    public ApiResult<?> remove(@PathVariable("userId") final Long userId) {
         final Optional<User> user = this.userRepository.findById(userId);
         if (user.isEmpty()) {
-            return ApiResult.notFound("用户 ID 不存在").build();
+            return ApiResult.bindException("用户 ID 不存在");
         }
         this.userRepository.deleteById(userId);
         this.invalidSession(user.get().getUsername());
@@ -113,7 +112,7 @@ public class UserManagerController {
     @PutMapping("/{userId:\\d+}")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> update(@Valid @JsonModel final UpdateUserView vo) {
+    public ApiResult<?> update(@Valid @JsonModel final UpdateUserView vo) {
         if (this.userRepository.findById(vo.getUserId()).isEmpty()) {
             return ApiResult.bindException("用户 ID 不存在");
         }
@@ -133,26 +132,26 @@ public class UserManagerController {
         if (!newUser.getStatus()) {
             this.invalidSession(newUser.getUsername());
         }
-        return ApiResult.ok(newUser, "更新用户成功");
+        return ApiResult.ok(newUser.toView(), "更新用户成功");
     }
 
     @ApiOperation("添加用户角色")
     @PostMapping("/{userId:\\d+}/role")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<User> addRoles(@Valid @JsonModel final EditUserRoleView vo) {
+    public ApiResult<?> addRoles(@Valid @JsonModel final EditUserRoleView vo) {
         final Optional<User> optional = this.userRepository.findById(vo.getUserId());
         if (optional.isEmpty()) {
-            return ApiResult.notFound("用户 ID 不存在").build();
+            return ApiResult.bindException("用户 ID 不存在");
         }
         final User user = optional.get();
         final int size = this.addRoleToUser(user, vo.getRoles());
         final User newUser = this.userRepository.save(user);
         this.invalidSession(newUser.getUsername());
         if (size == vo.getRoles().size()) {
-            return ApiResult.ok(newUser, "所有角色均添加成功");
+            return ApiResult.ok(newUser.toView(), "所有角色均添加成功");
         } else {
-            return ApiResult.ok(newUser, "部分角色添加成功（可能添加了不存在的角色）");
+            return ApiResult.ok(newUser.toView(), "部分角色添加成功（可能添加了不存在的角色）");
         }
     }
 
@@ -160,10 +159,10 @@ public class UserManagerController {
     @PutMapping("/{userId:\\d+}/role")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<User> updateRoles(@Valid @JsonModel final EditUserRoleView vo) {
+    public ApiResult<?> updateRoles(@Valid @JsonModel final EditUserRoleView vo) {
         final Optional<User> optional = this.userRepository.findById(vo.getUserId());
         if (optional.isEmpty()) {
-            return ApiResult.notFound("用户 ID 不存在").build();
+            return ApiResult.bindException("用户 ID 不存在");
         }
         final User user = optional.get();
         final Set<Role> roles = vo
@@ -177,9 +176,9 @@ public class UserManagerController {
         final User newUser = this.userRepository.save(user);
         this.invalidSession(newUser.getUsername());
         if (roles.size() != vo.getRoles().size()) {
-            return ApiResult.ok(newUser, "所有角色均修改成功");
+            return ApiResult.ok(newUser.toView(), "所有角色均修改成功");
         } else {
-            return ApiResult.ok(newUser, "部分角色修改成功（可能添加了或删除了不存在的角色）");
+            return ApiResult.ok(newUser.toView(), "部分角色修改成功（可能添加了或删除了不存在的角色）");
         }
     }
 
@@ -187,22 +186,22 @@ public class UserManagerController {
     @DeleteMapping("/{userId:\\d+}/role")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> removeRoles(
+    public ApiResult<?> removeRoles(
         @PathVariable("userId") @NotNull final Long userId,
         @RequestParam("roles") @NotNull final List<String> roles
     ) {
         final Optional<User> optional = this.userRepository.findById(userId);
         if (optional.isEmpty()) {
-            return ApiResult.notFound("用户 ID 不存在").build();
+            return ApiResult.bindException("用户 ID 不存在");
         }
         final User user = optional.get();
         final int size = this.removeRoleToUser(user, roles);
         final User newUser = this.userRepository.save(user);
         this.invalidSession(newUser.getUsername());
         if (size == roles.size()) {
-            return ApiResult.ok(newUser, "所有角色均删除成功");
+            return ApiResult.ok(newUser.toView(), "所有角色均删除成功");
         } else {
-            return ApiResult.ok(newUser, "部分角色删除成功（可能删除了不存在的角色）");
+            return ApiResult.ok(newUser.toView(), "部分角色删除成功（可能删除了不存在的角色）");
         }
     }
 

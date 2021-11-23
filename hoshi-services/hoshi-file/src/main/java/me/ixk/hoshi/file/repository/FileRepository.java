@@ -21,7 +21,7 @@ public interface FileRepository extends UpdatingRepository<File, Long>, JpaSpeci
      * @param disk   文件信息
      * @return 文件
      */
-    Optional<File> findByUserIdAndDisk(Long userId, String disk);
+    Optional<File> findByUserAndDisk(Long userId, String disk);
 
     /**
      * 通过用户 ID 和文件 ID 查找
@@ -30,5 +30,5 @@ public interface FileRepository extends UpdatingRepository<File, Long>, JpaSpeci
      * @param id     文件 ID
      * @return 文件
      */
-    Optional<File> findByUserIdAndId(Long userId, Long id);
+    Optional<File> findByUserAndId(Long userId, Long id);
 }

@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
@@ -36,42 +37,48 @@ public class RoleManagerController {
     @ApiOperation("列出所有角色")
     @GetMapping("")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
-    public ApiResult<List<Role>> list() {
-        return ApiResult.ok(this.roleRepository.findAll((Specification<Role>) null), "获取所有角色成功");
+    public ApiResult<?> list() {
+        return ApiResult.ok(
+            this.roleRepository.findAll((Specification<Role>) null)
+                .stream()
+                .map(Role::toView)
+                .collect(Collectors.toList()),
+            "获取所有角色成功"
+        );
     }
 
     @ApiOperation("获取角色")
     @GetMapping("/{roleName}")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
-    public ApiResult<Object> get(@PathVariable("roleName") final String roleName) {
+    public ApiResult<?> get(@PathVariable("roleName") final String roleName) {
         final Optional<Role> role = this.roleRepository.findById(roleName);
         if (role.isEmpty()) {
-            return ApiResult.notFound("角色未找到").build();
+            return ApiResult.bindException("角色未找到");
         }
-        return ApiResult.ok(role.get(), "获取角色成功");
+        return ApiResult.ok(role.get().toView(), "获取角色成功");
     }
 
     @ApiOperation("添加角色")
     @PostMapping("")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Role> add(@Valid @JsonModel final AddRoleView vo) {
-        return ApiResult.ok(this.roleRepository.save(Role.ofAdd(vo)), "添加角色成功");
+    public ApiResult<?> add(@Valid @JsonModel final AddRoleView vo) {
+        return ApiResult.ok(this.roleRepository.save(Role.ofAdd(vo)).toView(), "添加角色成功");
     }
 
     @ApiOperation("更新角色")
     @PutMapping("/{roleName}")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Role> update(@Valid @JsonModel final UpdateRoleView vo) {
-        return ApiResult.ok(this.roleRepository.update(Role.ofUpdate(vo)), "更新角色成功");
+    public ApiResult<?> update(@Valid @JsonModel final UpdateRoleView vo) {
+        return ApiResult.ok(this.roleRepository.update(Role.ofUpdate(vo)).toView(), "更新角色成功");
     }
 
     @ApiOperation("删除角色")
     @DeleteMapping("/{roleName}")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> remove(@PathVariable("roleName") final String roleName) {
+    public ApiResult<?> remove(@PathVariable("roleName") final String roleName) {
         if (List.of("USER", "ADMIN").contains(roleName)) {
             return ApiResult.bindException("不能删除 USER, ADMIN 角色");
         }

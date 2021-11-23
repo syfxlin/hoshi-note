@@ -46,7 +46,7 @@ public class File {
 
     @Column(name = "user_id", nullable = false)
     @ApiModelProperty("用户 ID")
-    private Long userId;
+    private Long user;
 
     @Column(name = "disk", nullable = false, unique = true)
     @ApiModelProperty("存储文件名")
@@ -86,11 +86,11 @@ public class File {
             .size(this.size)
             .contentType(this.contentType)
             .uploadedTime(this.uploadedTime)
-            .url(String.format("/files/%s/%s", this.userId, this.disk))
+            .url(String.format("/files/%s/%s", this.user, this.disk))
             .build();
     }
 
     public String toPath() {
-        return String.format("%s/%s", this.getUserId(), this.getDisk());
+        return String.format("%s/%s", this.getUser(), this.getDisk());
     }
 }

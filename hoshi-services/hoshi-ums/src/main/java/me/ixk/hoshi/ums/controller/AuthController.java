@@ -56,10 +56,7 @@ public class AuthController {
     @ApiOperation("发送注册验证码")
     @PostMapping("/register/{email}")
     @PreAuthorize("isAnonymous()")
-    public ApiResult<Object> sendRegisterCode(
-        @PathVariable("email") final String email,
-        final HttpServletRequest request
-    ) {
+    public ApiResult<?> sendRegisterCode(@PathVariable("email") final String email, final HttpServletRequest request) {
         final Optional<User> byEmail = userRepository.findByEmail(email);
         if (byEmail.isPresent()) {
             return ApiResult.bindException("已经有用户绑定了该邮箱");
@@ -78,7 +75,7 @@ public class AuthController {
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> register(@Valid @JsonModel final RegisterUserView vo) {
+    public ApiResult<?> register(@Valid @JsonModel final RegisterUserView vo) {
         final Optional<VerifyCode> verifyCode = verifyCodeService.find("验证您注册的邮箱", vo.getCode());
         if (verifyCode.isEmpty() || !verifyCode.get().getEmail().equals(vo.getEmail())) {
             return ApiResult.bindException("验证码无效");
@@ -89,14 +86,15 @@ public class AuthController {
         final User user = User.ofRegister(vo);
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(this.roleRepository.findById("USER").get()));
-        return ApiResult.ok(this.userRepository.save(user), "注册成功");
+        this.userRepository.save(user);
+        return ApiResult.ok("注册成功").build();
     }
 
     @ApiOperation("Token 登录")
     @PostMapping("/api/login")
     @PreAuthorize("isAnonymous()")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> apiLogin(@RequestParam("token") final String token, final HttpServletRequest request) {
+    public ApiResult<?> apiLogin(@RequestParam("token") final String token, final HttpServletRequest request) {
         final Optional<Token> tokenOptional = this.tokenRepository.findByToken(token);
         if (tokenOptional.isEmpty()) {
             return ApiResult.unauthorized("Token 无效").build();
@@ -118,13 +116,13 @@ public class AuthController {
         );
         authentication.setDetails(new WebAuthenticationDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return ApiResult.ok(user, "登录成功");
+        return ApiResult.ok(user.toView(), "登录成功");
     }
 
     @ApiOperation("发送找回密码验证码")
     @PostMapping("/reset-password/{email}")
     @PreAuthorize("isAnonymous()")
-    public ApiResult<Object> sendResetPasswordCode(
+    public ApiResult<?> sendResetPasswordCode(
         @PathVariable("email") final String email,
         final HttpServletRequest request
     ) {
@@ -139,7 +137,7 @@ public class AuthController {
     @ApiOperation("找回密码")
     @PutMapping("/reset-password")
     @PreAuthorize("isAnonymous()")
-    public ApiResult<Object> resetPassword(@Valid @JsonModel final ResetPasswordView vo) {
+    public ApiResult<?> resetPassword(@Valid @JsonModel final ResetPasswordView vo) {
         final Optional<VerifyCode> verifyCode = verifyCodeService.find("找回密码", vo.getCode());
         if (verifyCode.isEmpty()) {
             return ApiResult.bindException("验证码无效");
@@ -150,6 +148,7 @@ public class AuthController {
         }
         final User user = byEmail.get();
         user.setPassword(passwordEncoder.encode(vo.getPassword()));
-        return ApiResult.ok(userRepository.save(user), "重置密码成功");
+        userRepository.save(user);
+        return ApiResult.ok("重置密码成功").build();
     }
 }

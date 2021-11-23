@@ -14,12 +14,10 @@ import java.util.UUID;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.file.entity.File;
 import me.ixk.hoshi.file.repository.FileRepository;
 import me.ixk.hoshi.file.request.UpdateFile;
-import me.ixk.hoshi.file.response.FileView;
 import me.ixk.hoshi.file.service.MinioService;
 import me.ixk.hoshi.mysql.util.Jpa;
 import me.ixk.hoshi.web.annotation.JsonModel;
@@ -54,16 +52,16 @@ public class FileController {
     @ApiOperation("列出文件")
     @GetMapping("")
     @PreAuthorize("hasAuthority('FILE')")
-    public ApiResult<ApiPage<FileView>> list(
+    public ApiResult<?> list(
         @UserId final Long userId,
         @RequestParam(value = "search", required = false) final String search,
         final Pageable page
     ) {
         final Specification<File> specification = (root, query, cb) ->
             search == null
-                ? cb.equal(root.get("userId"), userId)
+                ? cb.equal(root.get("user"), userId)
                 : cb.and(
-                    cb.equal(root.get("userId"), userId),
+                    cb.equal(root.get("user"), userId),
                     cb.or(
                         cb.like(root.get("name"), String.format("%%%s%%", search)),
                         cb.like(root.get("description"), String.format("%%%s%%", search))
@@ -75,7 +73,7 @@ public class FileController {
     @ApiOperation("上传文件")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('FILE')")
-    public ApiResult<FileView> upload(@UserId final Long userId, @RequestParam("file") final MultipartFile file) {
+    public ApiResult<?> upload(@UserId final Long userId, @RequestParam("file") final MultipartFile file) {
         final String filename = UUID.randomUUID().toString();
         final String extname = FileNameUtil.extName(file.getOriginalFilename());
         final String name = String.format("%s.%s", filename, extname);
@@ -84,7 +82,7 @@ public class FileController {
             final File entity = fileRepository.save(
                 File
                     .builder()
-                    .userId(userId)
+                    .user(userId)
                     .disk(name)
                     .name(file.getOriginalFilename())
                     .size(file.getSize())
@@ -102,13 +100,13 @@ public class FileController {
     @ApiOperation("修改文件信息")
     @PutMapping("/{fileId:\\d+}")
     @PreAuthorize("hasAuthority('FILE')")
-    public ApiResult<Object> update(@UserId final Long userId, @JsonModel @Valid final UpdateFile file) {
-        final Optional<File> optionalFile = fileRepository.findByUserIdAndId(userId, file.getFileId());
+    public ApiResult<?> update(@UserId final Long userId, @JsonModel @Valid final UpdateFile file) {
+        final Optional<File> optionalFile = fileRepository.findByUserAndId(userId, file.getFileId());
         if (optionalFile.isEmpty()) {
-            return ApiResult.notFound("指定图片不存在").build();
+            return ApiResult.notFound("指定文件不存在").build();
         }
         return ApiResult.ok(
-            this.fileRepository.save(Jpa.merge(File.ofUpdate(file), optionalFile.get())),
+            this.fileRepository.save(Jpa.merge(File.ofUpdate(file), optionalFile.get())).toView(),
             "修改文件信息成功"
         );
     }
@@ -116,9 +114,9 @@ public class FileController {
     @ApiOperation("查看文件")
     @GetMapping("/{userId:\\d+}/{disk}")
     public ResponseEntity<?> get(@PathVariable("userId") final Long userId, @PathVariable("disk") final String disk) {
-        final Optional<File> optionalFile = fileRepository.findByUserIdAndDisk(userId, disk);
+        final Optional<File> optionalFile = fileRepository.findByUserAndDisk(userId, disk);
         if (optionalFile.isEmpty()) {
-            return ApiResultUtil.toResponseEntity(ApiResult.notFound("指定图片不存在").build());
+            return ApiResultUtil.toResponseEntity(ApiResult.notFound("指定文件不存在").build());
         }
         final File file = optionalFile.get();
         try {
@@ -142,9 +140,9 @@ public class FileController {
         @PathVariable("userId") final Long userId,
         @PathVariable("disk") final String disk
     ) {
-        final Optional<File> optionalFile = fileRepository.findByUserIdAndDisk(userId, disk);
+        final Optional<File> optionalFile = fileRepository.findByUserAndDisk(userId, disk);
         if (optionalFile.isEmpty()) {
-            return ApiResultUtil.toResponseEntity(ApiResult.notFound("指定图片不存在").build());
+            return ApiResultUtil.toResponseEntity(ApiResult.notFound("指定文件不存在").build());
         }
         final File file = optionalFile.get();
         try {
@@ -165,8 +163,8 @@ public class FileController {
     @ApiOperation("删除文件")
     @DeleteMapping("/{id:\\d+}")
     @PreAuthorize("hasAuthority('FILE')")
-    public ApiResult<Object> delete(@UserId final Long userId, @PathVariable("id") final Long id) {
-        final Optional<File> optionalFile = fileRepository.findByUserIdAndId(userId, id);
+    public ApiResult<?> delete(@UserId final Long userId, @PathVariable("id") final Long id) {
+        final Optional<File> optionalFile = fileRepository.findByUserAndId(userId, id);
         if (optionalFile.isEmpty()) {
             return ApiResult.notFound("文件不存在，无法删除").build();
         }

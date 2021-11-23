@@ -11,6 +11,7 @@ import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import me.ixk.hoshi.ums.response.TokenView;
 import org.hibernate.Hibernate;
 
 /**
@@ -46,11 +47,15 @@ public class Token {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @ApiModelProperty("用户")
     @ToString.Exclude
     @JsonBackReference
     private User user;
+
+    public TokenView toView() {
+        return TokenView.builder().id(this.id).name(this.name).token(this.token).build();
+    }
 
     @Override
     public boolean equals(Object o) {

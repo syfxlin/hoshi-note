@@ -8,7 +8,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import me.ixk.hoshi.common.result.ApiPage;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.ums.entity.Follow;
 import me.ixk.hoshi.ums.entity.User;
@@ -37,18 +36,18 @@ public class FollowController {
 
     @ApiOperation("获取关注列表")
     @GetMapping("/{userId:\\d+}/following")
-    public ApiResult<ApiPage<User>> following(@PathVariable("userId") final Long userId, final Pageable page) {
+    public ApiResult<?> following(@PathVariable("userId") final Long userId, final Pageable page) {
         return ApiResult.page(
-            this.followRepository.findByUserId(userId, page).map(Follow::getFollowing),
+            this.followRepository.findByUserId(userId, page).map(Follow::getFollowing).map(User::toView),
             "获取关注列表成功"
         );
     }
 
     @ApiOperation("被关注列表")
     @GetMapping("/{userId:\\d+}/followers")
-    public ApiResult<ApiPage<User>> follower(@PathVariable("userId") final Long userId, final Pageable page) {
+    public ApiResult<?> follower(@PathVariable("userId") final Long userId, final Pageable page) {
         return ApiResult.page(
-            this.followRepository.findByFollowingId(userId, page).map(Follow::getUser),
+            this.followRepository.findByFollowingId(userId, page).map(Follow::getUser).map(User::toView),
             "获取被关注列表成功"
         );
     }
@@ -57,10 +56,10 @@ public class FollowController {
     @PostMapping("/{followId:\\d+}")
     @PreAuthorize("hasAuthority('FOLLOW_USER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> add(@PathVariable("followId") final Long id, @Autowired final User user) {
+    public ApiResult<?> add(@PathVariable("followId") final Long id, @Autowired final User user) {
         final Optional<User> optional = this.userRepository.findById(id);
         if (optional.isEmpty()) {
-            return ApiResult.notFound("关注失败（关注的用户不存在）").build();
+            return ApiResult.bindException("关注失败（关注的用户不存在）");
         }
         final User following = optional.get();
         if (this.followRepository.findByUserIdAndFollowingId(user.getId(), following.getId()).isEmpty()) {
@@ -79,7 +78,7 @@ public class FollowController {
     @DeleteMapping("/{followId:\\d+}")
     @PreAuthorize("hasAuthority('FOLLOW_USER')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
-    public ApiResult<Object> delete(@PathVariable("followId") final Long id, @Autowired final User user) {
+    public ApiResult<?> delete(@PathVariable("followId") final Long id, @Autowired final User user) {
         this.followRepository.findByUserIdAndFollowingId(user.getId(), id)
             .ifPresent(follow -> {
                 // 用户计数 - 1

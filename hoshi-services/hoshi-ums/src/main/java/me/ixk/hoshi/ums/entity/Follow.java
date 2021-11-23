@@ -40,12 +40,12 @@ public class Follow {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @ApiModelProperty("关注者 ID")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "following_id", referencedColumnName = "id")
+    @JoinColumn(name = "following_id", referencedColumnName = "id", nullable = false)
     @ApiModelProperty("关注对象 ID")
     private User following;
 

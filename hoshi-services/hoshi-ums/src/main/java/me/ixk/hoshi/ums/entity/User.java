@@ -11,10 +11,12 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.ums.request.*;
+import me.ixk.hoshi.ums.response.UserView;
 import org.hibernate.Hibernate;
 
 /**
@@ -97,14 +99,14 @@ public class User implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_role_relation",
-        joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
-        inverseJoinColumns = { @JoinColumn(name = "role_name", referencedColumnName = "name") }
+        joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false) },
+        inverseJoinColumns = { @JoinColumn(name = "role_name", referencedColumnName = "name", nullable = false) }
     )
     @ApiModelProperty("用户角色列表")
     private Set<Role> roles;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_info", referencedColumnName = "id")
+    @JoinColumn(name = "user_info", referencedColumnName = "id", nullable = false)
     @ApiModelProperty("用户信息")
     private UserInfo info;
 
@@ -169,6 +171,22 @@ public class User implements Serializable {
 
     public static User ofUpdatePassword(final UpdatePasswordView vo, final Long userId) {
         return User.builder().id(userId).password(vo.getNewPassword()).build();
+    }
+
+    public UserView toView() {
+        return UserView
+            .builder()
+            .id(this.id)
+            .username(this.username)
+            .nickname(this.nickname)
+            .email(this.email)
+            .status(this.status)
+            .createdTime(this.createdTime)
+            .roles(this.roles.stream().map(Role::toView).collect(Collectors.toSet()))
+            .info(this.info.toView())
+            .followingCount(this.followingCount)
+            .followersCount(this.followersCount)
+            .build();
     }
 
     @Override
