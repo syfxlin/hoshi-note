@@ -9,7 +9,9 @@ import io.swagger.annotations.ApiOperation;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
@@ -26,6 +28,8 @@ import me.ixk.hoshi.note.response.BreadcrumbView;
 import me.ixk.hoshi.note.response.BreadcrumbView.Item;
 import me.ixk.hoshi.web.annotation.JsonModel;
 import me.ixk.hoshi.web.annotation.UserId;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -46,8 +50,8 @@ public class NoteController {
     private final NoteRepository noteRepository;
     private final NoteHistoryRepository noteHistoryRepository;
 
-    @GetMapping(value = { "/list/{workspaceId}", "/list/{workspaceId}/{parentId}" })
-    @ApiOperation("获取笔记列表")
+    @GetMapping(value = { "/tree/{workspaceId}", "/tree/{workspaceId}/{parentId}" })
+    @ApiOperation("获取笔记树")
     @PreAuthorize("hasAuthority('NOTE')")
     public ApiResult<?> list(
         @UserId final Long userId,
@@ -63,11 +67,75 @@ public class NoteController {
         }
         return ApiResult.ok(
             noteRepository
-                .findByWorkspaceIdAndParentId(workspaceId, parentId)
+                .findByWorkspaceIdAndParentIdAndStatus(workspaceId, parentId, Note.Status.NORMAL)
                 .stream()
                 .map(Note::toListView)
                 .collect(Collectors.toList()),
             "获取笔记列表成功"
+        );
+    }
+
+    @GetMapping("/archived")
+    @ApiOperation("获取归档笔记列表")
+    @PreAuthorize("hasAuthority('NOTE')")
+    public ApiResult<?> archived(
+        @UserId final Long userId,
+        final Pageable page,
+        @RequestParam(value = "search", required = false) final String search
+    ) {
+        Set<Workspace> workspaces = workspaceRepository.findByUser(userId);
+        final Specification<Note> specification = (root, query, cb) -> {
+            Predicate predicate = cb.and(
+                root.get("workspace").in(workspaces),
+                cb.equal(root.get("status"), Note.Status.ARCHIVE)
+            );
+            if (search != null) {
+                return cb.and(
+                    predicate,
+                    cb.or(
+                        cb.like(root.get("name"), String.format("%%%s%%", search)),
+                        cb.like(root.get("content"), String.format("%%%s%%", search))
+                    )
+                );
+            } else {
+                return predicate;
+            }
+        };
+        return ApiResult.page(
+            noteRepository.findAll(specification, page).map(Note::toListView),
+            "获取归档笔记列表成功"
+        );
+    }
+
+    @GetMapping("/deleted")
+    @ApiOperation("获取已删除笔记列表")
+    @PreAuthorize("hasAuthority('NOTE')")
+    public ApiResult<?> deleted(
+        @UserId final Long userId,
+        final Pageable page,
+        @RequestParam(value = "search", required = false) final String search
+    ) {
+        Set<Workspace> workspaces = workspaceRepository.findByUser(userId);
+        final Specification<Note> specification = (root, query, cb) -> {
+            Predicate predicate = cb.and(
+                root.get("workspace").in(workspaces),
+                cb.equal(root.get("status"), Note.Status.DELETED)
+            );
+            if (search != null) {
+                return cb.and(
+                    predicate,
+                    cb.or(
+                        cb.like(root.get("name"), String.format("%%%s%%", search)),
+                        cb.like(root.get("content"), String.format("%%%s%%", search))
+                    )
+                );
+            } else {
+                return predicate;
+            }
+        };
+        return ApiResult.page(
+            noteRepository.findAll(specification, page).map(Note::toListView),
+            "获取已删除笔记列表成功"
         );
     }
 
@@ -186,6 +254,62 @@ public class NoteController {
     @PreAuthorize("hasAuthority('NOTE')")
     @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<?> delete(@UserId final Long userId, @PathVariable("id") final String id) {
+        final Optional<Note> optional = noteRepository.findById(id);
+        if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {
+            return ApiResult.bindException("笔记不存在");
+        }
+        Note note = optional.get();
+        Set<Note> notes = note.allChildren();
+        notes.add(note);
+        notes.forEach(n -> n.setStatus(Note.Status.DELETED));
+        noteRepository.saveAll(notes);
+        return ApiResult.ok("删除笔记成功").build();
+    }
+
+    @DeleteMapping("/{id}/archive")
+    @ApiOperation("归档笔记")
+    @PreAuthorize("hasAuthority('NOTE')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
+    public ApiResult<?> archive(@UserId final Long userId, @PathVariable("id") final String id) {
+        final Optional<Note> optional = noteRepository.findById(id);
+        if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {
+            return ApiResult.bindException("笔记不存在");
+        }
+        Note note = optional.get();
+        Set<Note> notes = note.allChildren();
+        notes.add(note);
+        notes.forEach(n -> n.setStatus(Note.Status.ARCHIVE));
+        noteRepository.saveAll(notes);
+        return ApiResult.ok("归档笔记成功").build();
+    }
+
+    @PutMapping("/{id}/restore")
+    @ApiOperation("还原笔记")
+    @PreAuthorize("hasAuthority('NOTE')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
+    public ApiResult<?> restore(@UserId final Long userId, @PathVariable("id") final String id) {
+        final Optional<Note> optional = noteRepository.findById(id);
+        if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {
+            return ApiResult.bindException("笔记不存在");
+        }
+        Note note = optional.get();
+        // 如果父节点不是正常挂载状态，则将游离的笔记恢复到工作区根目录内
+        Note parent = note.getParent();
+        if (parent != null && parent.getStatus() != Note.Status.NORMAL) {
+            note.setParent(null);
+        }
+        Set<Note> notes = note.allChildren();
+        notes.add(note);
+        notes.forEach(n -> n.setStatus(Note.Status.NORMAL));
+        noteRepository.saveAll(notes);
+        return ApiResult.ok("还原笔记成功").build();
+    }
+
+    @DeleteMapping("/{id}/force")
+    @ApiOperation("删除笔记（物理删除）")
+    @PreAuthorize("hasAuthority('NOTE')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
+    public ApiResult<?> deleteForce(@UserId final Long userId, @PathVariable("id") final String id) {
         final Optional<Note> note = noteRepository.findById(id);
         if (note.isEmpty() || !userId.equals(note.get().getWorkspace().getUser())) {
             return ApiResult.bindException("笔记不存在");

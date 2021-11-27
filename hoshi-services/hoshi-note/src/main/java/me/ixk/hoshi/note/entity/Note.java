@@ -9,6 +9,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -59,6 +62,12 @@ public class Note {
 
     @JsonBackReference
     @ToString.Exclude
+    @ApiModelProperty("子笔记")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
+    private Set<Note> children;
+
+    @JsonBackReference
+    @ToString.Exclude
     @ApiModelProperty("空间")
     @ManyToOne
     @JoinColumn(name = "workspace_id", referencedColumnName = "id", nullable = false)
@@ -97,15 +106,18 @@ public class Note {
     @Column(name = "updated_time", nullable = false)
     private OffsetDateTime updatedTime;
 
+    public Set<Note> allChildren() {
+        Set<Note> children = this.getChildren();
+        return Stream
+            .concat(children.stream(), children.stream().flatMap(note -> note.allChildren().stream()))
+            .collect(Collectors.toSet());
+    }
+
     public enum Status {
         /**
          * 正常使用
          */
         NORMAL,
-        /**
-         * 编辑锁定
-         */
-        LOCKED,
         /**
          * 归档
          */
