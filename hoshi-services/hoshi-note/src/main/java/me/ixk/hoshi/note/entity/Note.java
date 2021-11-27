@@ -15,6 +15,7 @@ import lombok.experimental.Accessors;
 import me.ixk.hoshi.mysql.generator.ObjectIdGenerator;
 import me.ixk.hoshi.note.request.AddNoteView;
 import me.ixk.hoshi.note.request.UpdateNoteView;
+import me.ixk.hoshi.note.response.ListNoteView;
 import me.ixk.hoshi.note.response.NoteView;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -75,6 +76,10 @@ public class Note {
     @Column(name = "icon")
     private String icon;
 
+    @ApiModelProperty("属性")
+    @Column(name = "attributes", columnDefinition = "TEXT")
+    private String attributes;
+
     @ApiModelProperty("笔记版本号")
     @Column(name = "version", nullable = false)
     private Long version;
@@ -83,10 +88,6 @@ public class Note {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
-
-    @ApiModelProperty("属性")
-    @Column(name = "attributes", columnDefinition = "TEXT")
-    private String attributes;
 
     @ApiModelProperty("创建时间")
     @Column(name = "created_time", nullable = false)
@@ -137,17 +138,32 @@ public class Note {
             .icon(vo.getIcon())
             .status(status == null ? null : Status.valueOf(status))
             .attributes(vo.getAttributes())
+            .updatedTime(OffsetDateTime.now())
             .build();
     }
 
-    public NoteView toView(boolean content) {
+    public ListNoteView toListView() {
+        return ListNoteView
+            .builder()
+            .id(this.id)
+            .parent(this.parent != null ? this.parent.getId() : null)
+            .workspace(this.workspace.getId())
+            .name(this.name)
+            .icon(this.icon)
+            .status(this.status.name())
+            .createdTime(this.createdTime)
+            .updatedTime(this.updatedTime)
+            .build();
+    }
+
+    public NoteView toView() {
         return NoteView
             .builder()
             .id(this.id)
             .parent(this.parent != null ? this.parent.getId() : null)
             .workspace(this.workspace.getId())
             .name(this.name)
-            .content(content ? this.content : null)
+            .content(this.content)
             .icon(this.icon)
             .version(this.version)
             .status(this.status.name())

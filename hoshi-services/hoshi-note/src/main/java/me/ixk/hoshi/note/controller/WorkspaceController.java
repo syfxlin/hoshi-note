@@ -7,6 +7,7 @@ package me.ixk.hoshi.note.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
@@ -17,8 +18,8 @@ import me.ixk.hoshi.note.request.AddWorkspaceView;
 import me.ixk.hoshi.note.request.UpdateWorkspaceView;
 import me.ixk.hoshi.web.annotation.JsonModel;
 import me.ixk.hoshi.web.annotation.UserId;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -38,9 +39,9 @@ public class WorkspaceController {
     @GetMapping("")
     @ApiOperation("获取工作区列表")
     @PreAuthorize("hasAuthority('WORKSPACE')")
-    public ApiResult<?> list(@UserId final Long userId, final Pageable page) {
-        return ApiResult.page(
-            workspaceRepository.findByUser(userId, page).map(Workspace::toView),
+    public ApiResult<?> list(@UserId final Long userId) {
+        return ApiResult.ok(
+            workspaceRepository.findByUser(userId).stream().map(Workspace::toView).collect(Collectors.toList()),
             "获取工作区列表成功"
         );
     }
@@ -48,8 +49,9 @@ public class WorkspaceController {
     @PostMapping("")
     @ApiOperation("添加工作区")
     @PreAuthorize("hasAuthority('WORKSPACE')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<?> add(@UserId final Long userId, @JsonModel @Valid final AddWorkspaceView vo) {
-        if (workspaceRepository.findByDomain(vo.getDomain()).isPresent()) {
+        if (vo.getDomain() != null && workspaceRepository.findByDomain(vo.getDomain()).isPresent()) {
             return ApiResult.bindException("域名已经存在，请更换域名");
         }
         return ApiResult.ok(workspaceRepository.save(Workspace.ofAdd(vo, userId)), "添加工作区成功");
@@ -58,6 +60,7 @@ public class WorkspaceController {
     @PutMapping("/{id}")
     @ApiOperation("修改工作区")
     @PreAuthorize("hasAuthority('WORKSPACE')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<?> update(@UserId final Long userId, @JsonModel @Valid final UpdateWorkspaceView vo) {
         Optional<Workspace> optional = workspaceRepository.findByIdAndUser(vo.getId(), userId);
         if (optional.isEmpty()) {
@@ -77,6 +80,7 @@ public class WorkspaceController {
     @DeleteMapping("/{id}")
     @ApiOperation("删除工作区")
     @PreAuthorize("hasAuthority('WORKSPACE')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<?> delete(@UserId final Long userId, @PathVariable("id") final String id) {
         Optional<Workspace> optional = workspaceRepository.findByIdAndUser(id, userId);
         if (optional.isEmpty()) {

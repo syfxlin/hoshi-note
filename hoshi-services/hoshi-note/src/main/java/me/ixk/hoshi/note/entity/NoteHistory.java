@@ -30,9 +30,11 @@ import org.hibernate.annotations.GenericGenerator;
 @ToString
 @Accessors(chain = true)
 @ApiModel("笔记历史表")
-@Table(name = "note_history", indexes = { @Index(name = "idx_notehistory_tag", columnList = "tag") })
+@Table(name = "note_history")
 @Entity
 public class NoteHistory {
+
+    public static final long MIN_UPDATED = 5L;
 
     @Id
     @ApiModelProperty("笔记历史 ID")
@@ -56,13 +58,52 @@ public class NoteHistory {
     @Column(name = "version", columnDefinition = "BIGINT", nullable = false)
     private Long version;
 
-    @ApiModelProperty("标记")
-    @Column(name = "tag", length = 50)
-    private String tag;
+    @ApiModelProperty("笔记名称")
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @ApiModelProperty("笔记内容")
-    @Column(name = "content", columnDefinition = "LONGTEXT", nullable = false)
+    @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
+
+    @ApiModelProperty("笔记图标")
+    @Column(name = "icon")
+    private String icon;
+
+    @ApiModelProperty("属性")
+    @Column(name = "attributes", columnDefinition = "TEXT")
+    private String attributes;
+
+    public static boolean needSave(Note update, Note origin) {
+        OffsetDateTime lastTime = origin.getUpdatedTime();
+        OffsetDateTime nowTime = update.getUpdatedTime();
+        if (lastTime == null || nowTime == null || lastTime.isBefore(nowTime.minusMinutes(NoteHistory.MIN_UPDATED))) {
+            return false;
+        }
+        String name = update.getName();
+        String content = update.getContent();
+        String icon = update.getIcon();
+        String attributes = update.getAttributes();
+        return (
+            (name != null && !name.equals(origin.getName())) ||
+            (content != null && !content.equals(origin.getContent())) ||
+            (icon != null && !icon.equals(origin.getIcon())) ||
+            (attributes != null && !attributes.equals(origin.getAttributes()))
+        );
+    }
+
+    public static NoteHistory of(Note note) {
+        return NoteHistory
+            .builder()
+            .note(note)
+            .saveTime(note.getUpdatedTime())
+            .version(note.getVersion())
+            .name(note.getName())
+            .content(note.getContent())
+            .icon(note.getIcon())
+            .attributes(note.getAttributes())
+            .build();
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -77,3 +77,9 @@ Authorization: Bearer {{session_token}}
     "name": "Test2",
     "type": "markdown"
 }
+
+### 获取面包屑
+GET http://localhost:8001/notes/6198b69924aca403e08fdf2c/breadcrumb
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{session_token}}

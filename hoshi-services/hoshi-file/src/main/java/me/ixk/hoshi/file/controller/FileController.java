@@ -30,6 +30,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -73,6 +74,7 @@ public class FileController {
     @ApiOperation("上传文件")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('FILE')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<?> upload(@UserId final Long userId, @RequestParam("file") final MultipartFile file) {
         final String filename = UUID.randomUUID().toString();
         final String extname = FileNameUtil.extName(file.getOriginalFilename());
@@ -100,6 +102,7 @@ public class FileController {
     @ApiOperation("修改文件信息")
     @PutMapping("/{fileId:\\d+}")
     @PreAuthorize("hasAuthority('FILE')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<?> update(@UserId final Long userId, @JsonModel @Valid final UpdateFile file) {
         final Optional<File> optionalFile = fileRepository.findByUserAndId(userId, file.getFileId());
         if (optionalFile.isEmpty()) {
@@ -163,6 +166,7 @@ public class FileController {
     @ApiOperation("删除文件")
     @DeleteMapping("/{id:\\d+}")
     @PreAuthorize("hasAuthority('FILE')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<?> delete(@UserId final Long userId, @PathVariable("id") final Long id) {
         final Optional<File> optionalFile = fileRepository.findByUserAndId(userId, id);
         if (optionalFile.isEmpty()) {

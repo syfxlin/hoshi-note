@@ -5,10 +5,9 @@
 package me.ixk.hoshi.note.repository;
 
 import java.util.Optional;
+import java.util.Set;
 import me.ixk.hoshi.mysql.repository.UpdatingRepository;
 import me.ixk.hoshi.note.entity.Workspace;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
@@ -21,10 +20,9 @@ public interface WorkspaceRepository
      * 通过用户 ID 查找
      *
      * @param user 用户 ID
-     * @param page 分页
      * @return 工作区
      */
-    Page<Workspace> findByUser(Long user, Pageable page);
+    Set<Workspace> findByUser(Long user);
 
     /**
      * 通过域名查找工作区

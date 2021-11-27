@@ -22,3 +22,5 @@ minio:
   bucket: hoshi
   access-key: hoshi_note
   secret-key: 12345678
+pexels:
+  token: ***REMOVED***

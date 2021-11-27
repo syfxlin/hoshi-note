@@ -34,6 +34,11 @@ public class UpdateNoteView {
     @ApiModelProperty("工作区 ID")
     private String workspace;
 
+    @ApiModelProperty("笔记状态")
+    private String status;
+
+    // ==== 以下四项修改会生成历史记录
+
     @Size(min = 1, max = 255, message = "笔记名称的长度应在（1-255）之间")
     @ApiModelProperty("笔记名称")
     private String name;
@@ -43,9 +48,6 @@ public class UpdateNoteView {
 
     @ApiModelProperty("笔记图标")
     private String icon;
-
-    @ApiModelProperty("笔记状态")
-    private String status;
 
     @ApiModelProperty("属性")
     private String attributes;

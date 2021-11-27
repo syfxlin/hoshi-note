@@ -16,6 +16,7 @@ import me.ixk.hoshi.ums.entity.User;
 import me.ixk.hoshi.ums.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -45,6 +46,7 @@ public class TokenController {
     @ApiOperation("新增 Token")
     @PostMapping("/{name}")
     @PreAuthorize("hasAuthority('TOKEN')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<?> add(@Autowired final User user, @PathVariable("name") final String name) {
         if (this.tokenRepository.findByNameAndUserId(name, user.getId()).isPresent()) {
             return ApiResult.bindException("Token 已存在");
@@ -59,6 +61,7 @@ public class TokenController {
     @ApiOperation("撤销 Token")
     @DeleteMapping("/{token}")
     @PreAuthorize("hasAuthority('TOKEN')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<?> revoke(@Autowired final User user, @PathVariable("token") final String token) {
         final Optional<Token> optionalToken = this.tokenRepository.findByTokenAndUserId(token, user.getId());
         if (optionalToken.isEmpty()) {
