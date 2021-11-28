@@ -42,4 +42,7 @@ public class ListNoteView {
 
     @ApiModelProperty("修改时间")
     private final OffsetDateTime updatedTime;
+
+    @ApiModelProperty("面包屑")
+    private final BreadcrumbView breadcrumb;
 }

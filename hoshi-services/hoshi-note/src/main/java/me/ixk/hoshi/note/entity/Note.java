@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.OffsetDateTime;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,6 +19,8 @@ import lombok.experimental.Accessors;
 import me.ixk.hoshi.mysql.generator.ObjectIdGenerator;
 import me.ixk.hoshi.note.request.AddNoteView;
 import me.ixk.hoshi.note.request.UpdateNoteView;
+import me.ixk.hoshi.note.response.BreadcrumbView;
+import me.ixk.hoshi.note.response.BreadcrumbView.Item;
 import me.ixk.hoshi.note.response.ListNoteView;
 import me.ixk.hoshi.note.response.NoteView;
 import org.hibernate.Hibernate;
@@ -107,7 +110,7 @@ public class Note {
     private OffsetDateTime updatedTime;
 
     public Set<Note> allChildren() {
-        Set<Note> children = this.getChildren();
+        final Set<Note> children = this.getChildren();
         return Stream
             .concat(children.stream(), children.stream().flatMap(note -> note.allChildren().stream()))
             .collect(Collectors.toSet());
@@ -128,7 +131,7 @@ public class Note {
         DELETED,
     }
 
-    public static Note ofAdd(AddNoteView vo) {
+    public static Note ofAdd(final AddNoteView vo) {
         return Note
             .builder()
             .name(vo.getName())
@@ -140,8 +143,8 @@ public class Note {
             .build();
     }
 
-    public static Note ofUpdate(UpdateNoteView vo) {
-        String status = vo.getStatus();
+    public static Note ofUpdate(final UpdateNoteView vo) {
+        final String status = vo.getStatus();
         return Note
             .builder()
             .id(vo.getId())
@@ -155,6 +158,17 @@ public class Note {
     }
 
     public ListNoteView toListView() {
+        final LinkedList<Item> parent = new LinkedList<>();
+        Note curr = this.parent;
+        while (curr != null) {
+            parent.addFirst(Item.builder().id(curr.getId()).name(curr.getName()).build());
+            curr = curr.getParent();
+        }
+        final BreadcrumbView breadcrumb = BreadcrumbView
+            .builder()
+            .workspace(Item.builder().id(this.workspace.getId()).name(this.workspace.getName()).build())
+            .parent(parent)
+            .build();
         return ListNoteView
             .builder()
             .id(this.id)
@@ -165,10 +179,22 @@ public class Note {
             .status(this.status.name())
             .createdTime(this.createdTime)
             .updatedTime(this.updatedTime)
+            .breadcrumb(breadcrumb)
             .build();
     }
 
     public NoteView toView() {
+        final LinkedList<Item> parent = new LinkedList<>();
+        Note curr = this.parent;
+        while (curr != null) {
+            parent.addFirst(Item.builder().id(curr.getId()).name(curr.getName()).build());
+            curr = curr.getParent();
+        }
+        final BreadcrumbView breadcrumb = BreadcrumbView
+            .builder()
+            .workspace(Item.builder().id(this.workspace.getId()).name(this.workspace.getName()).build())
+            .parent(parent)
+            .build();
         return NoteView
             .builder()
             .id(this.id)
@@ -182,18 +208,19 @@ public class Note {
             .attributes(this.attributes)
             .createdTime(this.createdTime)
             .updatedTime(this.updatedTime)
+            .breadcrumb(breadcrumb)
             .build();
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        Note note = (Note) o;
+        final Note note = (Note) o;
         return id != null && Objects.equals(id, note.id);
     }
 

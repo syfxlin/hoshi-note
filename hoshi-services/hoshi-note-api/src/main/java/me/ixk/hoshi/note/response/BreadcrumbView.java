@@ -22,8 +22,6 @@ public class BreadcrumbView {
 
     private final List<Item> parent;
 
-    private final List<Item> children;
-
     @Data
     @Builder
     public static class Item {

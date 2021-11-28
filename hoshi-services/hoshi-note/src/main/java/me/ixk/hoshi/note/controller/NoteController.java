@@ -23,8 +23,6 @@ import me.ixk.hoshi.note.repository.NoteRepository;
 import me.ixk.hoshi.note.repository.WorkspaceRepository;
 import me.ixk.hoshi.note.request.AddNoteView;
 import me.ixk.hoshi.note.request.UpdateNoteView;
-import me.ixk.hoshi.note.response.BreadcrumbView;
-import me.ixk.hoshi.note.response.BreadcrumbView.Item;
 import me.ixk.hoshi.web.annotation.JsonModel;
 import me.ixk.hoshi.web.annotation.UserId;
 import org.springframework.data.domain.Pageable;
@@ -140,6 +138,45 @@ public class NoteController {
         return ApiResult.page(noteRepository.findAll(specification, page).map(Note::toListView), "搜索笔记列表成功");
     }
 
+    @GetMapping("/list/{workspaceId}")
+    @ApiOperation("获取工作区笔记列表")
+    @PreAuthorize("hasAuthority('NOTE')")
+    public ApiResult<?> list(
+        @UserId final Long userId,
+        @PathVariable("workspaceId") final String workspaceId,
+        final Pageable page,
+        @RequestParam(value = "search", required = false) final String search
+    ) {
+        final Optional<Workspace> optional = workspaceRepository.findByIdAndUser(workspaceId, userId);
+        if (optional.isEmpty()) {
+            return ApiResult.bindException("工作区不存在");
+        }
+        final Specification<Note> specification = (root, query, cb) -> {
+            final Predicate predicate = cb.and(
+                cb.equal(root.get("workspace"), optional.get()),
+                cb.equal(root.get("status"), Note.Status.NORMAL)
+            );
+            if (search != null) {
+                return cb.and(
+                    predicate,
+                    cb.or(
+                        cb.like(root.get("name"), String.format("%%%s%%", search)),
+                        cb.like(root.get("content"), String.format("%%%s%%", search)),
+                        cb.like(root.get("attributes"), String.format("%%%s%%", search)),
+                        cb.like(root.get("createdTime"), String.format("%%%s%%", search)),
+                        cb.like(root.get("updatedTime"), String.format("%%%s%%", search))
+                    )
+                );
+            } else {
+                return predicate;
+            }
+        };
+        return ApiResult.page(
+            noteRepository.findAll(specification, page).map(Note::toListView),
+            "获取工作区笔记列表成功"
+        );
+    }
+
     @GetMapping("/archived")
     @ApiOperation("获取归档笔记列表")
     @PreAuthorize("hasAuthority('NOTE')")
@@ -238,37 +275,6 @@ public class NoteController {
             return ApiResult.bindException("笔记不存在");
         }
         return ApiResult.ok(note.get().toView(), "获取笔记成功");
-    }
-
-    @GetMapping("/{id}/breadcrumb")
-    @ApiOperation("获取笔记面包屑")
-    @PreAuthorize("hasAuthority('NOTE')")
-    public ApiResult<?> breadcrumb(@UserId final Long userId, @PathVariable("id") final String id) {
-        final Optional<Note> optional = noteRepository.findById(id);
-        if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {
-            return ApiResult.bindException("笔记不存在");
-        }
-        final Note note = optional.get();
-        final Item workspace = Item
-            .builder()
-            .id(note.getWorkspace().getId())
-            .name(note.getWorkspace().getName())
-            .build();
-        final LinkedList<Item> parent = new LinkedList<>();
-        Note curr = note.getParent();
-        while (curr != null) {
-            parent.addFirst(Item.builder().id(curr.getId()).name(curr.getName()).build());
-            curr = curr.getParent();
-        }
-        final List<Item> children = noteRepository
-            .findByWorkspaceIdAndParentId(note.getWorkspace().getId(), note.getId())
-            .stream()
-            .map(n -> Item.builder().id(n.getId()).name(n.getName()).build())
-            .collect(Collectors.toList());
-        return ApiResult.ok(
-            BreadcrumbView.builder().workspace(workspace).parent(parent).children(children).build(),
-            "获取笔记面包屑成功"
-        );
     }
 
     @PutMapping("/{id}")
