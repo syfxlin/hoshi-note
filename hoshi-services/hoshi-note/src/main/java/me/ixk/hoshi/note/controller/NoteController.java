@@ -4,12 +4,11 @@
 
 package me.ixk.hoshi.note.controller;
 
+import cn.hutool.core.util.EnumUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.OffsetDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
@@ -75,6 +74,72 @@ public class NoteController {
         );
     }
 
+    @GetMapping("/search")
+    @ApiOperation("搜索")
+    @PreAuthorize("hasAuthority('NOTE')")
+    public ApiResult<?> search(
+        @UserId final Long userId,
+        final Pageable page,
+        @RequestParam("search") final String search,
+        @RequestParam(value = "filters", required = false) final List<String> filters
+    ) {
+        final Map<String, String> filterMap = new HashMap<>(5);
+        if (filters != null) {
+            for (final String filter : filters) {
+                final String[] kv = filter.split(",");
+                filterMap.put(kv[0].trim(), kv.length == 1 ? "true" : kv[1]);
+            }
+        }
+        final Set<Workspace> workspaces = workspaceRepository.findByUser(userId);
+        final Specification<Note> specification = (root, query, cb) -> {
+            // only name
+            final boolean onlyName = filterMap.containsKey("onlyName");
+            Predicate predicate = onlyName
+                ? cb.like(root.get("name"), String.format("%%%s%%", search))
+                : cb.or(
+                    cb.like(root.get("name"), String.format("%%%s%%", search)),
+                    cb.like(root.get("content"), String.format("%%%s%%", search)),
+                    cb.like(root.get("attributes"), String.format("%%%s%%", search))
+                );
+            // workspace filter
+            final String fw = filterMap.get("workspace");
+            if (fw == null) {
+                predicate = cb.and(predicate, root.get("workspace").in(workspaces));
+            } else {
+                predicate = cb.and(predicate, cb.equal(root.get("workspace").get("id"), fw));
+            }
+            // status
+            final String fs = filterMap.get("status");
+            if (fs == null) {
+                predicate = cb.and(predicate, cb.equal(root.get("status"), Note.Status.NORMAL));
+            } else if (EnumUtil.contains(Note.Status.class, fs)) {
+                predicate = cb.and(predicate, cb.equal(root.get("status"), Note.Status.valueOf(fs)));
+            }
+            // createdTime
+            final String cts = filterMap.get("createdTimeStart");
+            if (cts != null) {
+                predicate =
+                    cb.and(predicate, cb.greaterThanOrEqualTo(root.get("createdTime"), OffsetDateTime.parse(cts)));
+            }
+            final String cte = filterMap.get("createdTimeEnd");
+            if (cte != null) {
+                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get("createdTime"), OffsetDateTime.parse(cte)));
+            }
+            // updatedTime
+            final String uts = filterMap.get("updatedTimeStart");
+            if (uts != null) {
+                predicate =
+                    cb.and(predicate, cb.greaterThanOrEqualTo(root.get("updatedTime"), OffsetDateTime.parse(uts)));
+            }
+            final String ute = filterMap.get("updatedTimeEnd");
+            if (ute != null) {
+                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get("updatedTime"), OffsetDateTime.parse(ute)));
+            }
+            return predicate;
+        };
+        return ApiResult.page(noteRepository.findAll(specification, page).map(Note::toListView), "搜索笔记列表成功");
+    }
+
     @GetMapping("/archived")
     @ApiOperation("获取归档笔记列表")
     @PreAuthorize("hasAuthority('NOTE')")
@@ -83,9 +148,9 @@ public class NoteController {
         final Pageable page,
         @RequestParam(value = "search", required = false) final String search
     ) {
-        Set<Workspace> workspaces = workspaceRepository.findByUser(userId);
+        final Set<Workspace> workspaces = workspaceRepository.findByUser(userId);
         final Specification<Note> specification = (root, query, cb) -> {
-            Predicate predicate = cb.and(
+            final Predicate predicate = cb.and(
                 root.get("workspace").in(workspaces),
                 cb.equal(root.get("status"), Note.Status.ARCHIVE)
             );
@@ -94,7 +159,10 @@ public class NoteController {
                     predicate,
                     cb.or(
                         cb.like(root.get("name"), String.format("%%%s%%", search)),
-                        cb.like(root.get("content"), String.format("%%%s%%", search))
+                        cb.like(root.get("content"), String.format("%%%s%%", search)),
+                        cb.like(root.get("attributes"), String.format("%%%s%%", search)),
+                        cb.like(root.get("createdTime"), String.format("%%%s%%", search)),
+                        cb.like(root.get("updatedTime"), String.format("%%%s%%", search))
                     )
                 );
             } else {
@@ -115,9 +183,9 @@ public class NoteController {
         final Pageable page,
         @RequestParam(value = "search", required = false) final String search
     ) {
-        Set<Workspace> workspaces = workspaceRepository.findByUser(userId);
+        final Set<Workspace> workspaces = workspaceRepository.findByUser(userId);
         final Specification<Note> specification = (root, query, cb) -> {
-            Predicate predicate = cb.and(
+            final Predicate predicate = cb.and(
                 root.get("workspace").in(workspaces),
                 cb.equal(root.get("status"), Note.Status.DELETED)
             );
@@ -126,7 +194,10 @@ public class NoteController {
                     predicate,
                     cb.or(
                         cb.like(root.get("name"), String.format("%%%s%%", search)),
-                        cb.like(root.get("content"), String.format("%%%s%%", search))
+                        cb.like(root.get("content"), String.format("%%%s%%", search)),
+                        cb.like(root.get("attributes"), String.format("%%%s%%", search)),
+                        cb.like(root.get("createdTime"), String.format("%%%s%%", search)),
+                        cb.like(root.get("updatedTime"), String.format("%%%s%%", search))
                     )
                 );
             } else {
@@ -258,8 +329,8 @@ public class NoteController {
         if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {
             return ApiResult.bindException("笔记不存在");
         }
-        Note note = optional.get();
-        Set<Note> notes = note.allChildren();
+        final Note note = optional.get();
+        final Set<Note> notes = note.allChildren();
         notes.add(note);
         notes.forEach(n -> n.setStatus(Note.Status.DELETED));
         noteRepository.saveAll(notes);
@@ -275,8 +346,8 @@ public class NoteController {
         if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {
             return ApiResult.bindException("笔记不存在");
         }
-        Note note = optional.get();
-        Set<Note> notes = note.allChildren();
+        final Note note = optional.get();
+        final Set<Note> notes = note.allChildren();
         notes.add(note);
         notes.forEach(n -> n.setStatus(Note.Status.ARCHIVE));
         noteRepository.saveAll(notes);
@@ -292,13 +363,13 @@ public class NoteController {
         if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {
             return ApiResult.bindException("笔记不存在");
         }
-        Note note = optional.get();
+        final Note note = optional.get();
         // 如果父节点不是正常挂载状态，则将游离的笔记恢复到工作区根目录内
-        Note parent = note.getParent();
+        final Note parent = note.getParent();
         if (parent != null && parent.getStatus() != Note.Status.NORMAL) {
             note.setParent(null);
         }
-        Set<Note> notes = note.allChildren();
+        final Set<Note> notes = note.allChildren();
         notes.add(note);
         notes.forEach(n -> n.setStatus(Note.Status.NORMAL));
         noteRepository.saveAll(notes);
