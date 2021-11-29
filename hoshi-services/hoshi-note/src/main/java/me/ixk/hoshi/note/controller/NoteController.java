@@ -84,7 +84,7 @@ public class NoteController {
         final Map<String, String> filterMap = new HashMap<>(5);
         if (filters != null) {
             for (final String filter : filters) {
-                final String[] kv = filter.split(",");
+                final String[] kv = filter.split("~");
                 filterMap.put(kv[0].trim(), kv.length == 1 ? "true" : kv[1]);
             }
         }
