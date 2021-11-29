@@ -109,6 +109,10 @@ public class Note {
     @Column(name = "updated_time", nullable = false)
     private OffsetDateTime updatedTime;
 
+    @ApiModelProperty("分享")
+    @Column(name = "share", nullable = false)
+    private Boolean share;
+
     public Set<Note> allChildren() {
         final Set<Note> children = this.getChildren();
         return Stream
@@ -140,6 +144,7 @@ public class Note {
             .status(Status.NORMAL)
             .createdTime(OffsetDateTime.now())
             .updatedTime(OffsetDateTime.now())
+            .share(false)
             .build();
     }
 
@@ -154,6 +159,7 @@ public class Note {
             .status(status == null ? null : Status.valueOf(status))
             .attributes(vo.getAttributes())
             .updatedTime(OffsetDateTime.now())
+            .share(vo.getShare())
             .build();
     }
 
@@ -179,6 +185,7 @@ public class Note {
             .status(this.status.name())
             .createdTime(this.createdTime)
             .updatedTime(this.updatedTime)
+            .share(this.share)
             .breadcrumb(breadcrumb)
             .build();
     }
@@ -208,6 +215,7 @@ public class Note {
             .attributes(this.attributes)
             .createdTime(this.createdTime)
             .updatedTime(this.updatedTime)
+            .share(this.share)
             .breadcrumb(breadcrumb)
             .build();
     }

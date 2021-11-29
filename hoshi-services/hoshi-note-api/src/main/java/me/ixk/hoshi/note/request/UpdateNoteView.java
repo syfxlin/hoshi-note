@@ -37,6 +37,9 @@ public class UpdateNoteView {
     @ApiModelProperty("笔记状态")
     private String status;
 
+    @ApiModelProperty("分享")
+    private Boolean share;
+
     // ==== 以下四项修改会生成历史记录
 
     @Size(min = 1, max = 255, message = "笔记名称的长度应在（1-255）之间")

@@ -37,7 +37,7 @@ public class NoteView {
     private final String content;
 
     @ApiModelProperty("笔记图标")
-    private String icon;
+    private final String icon;
 
     @ApiModelProperty("笔记版本号")
     private final Long version;
@@ -53,6 +53,9 @@ public class NoteView {
 
     @ApiModelProperty("修改时间")
     private final OffsetDateTime updatedTime;
+
+    @ApiModelProperty("分享")
+    private final Boolean share;
 
     @ApiModelProperty("面包屑")
     private final BreadcrumbView breadcrumb;

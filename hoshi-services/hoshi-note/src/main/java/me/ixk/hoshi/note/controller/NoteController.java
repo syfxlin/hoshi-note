@@ -394,4 +394,22 @@ public class NoteController {
         noteRepository.deleteById(note.get().getId());
         return ApiResult.ok("删除笔记成功").build();
     }
+
+    @PutMapping("/{id}/share")
+    @ApiOperation("分享笔记")
+    @PreAuthorize("hasAuthority('NOTE')")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
+    public ApiResult<?> share(@UserId final Long userId, @PathVariable("id") final String id) {
+        final Optional<Note> optional = noteRepository.findById(id);
+        if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {
+            return ApiResult.bindException("笔记不存在");
+        }
+        final Note note = optional.get();
+        final Boolean share = !note.getShare();
+        final Set<Note> notes = note.allChildren();
+        notes.add(note);
+        notes.forEach(n -> n.setShare(share));
+        noteRepository.saveAll(notes);
+        return ApiResult.ok("分享/取消分享笔记成功").build();
+    }
 }

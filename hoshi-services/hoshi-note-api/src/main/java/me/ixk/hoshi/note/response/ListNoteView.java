@@ -32,7 +32,7 @@ public class ListNoteView {
     private final String name;
 
     @ApiModelProperty("笔记图标")
-    private String icon;
+    private final String icon;
 
     @ApiModelProperty("笔记状态")
     private final String status;
@@ -42,6 +42,9 @@ public class ListNoteView {
 
     @ApiModelProperty("修改时间")
     private final OffsetDateTime updatedTime;
+
+    @ApiModelProperty("分享")
+    private final Boolean share;
 
     @ApiModelProperty("面包屑")
     private final BreadcrumbView breadcrumb;
