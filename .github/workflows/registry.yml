@@ -21,7 +21,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/syfxlin/${{ github.repository }}:registry
+          images: ghcr.io/${{ github.repository }}
+          tags:
+            - registry
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
