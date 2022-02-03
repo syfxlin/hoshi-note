@@ -20,6 +20,12 @@ spec:
             - java
             - -jar
             - /app/hoshi-registry-1.0-SNAPSHOT.jar
+          env:
+            - name: SPRING_REGISTRY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-registry
+                  key: spring-registry-password
           ports:
             - name: hoshi-registry
               containerPort: 7500

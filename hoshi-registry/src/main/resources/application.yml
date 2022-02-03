@@ -3,6 +3,10 @@ server:
 spring:
   application:
     name: hoshi-registry
+  security:
+    user:
+      name: hoshi-registry
+      password: ${SPRING_REGISTRY_PASSWORD}
 eureka:
   client:
     fetch-registry: false

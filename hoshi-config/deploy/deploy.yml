@@ -20,6 +20,11 @@ spec:
           image: ghcr.io/syfxlin/hoshi-note:config
           imagePullPolicy: IfNotPresent
           env:
+            - name: SPRING_REGISTRY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-config
+                  key: spring-registry-password
             - name: SPRING_CONFIG_PASSWORD
               valueFrom:
                 secretKeyRef:
