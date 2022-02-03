@@ -1,0 +1,21 @@
+server:
+  port: 0
+spring:
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:///${user.dir}/misc/config
+  security:
+    user:
+      name: hoshi-config
+      password: 123456
+encrypt:
+  key: kudgJi8jj5adWu
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

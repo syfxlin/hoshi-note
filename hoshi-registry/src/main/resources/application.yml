@@ -1,7 +1,12 @@
+server:
+  port: 6000
 spring:
   application:
     name: hoshi-registry
 eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
   server:
     enable-self-preservation: false
   instance:

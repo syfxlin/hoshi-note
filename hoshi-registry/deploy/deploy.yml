@@ -18,13 +18,12 @@ spec:
           imagePullPolicy: IfNotPresent
           command:
             - java
-            - -Dspring.profiles.active=peer1
             - -jar
             - /app/hoshi-registry-1.0-SNAPSHOT.jar
           ports:
             - name: hoshi-registry
-              containerPort: 7001
-              hostPort: 7001
+              containerPort: 6000
+              hostPort: 6000
       restartPolicy: Always
   selector:
     matchLabels:
