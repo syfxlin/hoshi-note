@@ -9,7 +9,7 @@ spring:
     config:
       server:
         native:
-          search-locations: file:///${user.dir}/static/config
+          search-locations: file:///${user.dir}/misc/config
   security:
     user:
       name: hoshi-config

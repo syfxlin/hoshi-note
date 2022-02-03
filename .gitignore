@@ -62,3 +62,7 @@ yarn-error.log*
 
 ### SonarQube ###
 .scannerwork
+
+### Kubernetes Secret ###
+misc/k8s/*-secret.yml
+misc/config/
