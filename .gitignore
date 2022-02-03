@@ -67,4 +67,6 @@ yarn-error.log*
 misc/config/
 application-dev.yml
 application-k8s.yml
+bootstrap-dev.yml
+bootstrap-k8s.yml
 *-secret.yml
