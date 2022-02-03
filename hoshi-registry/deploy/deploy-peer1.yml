@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hoshi-registry
+  labels:
+    app: hoshi-registry
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: hoshi-registry
+      labels:
+        app: hoshi-registry
+    spec:
+      containers:
+        - name: hoshi-registry
+          image: ghcr.io/syfxlin/hoshi-note:registry
+          imagePullPolicy: IfNotPresent
+          command:
+            - java
+            - -Dspring.profiles.active=peer1
+            - -jar
+            - /app/hoshi-registry-1.0-SNAPSHOT.jar
+          ports:
+            - name: hoshi-registry
+              containerPort: 7001
+              hostPort: 7001
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: hoshi-registry
