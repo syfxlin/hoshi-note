@@ -1,19 +1,18 @@
 server:
-  port: 0
+  port: 7600
 spring:
-  profiles:
-    active: native
   cloud:
     config:
       server:
+        # 开发环境，如果是生产环境应使用 git
         native:
-          search-locations: file:///${user.dir}/misc/config
+          search-locations: ${SPRING_CONFIG_LOCATIONS}
   security:
     user:
       name: hoshi-config
-      password: 123456
+      password: ${SPRING_CONFIG_PASSWORD}
 encrypt:
-  key: kudgJi8jj5adWu
+  key: ${SRPING_CONFIG_ENCRYPT_KEY}
 management:
   endpoints:
     web:

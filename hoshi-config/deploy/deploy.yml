@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hoshi-config
+  labels:
+    app: hoshi-config
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: hoshi-config
+      labels:
+        app: hoshi-config
+    spec:
+      containers:
+        - name: hoshi-config
+          image: ghcr.io/syfxlin/hoshi-note:config
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_CONFIG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-config
+                  key: spring-config-password
+            - name: SRPING_CONFIG_ENCRYPT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-config
+                  key: spring-config-encrypt-key
+            - name: SPRING_CONFIG_LOCATIONS
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-config
+                  key: spring-config-localtions
+          command:
+            - java
+            - -Dspring.profiles.active=native
+            - -jar
+            - /app/hoshi-config-1.0-SNAPSHOT.jar
+          ports:
+            - name: hoshi-config
+              containerPort: 7600
+              hostPort: 7600
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: hoshi-config
