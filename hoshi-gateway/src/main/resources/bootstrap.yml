@@ -1,5 +1,3 @@
-server:
-  port: 7000
 spring:
   application:
     name: hoshi-gateway
@@ -12,7 +10,7 @@ spring:
         service-id: hoshi-config
 eureka:
   instance:
-    instance-id: ${spring.application.name}:${random.int[0,100]}
+    instance-id: ${spring.application.name}:${random.int[1,100]}
   client:
     service-url:
       defaultZone: http://hoshi-registry:${SPRING_REGISTRY_PASSWORD}@hoshi-registry:7500/eureka/

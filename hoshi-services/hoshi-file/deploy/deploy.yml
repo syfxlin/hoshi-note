@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hoshi-file
+  labels:
+    app: hoshi-file
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hoshi-file
+  template:
+    metadata:
+      name: hoshi-file
+      labels:
+        app: hoshi-file
+    spec:
+      containers:
+        - name: hoshi-file
+          image: ghcr.io/syfxlin/hoshi-note:file
+          imagePullPolicy: IfNotPresent
+          command:
+            - java
+            - -jar
+            - /app/hoshi-file-1.0-SNAPSHOT.jar
+          env:
+            - name: SPRING_REGISTRY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: spring-registry-password
+            - name: SPRING_CONFIG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: spring-config-password
+            - name: MYSQL_URL
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: mysql-url
+            - name: MYSQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: mysql-username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: mysql-password
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: redis-host
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: redis-port
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: redis-password
+            - name: MINIO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: minio-url
+            - name: MINIO_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: minio-bucket
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: minio-access-key
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: minio-secret-key
+            - name: PEXELS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hoshi-file
+                  key: pexels-token
+          ports:
+            - name: hoshi-file
+              containerPort: 8002
+              hostPort: 8002
+      restartPolicy: Always

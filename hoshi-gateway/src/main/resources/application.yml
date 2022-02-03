@@ -1,8 +1,5 @@
-resilience4j:
-  timelimiter:
-    configs:
-      default:
-        timeoutDuration: 3s
+server:
+  port: 7000
 spring:
   cloud:
     gateway:
@@ -38,6 +35,11 @@ spring:
             allowedHeaders: "*"
             allowedMethods: "*"
             exposedHeaders: "X-Auth-Token"
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 3s
 management:
   endpoints:
     web:
