@@ -15,7 +15,7 @@ eureka:
     instance-id: ${spring.application.name}:${random.int[1,100]}
   client:
     service-url:
-      defaultZone: http://hoshi-registry:6000/eureka/
+      defaultZone: http://hoshi-registry:7500/eureka/
 management:
   endpoints:
     web:

@@ -22,8 +22,8 @@ spec:
             - /app/hoshi-registry-1.0-SNAPSHOT.jar
           ports:
             - name: hoshi-registry
-              containerPort: 6000
-              hostPort: 6000
+              containerPort: 7500
+              hostPort: 7500
       restartPolicy: Always
   selector:
     matchLabels:

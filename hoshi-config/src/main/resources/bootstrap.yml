@@ -9,4 +9,4 @@ eureka:
       user.password: ${spring.security.user.password}
   client:
     service-url:
-      defaultZone: http://hoshi-registry:6000/eureka/
+      defaultZone: http://hoshi-registry:7500/eureka/
