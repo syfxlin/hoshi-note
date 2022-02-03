@@ -6,7 +6,7 @@ spring:
       server:
         # 开发环境，如果是生产环境应使用 git
         native:
-          search-locations: ${SPRING_CONFIG_LOCATIONS}
+          search-locations: file:///app/config/
   security:
     user:
       name: hoshi-config

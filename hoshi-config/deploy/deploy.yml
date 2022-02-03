@@ -6,6 +6,9 @@ metadata:
     app: hoshi-config
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: hoshi-config
   template:
     metadata:
       name: hoshi-config
@@ -27,11 +30,6 @@ spec:
                 secretKeyRef:
                   name: hoshi-config
                   key: spring-config-encrypt-key
-            - name: SPRING_CONFIG_LOCATIONS
-              valueFrom:
-                secretKeyRef:
-                  name: hoshi-config
-                  key: spring-config-localtions
           command:
             - java
             - -Dspring.profiles.active=native
@@ -41,7 +39,11 @@ spec:
             - name: hoshi-config
               containerPort: 7600
               hostPort: 7600
+          volumeMounts:
+            - name: hoshi-config-data
+              mountPath: /app/config
       restartPolicy: Always
-  selector:
-    matchLabels:
-      app: hoshi-config
+      volumes:
+        - name: hoshi-config-data
+          hostPath:
+            path: /mnt/data/hoshi-config
