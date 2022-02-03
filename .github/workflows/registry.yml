@@ -22,8 +22,8 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: ghcr.io/${{ github.repository }}
-          tags:
-            - type=raw,value=registry
+          tags: |
+            type=raw,value=registry
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
