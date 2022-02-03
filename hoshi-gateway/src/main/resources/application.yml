@@ -38,3 +38,8 @@ spring:
             allowedHeaders: "*"
             allowedMethods: "*"
             exposedHeaders: "X-Auth-Token"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
