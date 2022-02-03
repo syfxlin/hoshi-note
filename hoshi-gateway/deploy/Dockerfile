@@ -3,7 +3,7 @@ FROM maven:3-openjdk-17 as builder
 WORKDIR /app
 COPY . .
 
-RUN mvn package -DskipTest -pl me.ixk.hoshi:hoshi-gateway
+RUN mvn package -DskipTest -pl me.ixk.hoshi:hoshi-gateway -am
 
 FROM openjdk:17-jdk-alpine
 
