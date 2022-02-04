@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hoshi-ums
+  namespace: hoshi-note
   labels:
     app: hoshi-ums
 spec:
@@ -15,6 +16,7 @@ spec:
       labels:
         app: hoshi-ums
     spec:
+      serviceAccountName: hoshi-note
       containers:
         - name: hoshi-ums
           image: ghcr.io/syfxlin/hoshi-note:hoshi-ums
@@ -35,6 +37,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hoshi-ums
+  namespace: hoshi-note
 spec:
   selector:
     app: hoshi-ums

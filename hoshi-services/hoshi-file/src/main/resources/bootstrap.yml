@@ -7,4 +7,4 @@ spring:
   cloud:
     kubernetes:
       client:
-        namespace: ${KUBERNETES_NAMESPACE:default}
+        namespace: ${KUBERNETES_NAMESPACE:hoshi-note}

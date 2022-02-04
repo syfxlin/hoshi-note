@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hoshi-gateway
+  namespace: hoshi-note
   labels:
     app: hoshi-gateway
 spec:
@@ -15,6 +16,7 @@ spec:
       labels:
         app: hoshi-gateway
     spec:
+      serviceAccountName: hoshi-note
       containers:
         - name: hoshi-gateway
           image: ghcr.io/syfxlin/hoshi-note:hoshi-gateway
@@ -23,20 +25,24 @@ spec:
             - java
             - -jar
             - /app/hoshi-gateway-1.0-SNAPSHOT.jar
+          envFrom:
+            - secretRef:
+                name: hoshi-services
           ports:
             - name: hoshi-gateway
-              containerPort: 7000
+              containerPort: 8000
       restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: hoshi-gateway
+  namespace: hoshi-note
 spec:
   selector:
     app: hoshi-gateway
   ports:
     - name: hoshi-gateway
-      port: 7000
+      port: 8000
       nodePort: 30000
   type: NodePort
