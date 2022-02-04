@@ -32,9 +32,6 @@ minio:
 pexels:
   token: ${PEXELS_TOKEN}
 management:
-  security:
-    username: ${ACTUATOR_USERNAME}
-    password: ${ACTUATOR_PASSWORD}
   endpoints:
     web:
       exposure:

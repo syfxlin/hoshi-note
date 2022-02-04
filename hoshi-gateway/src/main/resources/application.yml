@@ -41,9 +41,6 @@ resilience4j:
       default:
         timeoutDuration: 5s
 management:
-  security:
-    username: ${ACTUATOR_USERNAME}
-    password: ${ACTUATOR_PASSWORD}
   endpoints:
     web:
       exposure:

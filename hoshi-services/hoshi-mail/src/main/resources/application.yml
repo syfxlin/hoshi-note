@@ -30,9 +30,6 @@ spring:
     ansi:
       enabled: always
 management:
-  security:
-    username: ${ACTUATOR_USERNAME}
-    password: ${ACTUATOR_PASSWORD}
   endpoints:
     web:
       exposure:

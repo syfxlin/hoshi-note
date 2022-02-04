@@ -30,9 +30,6 @@ spring:
       max-file-size: ${MAX_FILE_SIZE:20MB}
       max-request-size: ${MAX_FILE_SIZE:20MB}
 management:
-  security:
-    username: ${ACTUATOR_USERNAME}
-    password: ${ACTUATOR_PASSWORD}
   endpoints:
     web:
       exposure:

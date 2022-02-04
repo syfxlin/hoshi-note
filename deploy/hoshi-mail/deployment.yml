@@ -32,6 +32,24 @@ spec:
           ports:
             - name: hoshi-mail
               containerPort: 8000
+          livenessProbe:
+            httpGet:
+              port: 8000
+              path: /actuator/health/liveness
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              port: 8000
+              path: /actuator/health/readiness
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
       restartPolicy: Always
 ---
 apiVersion: v1
