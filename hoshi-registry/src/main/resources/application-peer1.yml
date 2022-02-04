@@ -1,8 +1,0 @@
-server:
-  port: 7001
-eureka:
-  instance:
-    hostname: hoshi-peer1
-  client:
-    service-url:
-      defaultZone: http://hoshi-peer2:7002/eureka/

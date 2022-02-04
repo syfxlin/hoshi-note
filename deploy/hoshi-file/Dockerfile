@@ -3,7 +3,7 @@ FROM maven:3-openjdk-17 as builder
 WORKDIR /app
 COPY . .
 
-RUN mvn package -DskipTests -pl me.ixk.hoshi:hoshi-file -am
+RUN --mount=type=cache,target=/root/.m2 mvn package -DskipTests -pl me.ixk.hoshi:hoshi-file -am
 
 FROM openjdk:17-jdk-alpine
 

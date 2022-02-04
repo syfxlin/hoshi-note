@@ -13,25 +13,15 @@
   <artifactId>hoshi-common</artifactId>
 
   <dependencies>
-    <!-- 注册中心（客户端） -->
+    <!-- k8s -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+      <artifactId>spring-cloud-starter-kubernetes-client-all</artifactId>
     </dependency>
-    <!-- 配置中心（客户端） -->
+    <!-- 指标 -->
     <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-config</artifactId>
-    </dependency>
-    <!-- 服务跟踪 -->
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-sleuth</artifactId>
-    </dependency>
-    <!-- Spring Admin（客户端） -->
-    <dependency>
-      <groupId>de.codecentric</groupId>
-      <artifactId>spring-boot-admin-starter-client</artifactId>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
     </dependency>
     <dependency>
       <groupId>io.swagger</groupId>
@@ -41,6 +31,10 @@
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-commons</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
     </dependency>
   </dependencies>
 </project>

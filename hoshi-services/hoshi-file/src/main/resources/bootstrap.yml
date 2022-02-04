@@ -1,16 +1,10 @@
 spring:
   application:
     name: hoshi-file
+  main:
+    cloud-platform: kubernetes
+    allow-circular-references: true
   cloud:
-    config:
-      username: hoshi-config
-      password: ${SPRING_CONFIG_PASSWORD}
-      discovery:
-        enabled: true
-        service-id: hoshi-config
-eureka:
-  instance:
-    instance-id: ${spring.application.name}:${random.int[1,100]}
-  client:
-    service-url:
-      defaultZone: http://hoshi-registry:${SPRING_REGISTRY_PASSWORD}@hoshi-registry:7500/eureka/
+    kubernetes:
+      client:
+        namespace: default

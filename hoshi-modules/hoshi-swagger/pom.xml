@@ -17,9 +17,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-boot-starter</artifactId>
-      <version>3.0.0</version>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
+      <version>1.6.5</version>
     </dependency>
   </dependencies>
 </project>

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: hoshi-file
-          image: ghcr.io/syfxlin/hoshi-note:file
+          image: ghcr.io/syfxlin/hoshi-note:hoshi-file
           imagePullPolicy: IfNotPresent
           command:
             - java
@@ -94,3 +94,15 @@ spec:
               containerPort: 8002
               hostPort: 8002
       restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hoshi-file
+spec:
+  selector:
+    app: hoshi-file
+  ports:
+    - name: hoshi-file
+      port: 8002
+  type: ClusterIP

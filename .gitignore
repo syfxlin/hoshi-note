@@ -64,7 +64,6 @@ yarn-error.log*
 .scannerwork
 
 ### Secret ###
-misc/config/
 application-dev.yml
 application-k8s.yml
 bootstrap-dev.yml
