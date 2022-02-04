@@ -60,7 +60,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain defaultSecurityChain(ServerHttpSecurity http) {
-        return http.authorizeExchange()
+        return http.csrf().disable()
+            .cors()
+            .and()
+            .authorizeExchange()
             .anyExchange()
             .permitAll()
             .and()
