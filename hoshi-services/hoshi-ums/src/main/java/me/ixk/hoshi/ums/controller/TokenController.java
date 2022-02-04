@@ -4,11 +4,8 @@
 
 package me.ixk.hoshi.ums.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.ums.entity.Token;
@@ -19,6 +16,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 /**
  * Token 控制器
  *
@@ -27,13 +28,13 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/tokens")
-@Api("Token 控制器")
+@Tag(name = "Token 控制器")
 @RequiredArgsConstructor
 public class TokenController {
 
     private final TokenRepository tokenRepository;
 
-    @ApiOperation("获取所有 Token")
+    @Operation(summary = "获取所有 Token")
     @GetMapping("")
     @PreAuthorize("hasAuthority('TOKEN')")
     public ApiResult<?> list(@Autowired final User user) {
@@ -43,10 +44,10 @@ public class TokenController {
         );
     }
 
-    @ApiOperation("新增 Token")
+    @Operation(summary = "新增 Token")
     @PostMapping("/{name}")
     @PreAuthorize("hasAuthority('TOKEN')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> add(@Autowired final User user, @PathVariable("name") final String name) {
         if (this.tokenRepository.findByNameAndUserId(name, user.getId()).isPresent()) {
             return ApiResult.bindException("Token 已存在");
@@ -58,10 +59,10 @@ public class TokenController {
         );
     }
 
-    @ApiOperation("撤销 Token")
+    @Operation(summary = "撤销 Token")
     @DeleteMapping("/{token}")
     @PreAuthorize("hasAuthority('TOKEN')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> revoke(@Autowired final User user, @PathVariable("token") final String token) {
         final Optional<Token> optionalToken = this.tokenRepository.findByTokenAndUserId(token, user.getId());
         if (optionalToken.isEmpty()) {

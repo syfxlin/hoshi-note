@@ -22,8 +22,8 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: ${SPRING_MAX_FILE_SIZE:20MB}
-      max-request-size: ${SPRING_MAX_FILE_SIZE:20MB}
+      max-file-size: ${MAX_FILE_SIZE:20MB}
+      max-request-size: ${MAX_FILE_SIZE:20MB}
 minio:
   url: ${MINIO_URL}
   bucket: ${MINIO_BUCKET}
@@ -32,7 +32,15 @@ minio:
 pexels:
   token: ${PEXELS_TOKEN}
 management:
+  security:
+    username: ${ACTUATOR_USERNAME}
+    password: ${ACTUATOR_PASSWORD}
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: info,health,prometheus,metrics
+springdoc:
+  swagger-ui:
+    path: /actuator/swagger-ui.html
+  api-docs:
+    path: /actuator/openapi

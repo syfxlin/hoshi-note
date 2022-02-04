@@ -4,15 +4,15 @@
 
 package me.ixk.hoshi.ums.request;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.util.HashSet;
-import java.util.Set;
-import javax.validation.constraints.NotNull;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Otstar Lin
@@ -22,13 +22,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ApiModel("编辑用户角色")
+@Schema(name = "编辑用户角色")
 public class EditUserRoleView {
 
     @NotNull(message = "修改角色时必须设置用户 id")
-    @ApiModelProperty("用户 ID")
+    @Schema(name = "用户 ID")
     private Long userId;
 
-    @ApiModelProperty("角色列表")
+    @Schema(name = "角色列表")
     private Set<String> roles = new HashSet<>();
 }

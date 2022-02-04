@@ -4,20 +4,20 @@
 
 package me.ixk.hoshi.ums.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.OffsetDateTime;
-import java.util.Objects;
-import java.util.Set;
-import javax.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.ums.request.AddRoleView;
 import me.ixk.hoshi.ums.request.UpdateRoleView;
 import me.ixk.hoshi.ums.response.RoleView;
 import org.hibernate.Hibernate;
+
+import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.OffsetDateTime;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * 角色表
@@ -32,7 +32,7 @@ import org.hibernate.Hibernate;
 @Setter
 @ToString
 @Accessors(chain = true)
-@ApiModel("角色表")
+@Schema(name = "角色表")
 @Entity
 @Table(name = "role")
 public class Role implements Serializable {
@@ -44,35 +44,35 @@ public class Role implements Serializable {
      * 角色名称，必须是大写英文
      */
     @Id
-    @ApiModelProperty("角色名称，必须是大写英文")
+    @Schema(name = "角色名称，必须是大写英文")
     @Column(name = "name", nullable = false, unique = true, length = 50)
     private String name;
 
     /**
      * 创建时间
      */
-    @ApiModelProperty("创建时间")
+    @Schema(name = "创建时间")
     @Column(name = "created_time", nullable = false)
     private OffsetDateTime createdTime;
 
     /**
      * 状态
      */
-    @ApiModelProperty("状态")
+    @Schema(name = "状态")
     @Column(name = "status", nullable = false)
     private Boolean status;
 
     /**
      * 角色的描述
      */
-    @ApiModelProperty("角色的描述")
+    @Schema(name = "角色的描述")
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     /**
      * 权限列表
      */
-    @ApiModelProperty("权限列表")
+    @Schema(name = "权限列表")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> permissions;
 

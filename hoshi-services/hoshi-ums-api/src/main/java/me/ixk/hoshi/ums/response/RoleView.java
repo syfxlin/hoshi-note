@@ -4,12 +4,12 @@
 
 package me.ixk.hoshi.ums.response;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
-import java.util.Set;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.OffsetDateTime;
+import java.util.Set;
 
 /**
  * @author Otstar Lin
@@ -17,21 +17,21 @@ import lombok.Data;
  */
 @Data
 @Builder
-@ApiModel("权限")
+@Schema(name = "权限")
 public class RoleView {
 
-    @ApiModelProperty("角色名称，必须是大写英文")
+    @Schema(name = "角色名称，必须是大写英文")
     private final String name;
 
-    @ApiModelProperty("创建时间")
+    @Schema(name = "创建时间")
     private final OffsetDateTime createdTime;
 
-    @ApiModelProperty("状态")
+    @Schema(name = "状态")
     private final Boolean status;
 
-    @ApiModelProperty("角色的描述")
+    @Schema(name = "角色的描述")
     private final String description;
 
-    @ApiModelProperty("权限列表")
+    @Schema(name = "权限列表")
     private final Set<String> permissions;
 }

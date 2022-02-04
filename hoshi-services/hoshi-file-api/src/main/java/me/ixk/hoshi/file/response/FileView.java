@@ -4,11 +4,11 @@
 
 package me.ixk.hoshi.file.response;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.OffsetDateTime;
 
 /**
  * 文件
@@ -18,30 +18,30 @@ import lombok.Data;
  */
 @Data
 @Builder
-@ApiModel("文件信息")
+@Schema(name = "文件信息")
 public class FileView {
 
-    @ApiModelProperty("文件 ID")
+    @Schema(name = "文件 ID")
     private final Long id;
 
-    @ApiModelProperty("存储文件名")
+    @Schema(name = "存储文件名")
     private final String disk;
 
-    @ApiModelProperty("文件名")
+    @Schema(name = "文件名")
     private final String name;
 
-    @ApiModelProperty("文件描述")
+    @Schema(name = "文件描述")
     private final String description;
 
-    @ApiModelProperty("文件大小")
+    @Schema(name = "文件大小")
     private final Long size;
 
-    @ApiModelProperty("文件类型")
+    @Schema(name = "文件类型")
     private final String contentType;
 
-    @ApiModelProperty("上传时间")
+    @Schema(name = "上传时间")
     private final OffsetDateTime uploadedTime;
 
-    @ApiModelProperty("文件 URL")
+    @Schema(name = "文件 URL")
     private final String url;
 }

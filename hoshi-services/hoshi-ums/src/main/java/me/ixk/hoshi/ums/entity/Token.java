@@ -5,14 +5,14 @@
 package me.ixk.hoshi.ums.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.util.Objects;
-import javax.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.ums.response.TokenView;
 import org.hibernate.Hibernate;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * 令牌表
@@ -27,28 +27,28 @@ import org.hibernate.Hibernate;
 @Setter
 @ToString
 @Accessors(chain = true)
-@ApiModel("Token 表")
+@Schema(name = "Token 表")
 @Entity
-@Table(name = "token", indexes = { @Index(name = "idx_token_token_unq", columnList = "token", unique = true) })
+@Table(name = "token", indexes = {@Index(name = "idx_token_token_unq", columnList = "token", unique = true)})
 public class Token {
 
     @Id
-    @ApiModelProperty("Token ID")
+    @Schema(name = "Token ID")
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ApiModelProperty("Token")
+    @Schema(name = "Token")
     @Column(name = "token", nullable = false, unique = true)
     private String token;
 
-    @ApiModelProperty("名称")
+    @Schema(name = "名称")
     @Column(name = "name", nullable = false)
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    @ApiModelProperty("用户")
+    @Schema(name = "用户")
     @ToString.Exclude
     @JsonBackReference
     private User user;

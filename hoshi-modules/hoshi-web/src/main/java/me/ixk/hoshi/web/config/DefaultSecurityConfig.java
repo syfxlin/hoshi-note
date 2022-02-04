@@ -9,12 +9,13 @@ import me.ixk.hoshi.common.result.ApiMessage;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.web.details.WebAuthenticationDetails;
 import me.ixk.hoshi.web.result.ApiResultUtil;
-import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -61,15 +62,31 @@ public class DefaultSecurityConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public static class ActuatorSecurityConfig extends WebSecurityConfigurerAdapter {
 
+        @Value("${management.security.username}")
+        private String username;
+
+        @Value("${management.security.password}")
+        private String password;
+
         @Override
         protected void configure(final HttpSecurity http) throws Exception {
             http
-                .requestMatcher(EndpointRequest.toAnyEndpoint())
+                .antMatcher("/actuator/**")
                 .authorizeRequests()
                 .anyRequest()
                 .hasAuthority("ACTUATOR")
                 .and()
                 .httpBasic();
+        }
+
+        @Override
+        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+            if (username != null && password != null) {
+                auth.inMemoryAuthentication()
+                    .withUser(username)
+                    .password(password)
+                    .authorities("ACTUATOR");
+            }
         }
     }
 

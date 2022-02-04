@@ -1,12 +1,12 @@
 package me.ixk.hoshi.ums.request;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import javax.validation.constraints.Size;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.Size;
 
 /**
  * @author Otstar Lin
@@ -16,14 +16,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ApiModel("更新用户名")
+@Schema(name = "更新用户名")
 public class UpdateNameView {
 
     @Size(min = 3, max = 50, message = "用户名长度应在（3-50）之间")
-    @ApiModelProperty("用户名")
+    @Schema(name = "用户名")
     private String username;
 
     @Size(min = 3, max = 50, message = "昵称长度应在（3-50）之间")
-    @ApiModelProperty("昵称")
+    @Schema(name = "昵称")
     private String nickname;
 }

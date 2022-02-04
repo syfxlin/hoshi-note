@@ -5,15 +5,8 @@
 package me.ixk.hoshi.ums.controller;
 
 import cn.hutool.core.util.RandomUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.mail.service.VerifyCodeService;
@@ -38,6 +31,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.Comparator;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 /**
  * 用户控制器
  *
@@ -46,7 +47,7 @@ import org.springframework.web.context.request.RequestContextHolder;
  */
 @RestController
 @RequestMapping("/users")
-@Api("用户控制器")
+@Tag(name = "用户控制器")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -55,14 +56,14 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final VerifyCodeService verifyCodeService;
 
-    @ApiOperation("获取用户")
+    @Operation(summary = "获取用户")
     @GetMapping("")
     @PreAuthorize("hasAuthority('ME')")
     public final ApiResult<?> user(@Autowired final User user) {
         return ApiResult.ok(user.toView(), "获取当前用户成功");
     }
 
-    @ApiOperation("通过用户名获取用户")
+    @Operation(summary = "通过用户名获取用户")
     @GetMapping("/{username}")
     public ApiResult<?> user(@PathVariable("username") final String username) {
         final Optional<User> byUsername = userRepository.findByUsername(username);
@@ -72,7 +73,7 @@ public class UserController {
         return ApiResult.ok(byUsername.get().toView(), "获取用户成功");
     }
 
-    @ApiOperation("更新用户名")
+    @Operation(summary = "更新用户名")
     @PutMapping("/name")
     @PreAuthorize("hasAuthority('ME')")
     public ApiResult<?> updateName(@Autowired final User user, @Valid @JsonModel final UpdateNameView vo) {
@@ -80,7 +81,7 @@ public class UserController {
         return ApiResult.ok(this.userRepository.update(update).toView(), "更新用户名成功");
     }
 
-    @ApiOperation("发送更新邮箱验证码")
+    @Operation(summary = "发送更新邮箱验证码")
     @PostMapping("/email/{email}")
     @PreAuthorize("hasAuthority('ME')")
     public ApiResult<?> sendEmailCode(@PathVariable("email") final String email, final HttpServletRequest request) {
@@ -97,7 +98,7 @@ public class UserController {
         return ApiResult.ok("验证码发送成功").build();
     }
 
-    @ApiOperation("更新用户邮箱")
+    @Operation(summary = "更新用户邮箱")
     @PutMapping("/email")
     @PreAuthorize("hasAuthority('ME')")
     public ApiResult<?> updateEmail(@Autowired final User user, @Valid @JsonModel final UpdateEmailView vo) {
@@ -108,7 +109,7 @@ public class UserController {
         return ApiResult.ok(this.userRepository.update(update).toView(), "更新邮箱成功");
     }
 
-    @ApiOperation("更新用户密码")
+    @Operation(summary = "更新用户密码")
     @PutMapping("/password")
     @PreAuthorize("hasAuthority('ME')")
     public ApiResult<?> updatePassword(@Autowired final User user, @Valid @JsonModel final UpdatePasswordView vo) {
@@ -120,23 +121,23 @@ public class UserController {
         return ApiResult.ok(this.userRepository.update(update).toView(), "更新密码成功");
     }
 
-    @ApiOperation("获取用户信息")
+    @Operation(summary = "获取用户信息")
     @GetMapping("/info")
     @PreAuthorize("hasAuthority('ME')")
     public ApiResult<?> getInfo(@Autowired final User user) {
         return ApiResult.ok(user.getInfo().toView(), "获取当前用户信息成功");
     }
 
-    @ApiOperation("更新用户信息")
+    @Operation(summary = "更新用户信息")
     @PutMapping("/info")
     @PreAuthorize("hasAuthority('ME')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> updateInfo(@Autowired final User user, @Valid @JsonModel final UpdateUserInfoView vo) {
         user.setInfo(Jpa.merge(UserInfo.ofUpdate(vo, user.getInfo().getId()), user.getInfo()));
         return ApiResult.ok(this.userRepository.save(user).getInfo().toView(), "更新用户成功");
     }
 
-    @ApiOperation("获取当前用户登录信息")
+    @Operation(summary = "获取当前用户登录信息")
     @GetMapping("/logged")
     @PreAuthorize("hasAuthority('ME_LOGGED_MANAGER')")
     public ApiResult<?> logged(@Autowired final User user) {
@@ -175,7 +176,7 @@ public class UserController {
         );
     }
 
-    @ApiOperation("踢出用户")
+    @Operation(summary = "踢出用户")
     @DeleteMapping("/exclude/{sessionId}")
     @PreAuthorize("hasAuthority('ME_LOGGED_MANAGER')")
     public ApiResult<?> exclude(@Autowired final User user, @PathVariable("sessionId") final String sessionId) {

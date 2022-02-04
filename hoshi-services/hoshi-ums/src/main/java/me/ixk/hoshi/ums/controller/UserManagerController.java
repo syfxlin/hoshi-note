@@ -4,16 +4,8 @@
 
 package me.ixk.hoshi.ums.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.ums.entity.Role;
@@ -34,6 +26,15 @@ import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * 用户管理控制器
  *
@@ -43,7 +44,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin/users")
 @RequiredArgsConstructor
-@Api(value = "用户管理控制器")
+@Tag(name = "用户管理控制器")
 public class UserManagerController {
 
     private final UserRepository userRepository;
@@ -51,7 +52,7 @@ public class UserManagerController {
     private final PasswordEncoder passwordEncoder;
     private final RedisIndexedSessionRepository sessionRepository;
 
-    @ApiOperation("列出用户（查询用户）")
+    @Operation(summary = "列出用户（查询用户）")
     @GetMapping("")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
     public ApiResult<?> list(
@@ -61,15 +62,15 @@ public class UserManagerController {
         final Specification<User> specification = search == null
             ? null
             : (root, query, cb) ->
-                cb.or(
-                    cb.like(root.get("username"), String.format("%%%s%%", search)),
-                    cb.like(root.get("nickname"), String.format("%%%s%%", search)),
-                    cb.like(root.get("email"), String.format("%%%s%%", search))
-                );
+            cb.or(
+                cb.like(root.get("username"), String.format("%%%s%%", search)),
+                cb.like(root.get("nickname"), String.format("%%%s%%", search)),
+                cb.like(root.get("email"), String.format("%%%s%%", search))
+            );
         return ApiResult.page(this.userRepository.findAll(specification, page).map(User::toView), "获取用户成功");
     }
 
-    @ApiOperation("获取用户")
+    @Operation(summary = "获取用户")
     @GetMapping("/{userId:\\d+}")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
     public ApiResult<?> get(@PathVariable("userId") final Long userId) {
@@ -80,10 +81,10 @@ public class UserManagerController {
         return ApiResult.ok(user.get().toView(), "获取用户成功");
     }
 
-    @ApiOperation("添加用户")
+    @Operation(summary = "添加用户")
     @PostMapping("")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> add(@Valid @JsonModel final AddUserView vo) {
         if (this.userRepository.findByUsernameOrEmail(vo.getUsername(), vo.getEmail()).isPresent()) {
             return ApiResult.bindException("用户名或邮箱已存在");
@@ -94,10 +95,10 @@ public class UserManagerController {
         return ApiResult.ok(this.userRepository.save(user).toView(), "添加用户成功");
     }
 
-    @ApiOperation("删除用户")
+    @Operation(summary = "删除用户")
     @DeleteMapping("/{userId:\\d+}")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> remove(@PathVariable("userId") final Long userId) {
         final Optional<User> user = this.userRepository.findById(userId);
         if (user.isEmpty()) {
@@ -108,10 +109,10 @@ public class UserManagerController {
         return ApiResult.ok("删除用户成功").build();
     }
 
-    @ApiOperation("更新用户")
+    @Operation(summary = "更新用户")
     @PutMapping("/{userId:\\d+}")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> update(@Valid @JsonModel final UpdateUserView vo) {
         if (this.userRepository.findById(vo.getUserId()).isEmpty()) {
             return ApiResult.bindException("用户 ID 不存在");
@@ -135,10 +136,10 @@ public class UserManagerController {
         return ApiResult.ok(newUser.toView(), "更新用户成功");
     }
 
-    @ApiOperation("添加用户角色")
+    @Operation(summary = "添加用户角色")
     @PostMapping("/{userId:\\d+}/role")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> addRoles(@Valid @JsonModel final EditUserRoleView vo) {
         final Optional<User> optional = this.userRepository.findById(vo.getUserId());
         if (optional.isEmpty()) {
@@ -155,10 +156,10 @@ public class UserManagerController {
         }
     }
 
-    @ApiOperation("更改用户角色")
+    @Operation(summary = "更改用户角色")
     @PutMapping("/{userId:\\d+}/role")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> updateRoles(@Valid @JsonModel final EditUserRoleView vo) {
         final Optional<User> optional = this.userRepository.findById(vo.getUserId());
         if (optional.isEmpty()) {
@@ -182,10 +183,10 @@ public class UserManagerController {
         }
     }
 
-    @ApiOperation("删除用户角色")
+    @Operation(summary = "删除用户角色")
     @DeleteMapping("/{userId:\\d+}/role")
     @PreAuthorize("hasAuthority('USER_MANAGER')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> removeRoles(
         @PathVariable("userId") @NotNull final Long userId,
         @RequestParam("roles") @NotNull final List<String> roles

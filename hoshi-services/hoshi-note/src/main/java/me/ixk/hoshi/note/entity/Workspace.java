@@ -5,12 +5,7 @@
 package me.ixk.hoshi.note.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
-import java.util.Objects;
-import java.util.Set;
-import javax.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.mysql.generator.ObjectIdGenerator;
@@ -19,6 +14,11 @@ import me.ixk.hoshi.note.request.UpdateWorkspaceView;
 import me.ixk.hoshi.note.response.WorkspaceView;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.time.OffsetDateTime;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * 工作区
@@ -33,7 +33,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Setter
 @ToString
 @Accessors(chain = true)
-@ApiModel("工作区表")
+@Schema(name = "工作区表")
 @Table(
     name = "workspace",
     indexes = {
@@ -46,46 +46,46 @@ import org.hibernate.annotations.GenericGenerator;
 public class Workspace {
 
     @Id
-    @ApiModelProperty("空间 ID")
+    @Schema(name = "空间 ID")
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(generator = "objectId")
     @GenericGenerator(name = "objectId", strategy = ObjectIdGenerator.STRATEGY_NAME)
     private String id;
 
-    @ApiModelProperty("用户")
+    @Schema(name = "用户")
     @Column(name = "user_id", nullable = false)
     private Long user;
 
-    @ApiModelProperty("空间名称")
+    @Schema(name = "空间名称")
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @ApiModelProperty("空间描述")
+    @Schema(name = "空间描述")
     @Column(name = "description")
     private String description;
 
-    @ApiModelProperty("域名")
+    @Schema(name = "域名")
     @Column(name = "domain", unique = true, length = 50)
     private String domain;
 
-    @ApiModelProperty("空间图标")
+    @Schema(name = "空间图标")
     @Column(name = "icon")
     private String icon;
 
-    @ApiModelProperty("创建时间")
+    @Schema(name = "创建时间")
     @Column(name = "created_time", nullable = false)
     private OffsetDateTime createdTime;
 
-    @ApiModelProperty("是否公开")
+    @Schema(name = "是否公开")
     @Column(name = "disclose", nullable = false)
     private Boolean disclose;
 
-    @ApiModelProperty("协作者")
+    @Schema(name = "协作者")
     @OneToMany
     @JoinTable(
         name = "workspace_collaborator_relation",
-        joinColumns = { @JoinColumn(name = "workspace_id", referencedColumnName = "id", nullable = false) },
-        inverseJoinColumns = { @JoinColumn(name = "collaborator_id", referencedColumnName = "id", nullable = false) }
+        joinColumns = {@JoinColumn(name = "workspace_id", referencedColumnName = "id", nullable = false)},
+        inverseJoinColumns = {@JoinColumn(name = "collaborator_id", referencedColumnName = "id", nullable = false)}
     )
     @JsonBackReference
     @ToString.Exclude

@@ -4,10 +4,11 @@
 
 package me.ixk.hoshi.note.response;
 
-import io.swagger.annotations.ApiModel;
-import java.util.List;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author Otstar Lin
@@ -15,7 +16,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-@ApiModel("笔记面包屑")
+@Schema(name = "笔记面包屑")
 public class BreadcrumbView {
 
     private final Item workspace;

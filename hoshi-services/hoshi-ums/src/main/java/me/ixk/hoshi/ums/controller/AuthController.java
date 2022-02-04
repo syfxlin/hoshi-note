@@ -5,15 +5,8 @@
 package me.ixk.hoshi.ums.controller;
 
 import cn.hutool.core.util.RandomUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.mail.entity.VerifyCode;
@@ -36,6 +29,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 /**
  * 验证控制器
  *
@@ -44,7 +45,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@Api("验证控制器")
+@Tag(name = "验证控制器")
 public class AuthController {
 
     private final UserRepository userRepository;
@@ -53,7 +54,7 @@ public class AuthController {
     private final TokenRepository tokenRepository;
     private final VerifyCodeService verifyCodeService;
 
-    @ApiOperation("发送注册验证码")
+    @Operation(summary = "发送注册验证码")
     @PostMapping("/register/{email}")
     @PreAuthorize("isAnonymous()")
     public ApiResult<?> sendRegisterCode(@PathVariable("email") final String email, final HttpServletRequest request) {
@@ -71,10 +72,10 @@ public class AuthController {
         return ApiResult.ok("验证码发送成功").build();
     }
 
-    @ApiOperation("注册")
+    @Operation(summary = "注册")
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> register(@Valid @JsonModel final RegisterUserView vo) {
         final Optional<VerifyCode> verifyCode = verifyCodeService.find("验证您注册的邮箱", vo.getCode());
         if (verifyCode.isEmpty() || !verifyCode.get().getEmail().equals(vo.getEmail())) {
@@ -90,10 +91,10 @@ public class AuthController {
         return ApiResult.ok("注册成功").build();
     }
 
-    @ApiOperation("Token 登录")
+    @Operation(summary = "Token 登录")
     @PostMapping("/api/login")
     @PreAuthorize("isAnonymous()")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> apiLogin(@RequestParam("token") final String token, final HttpServletRequest request) {
         final Optional<Token> tokenOptional = this.tokenRepository.findByToken(token);
         if (tokenOptional.isEmpty()) {
@@ -119,7 +120,7 @@ public class AuthController {
         return ApiResult.ok(user.toView(), "登录成功");
     }
 
-    @ApiOperation("发送找回密码验证码")
+    @Operation(summary = "发送找回密码验证码")
     @PostMapping("/reset-password/{email}")
     @PreAuthorize("isAnonymous()")
     public ApiResult<?> sendResetPasswordCode(
@@ -134,7 +135,7 @@ public class AuthController {
         return ApiResult.ok("验证码发送成功").build();
     }
 
-    @ApiOperation("找回密码")
+    @Operation(summary = "找回密码")
     @PutMapping("/reset-password")
     @PreAuthorize("isAnonymous()")
     public ApiResult<?> resetPassword(@Valid @JsonModel final ResetPasswordView vo) {

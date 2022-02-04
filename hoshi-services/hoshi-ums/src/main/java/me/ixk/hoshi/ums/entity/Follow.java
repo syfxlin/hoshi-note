@@ -4,13 +4,13 @@
 
 package me.ixk.hoshi.ums.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.util.Objects;
-import javax.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * 关注表
@@ -25,7 +25,7 @@ import org.hibernate.Hibernate;
 @Setter
 @ToString
 @Accessors(chain = true)
-@ApiModel("关注表")
+@Schema(name = "关注表")
 @Entity
 @Table(name = "follow")
 public class Follow {
@@ -34,19 +34,19 @@ public class Follow {
      * 主键
      */
     @Id
-    @ApiModelProperty("ID")
+    @Schema(name = "ID")
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    @ApiModelProperty("关注者 ID")
+    @Schema(name = "关注者 ID")
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "following_id", referencedColumnName = "id", nullable = false)
-    @ApiModelProperty("关注对象 ID")
+    @Schema(name = "关注对象 ID")
     private User following;
 
     @Override

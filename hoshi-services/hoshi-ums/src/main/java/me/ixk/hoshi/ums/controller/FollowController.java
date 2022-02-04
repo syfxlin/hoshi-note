@@ -4,9 +4,8 @@
 
 package me.ixk.hoshi.ums.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.util.Optional;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.ums.entity.Follow;
@@ -19,6 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 /**
  * 关注控制器
  *
@@ -27,14 +28,14 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/follows")
-@Api("关注控制器")
+@Tag(name = "关注控制器")
 @RequiredArgsConstructor
 public class FollowController {
 
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
 
-    @ApiOperation("获取关注列表")
+    @Operation(summary = "获取关注列表")
     @GetMapping("/{userId:\\d+}/following")
     public ApiResult<?> following(@PathVariable("userId") final Long userId, final Pageable page) {
         return ApiResult.page(
@@ -43,7 +44,7 @@ public class FollowController {
         );
     }
 
-    @ApiOperation("被关注列表")
+    @Operation(summary = "被关注列表")
     @GetMapping("/{userId:\\d+}/followers")
     public ApiResult<?> follower(@PathVariable("userId") final Long userId, final Pageable page) {
         return ApiResult.page(
@@ -52,10 +53,10 @@ public class FollowController {
         );
     }
 
-    @ApiOperation("添加关注")
+    @Operation(summary = "添加关注")
     @PostMapping("/{followId:\\d+}")
     @PreAuthorize("hasAuthority('FOLLOW_USER')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> add(@PathVariable("followId") final Long id, @Autowired final User user) {
         final Optional<User> optional = this.userRepository.findById(id);
         if (optional.isEmpty()) {
@@ -74,10 +75,10 @@ public class FollowController {
         return ApiResult.ok("关注成功").build();
     }
 
-    @ApiOperation("取消关注")
+    @Operation(summary = "取消关注")
     @DeleteMapping("/{followId:\\d+}")
     @PreAuthorize("hasAuthority('FOLLOW_USER')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> delete(@PathVariable("followId") final Long id, @Autowired final User user) {
         this.followRepository.findByUserIdAndFollowingId(user.getId(), id)
             .ifPresent(follow -> {

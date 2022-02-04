@@ -5,16 +5,16 @@
 package me.ixk.hoshi.note.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
-import java.util.Objects;
-import javax.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.mysql.generator.ObjectIdGenerator;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.time.OffsetDateTime;
+import java.util.Objects;
 
 /**
  * 笔记历史
@@ -29,7 +29,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Setter
 @ToString
 @Accessors(chain = true)
-@ApiModel("笔记历史表")
+@Schema(name = "笔记历史表")
 @Table(name = "note_history")
 @Entity
 public class NoteHistory {
@@ -37,7 +37,7 @@ public class NoteHistory {
     public static final long MIN_UPDATED = 5L;
 
     @Id
-    @ApiModelProperty("笔记历史 ID")
+    @Schema(name = "笔记历史 ID")
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(generator = "objectId")
     @GenericGenerator(name = "objectId", strategy = ObjectIdGenerator.STRATEGY_NAME)
@@ -45,32 +45,32 @@ public class NoteHistory {
 
     @JsonBackReference
     @ToString.Exclude
-    @ApiModelProperty("笔记")
+    @Schema(name = "笔记")
     @ManyToOne
     @JoinColumn(name = "note_id", referencedColumnName = "id", nullable = false)
     private Note note;
 
-    @ApiModelProperty("保存时间")
+    @Schema(name = "保存时间")
     @Column(name = "save_time", nullable = false)
     private OffsetDateTime saveTime;
 
-    @ApiModelProperty("版本号")
+    @Schema(name = "版本号")
     @Column(name = "version", columnDefinition = "BIGINT", nullable = false)
     private Long version;
 
-    @ApiModelProperty("笔记名称")
+    @Schema(name = "笔记名称")
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ApiModelProperty("笔记内容")
+    @Schema(name = "笔记内容")
     @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
 
-    @ApiModelProperty("笔记图标")
+    @Schema(name = "笔记图标")
     @Column(name = "icon")
     private String icon;
 
-    @ApiModelProperty("属性")
+    @Schema(name = "属性")
     @Column(name = "attributes", columnDefinition = "TEXT")
     private String attributes;
 
@@ -86,9 +86,9 @@ public class NoteHistory {
         String attributes = update.getAttributes();
         return (
             (name != null && !name.equals(origin.getName())) ||
-            (content != null && !content.equals(origin.getContent())) ||
-            (icon != null && !icon.equals(origin.getIcon())) ||
-            (attributes != null && !attributes.equals(origin.getAttributes()))
+                (content != null && !content.equals(origin.getContent())) ||
+                (icon != null && !icon.equals(origin.getIcon())) ||
+                (attributes != null && !attributes.equals(origin.getAttributes()))
         );
     }
 

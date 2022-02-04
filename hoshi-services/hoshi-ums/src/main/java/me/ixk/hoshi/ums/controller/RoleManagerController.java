@@ -4,12 +4,8 @@
 
 package me.ixk.hoshi.ums.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.ums.entity.Role;
@@ -22,6 +18,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 /**
  * @author Otstar Lin
  * @date 2021/5/18 下午 9:21
@@ -29,12 +30,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin/roles")
 @RequiredArgsConstructor
-@Api(value = "角色管理控制器")
+@Tag(name = "角色管理控制器")
 public class RoleManagerController {
 
     private final RoleRepository roleRepository;
 
-    @ApiOperation("列出所有角色")
+    @Operation(summary = "列出所有角色")
     @GetMapping("")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ApiResult<?> list() {
@@ -47,7 +48,7 @@ public class RoleManagerController {
         );
     }
 
-    @ApiOperation("获取角色")
+    @Operation(summary = "获取角色")
     @GetMapping("/{roleName}")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
     public ApiResult<?> get(@PathVariable("roleName") final String roleName) {
@@ -58,26 +59,26 @@ public class RoleManagerController {
         return ApiResult.ok(role.get().toView(), "获取角色成功");
     }
 
-    @ApiOperation("添加角色")
+    @Operation(summary = "添加角色")
     @PostMapping("")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> add(@Valid @JsonModel final AddRoleView vo) {
         return ApiResult.ok(this.roleRepository.save(Role.ofAdd(vo)).toView(), "添加角色成功");
     }
 
-    @ApiOperation("更新角色")
+    @Operation(summary = "更新角色")
     @PutMapping("/{roleName}")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> update(@Valid @JsonModel final UpdateRoleView vo) {
         return ApiResult.ok(this.roleRepository.update(Role.ofUpdate(vo)).toView(), "更新角色成功");
     }
 
-    @ApiOperation("删除角色")
+    @Operation(summary = "删除角色")
     @DeleteMapping("/{roleName}")
     @PreAuthorize("hasAuthority('ROLE_MANAGER')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> remove(@PathVariable("roleName") final String roleName) {
         if (List.of("USER", "ADMIN").contains(roleName)) {
             return ApiResult.bindException("不能删除 USER, ADMIN 角色");

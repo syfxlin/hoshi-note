@@ -4,13 +4,13 @@
 
 package me.ixk.hoshi.note.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.util.Objects;
-import javax.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * 协作者
@@ -25,22 +25,22 @@ import org.hibernate.Hibernate;
 @Setter
 @ToString
 @Accessors(chain = true)
-@ApiModel("协作表")
-@Table(name = "collaborator", indexes = { @Index(name = "idx_collaborator_user", columnList = "user") })
+@Schema(name = "协作表")
+@Table(name = "collaborator", indexes = {@Index(name = "idx_collaborator_user", columnList = "user")})
 @Entity
 public class Collaborator {
 
     @Id
-    @ApiModelProperty("协作 ID")
+    @Schema(name = "协作 ID")
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ApiModelProperty("协作者 ID")
+    @Schema(name = "协作者 ID")
     @Column(name = "user")
     private Long user;
 
-    @ApiModelProperty("权限 ID")
+    @Schema(name = "权限 ID")
     @Enumerated(EnumType.STRING)
     @Column(name = "permission")
     private Permission permission;

@@ -4,11 +4,8 @@
 
 package me.ixk.hoshi.note.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.mysql.util.Jpa;
@@ -22,6 +19,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 /**
  * 工作区控制器
  *
@@ -30,14 +31,14 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@Api("工作区控制器")
+@Tag(name = "工作区控制器")
 @RequestMapping("/workspaces")
 public class WorkspaceController {
 
     private final WorkspaceRepository workspaceRepository;
 
     @GetMapping("")
-    @ApiOperation("获取工作区列表")
+    @Operation(summary = "获取工作区列表")
     @PreAuthorize("hasAuthority('WORKSPACE')")
     public ApiResult<?> list(@UserId final Long userId) {
         return ApiResult.ok(
@@ -47,9 +48,9 @@ public class WorkspaceController {
     }
 
     @PostMapping("")
-    @ApiOperation("添加工作区")
+    @Operation(summary = "添加工作区")
     @PreAuthorize("hasAuthority('WORKSPACE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> add(@UserId final Long userId, @JsonModel @Valid final AddWorkspaceView vo) {
         if (vo.getDomain() != null && workspaceRepository.findByDomain(vo.getDomain()).isPresent()) {
             return ApiResult.bindException("域名已经存在，请更换域名");
@@ -58,9 +59,9 @@ public class WorkspaceController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation("修改工作区")
+    @Operation(summary = "修改工作区")
     @PreAuthorize("hasAuthority('WORKSPACE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> update(@UserId final Long userId, @JsonModel @Valid final UpdateWorkspaceView vo) {
         Optional<Workspace> optional = workspaceRepository.findByIdAndUser(vo.getId(), userId);
         if (optional.isEmpty()) {
@@ -68,8 +69,8 @@ public class WorkspaceController {
         }
         if (
             vo.getDomain() != null &&
-            !vo.getDomain().equals(optional.get().getDomain()) &&
-            workspaceRepository.findByDomain(vo.getDomain()).isPresent()
+                !vo.getDomain().equals(optional.get().getDomain()) &&
+                workspaceRepository.findByDomain(vo.getDomain()).isPresent()
         ) {
             return ApiResult.bindException("域名已经存在，请更换域名");
         }
@@ -78,9 +79,9 @@ public class WorkspaceController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("删除工作区")
+    @Operation(summary = "删除工作区")
     @PreAuthorize("hasAuthority('WORKSPACE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> delete(@UserId final Long userId, @PathVariable("id") final String id) {
         Optional<Workspace> optional = workspaceRepository.findByIdAndUser(id, userId);
         if (optional.isEmpty()) {

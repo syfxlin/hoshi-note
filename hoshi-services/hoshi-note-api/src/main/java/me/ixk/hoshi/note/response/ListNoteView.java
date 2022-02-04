@@ -4,11 +4,11 @@
 
 package me.ixk.hoshi.note.response;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.OffsetDateTime;
 
 /**
  * @author Otstar Lin
@@ -16,36 +16,36 @@ import lombok.Data;
  */
 @Data
 @Builder
-@ApiModel("笔记")
+@Schema(name = "笔记")
 public class ListNoteView {
 
-    @ApiModelProperty("空间 ID")
+    @Schema(name = "空间 ID")
     private final String id;
 
-    @ApiModelProperty("父笔记")
+    @Schema(name = "父笔记")
     private final String parent;
 
-    @ApiModelProperty("空间")
+    @Schema(name = "空间")
     private final String workspace;
 
-    @ApiModelProperty("笔记名称")
+    @Schema(name = "笔记名称")
     private final String name;
 
-    @ApiModelProperty("笔记图标")
+    @Schema(name = "笔记图标")
     private final String icon;
 
-    @ApiModelProperty("笔记状态")
+    @Schema(name = "笔记状态")
     private final String status;
 
-    @ApiModelProperty("创建时间")
+    @Schema(name = "创建时间")
     private final OffsetDateTime createdTime;
 
-    @ApiModelProperty("修改时间")
+    @Schema(name = "修改时间")
     private final OffsetDateTime updatedTime;
 
-    @ApiModelProperty("分享")
+    @Schema(name = "分享")
     private final Boolean share;
 
-    @ApiModelProperty("面包屑")
+    @Schema(name = "面包屑")
     private final BreadcrumbView breadcrumb;
 }

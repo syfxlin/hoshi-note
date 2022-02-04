@@ -4,11 +4,11 @@
 
 package me.ixk.hoshi.note.response;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.OffsetDateTime;
 
 /**
  * @author Otstar Lin
@@ -16,30 +16,30 @@ import lombok.Data;
  */
 @Data
 @Builder
-@ApiModel("工作区")
+@Schema(name = "工作区")
 public class WorkspaceView {
 
-    @ApiModelProperty("空间 ID")
+    @Schema(name = "空间 ID")
     private final String id;
 
-    @ApiModelProperty("用户")
+    @Schema(name = "用户")
     private final Long user;
 
-    @ApiModelProperty("空间名称")
+    @Schema(name = "空间名称")
     private final String name;
 
-    @ApiModelProperty("空间描述")
+    @Schema(name = "空间描述")
     private final String description;
 
-    @ApiModelProperty("域名")
+    @Schema(name = "域名")
     private final String domain;
 
-    @ApiModelProperty("空间图标")
+    @Schema(name = "空间图标")
     private final String icon;
 
-    @ApiModelProperty("创建时间")
+    @Schema(name = "创建时间")
     private final OffsetDateTime createdTime;
 
-    @ApiModelProperty("是否公开")
+    @Schema(name = "是否公开")
     private final Boolean disclose;
 }

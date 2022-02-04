@@ -4,8 +4,7 @@
 
 package me.ixk.hoshi.ums.response;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,24 +14,24 @@ import lombok.Data;
  */
 @Data
 @Builder
-@ApiModel("用户信息")
+@Schema(name = "用户信息")
 public class UserInfoView {
 
-    @ApiModelProperty("用户头像的地址")
+    @Schema(name = "用户头像的地址")
     private final String avatar;
 
-    @ApiModelProperty("用户简介")
+    @Schema(name = "用户简介")
     private final String bio;
 
-    @ApiModelProperty("用户地址")
+    @Schema(name = "用户地址")
     private final String address;
 
-    @ApiModelProperty("用户链接")
+    @Schema(name = "用户链接")
     private final String url;
 
-    @ApiModelProperty("公司名称")
+    @Schema(name = "公司名称")
     private final String company;
 
-    @ApiModelProperty("用户状态")
+    @Schema(name = "用户状态")
     private final String status;
 }

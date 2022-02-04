@@ -1,7 +1,6 @@
 package me.ixk.hoshi.mail.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,24 +20,24 @@ import org.springframework.data.redis.core.index.Indexed;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("验证码")
+@Schema(name = "验证码")
 @RedisHash("hoshi:mail:verify-code")
 public class VerifyCode {
 
-    @ApiModelProperty("主题区分")
+    @Schema(name = "主题区分")
     @Indexed
     private String hash;
 
-    @ApiModelProperty("验证码")
+    @Schema(name = "验证码")
     @Id
     @Indexed
     private String code;
 
-    @ApiModelProperty("邮箱")
+    @Schema(name = "邮箱")
     @Indexed
     private String email;
 
-    @ApiModelProperty("过期时间")
+    @Schema(name = "过期时间")
     @TimeToLive
     private Long timeout;
 }

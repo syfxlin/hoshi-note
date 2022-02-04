@@ -38,5 +38,5 @@ spec:
   ports:
     - name: hoshi-gateway
       port: 7000
-      nodePort: 37000
+      nodePort: 30000
   type: NodePort

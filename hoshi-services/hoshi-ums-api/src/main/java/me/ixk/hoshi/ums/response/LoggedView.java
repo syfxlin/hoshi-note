@@ -4,11 +4,11 @@
 
 package me.ixk.hoshi.ums.response;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.OffsetDateTime;
 
 /**
  * @author Otstar Lin
@@ -16,24 +16,24 @@ import lombok.Data;
  */
 @Data
 @Builder
-@ApiModel("已登录用户信息")
+@Schema(name = "已登录用户信息")
 public class LoggedView {
 
-    @ApiModelProperty("Session ID")
+    @Schema(name = "Session ID")
     private final String sessionId;
 
-    @ApiModelProperty("用户地址（IP）")
+    @Schema(name = "用户地址（IP）")
     private final String address;
 
-    @ApiModelProperty("UA 信息")
+    @Schema(name = "UA 信息")
     private final String userAgent;
 
-    @ApiModelProperty("登录时间")
+    @Schema(name = "登录时间")
     private final OffsetDateTime creationTime;
 
-    @ApiModelProperty("最后访问时间")
+    @Schema(name = "最后访问时间")
     private final OffsetDateTime lastAccessedTime;
 
-    @ApiModelProperty("是否是当前访问的设备")
+    @Schema(name = "是否是当前访问的设备")
     private final Boolean current;
 }

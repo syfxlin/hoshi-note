@@ -4,12 +4,12 @@
 
 package me.ixk.hoshi.ums.response;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
-import java.util.Set;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.OffsetDateTime;
+import java.util.Set;
 
 /**
  * @author Otstar Lin
@@ -17,36 +17,36 @@ import lombok.Data;
  */
 @Data
 @Builder
-@ApiModel("用户")
+@Schema(name = "用户")
 public class UserView {
 
-    @ApiModelProperty("用户 ID")
+    @Schema(name = "用户 ID")
     private final Long id;
 
-    @ApiModelProperty("用户名")
+    @Schema(name = "用户名")
     private final String username;
 
-    @ApiModelProperty("昵称")
+    @Schema(name = "昵称")
     private final String nickname;
 
-    @ApiModelProperty("邮箱")
+    @Schema(name = "邮箱")
     private final String email;
 
-    @ApiModelProperty("用户状态")
+    @Schema(name = "用户状态")
     private final Boolean status;
 
-    @ApiModelProperty("创建时间")
+    @Schema(name = "创建时间")
     private final OffsetDateTime createdTime;
 
-    @ApiModelProperty("用户角色列表")
+    @Schema(name = "用户角色列表")
     private final Set<RoleView> roles;
 
-    @ApiModelProperty("用户信息")
+    @Schema(name = "用户信息")
     private final UserInfoView info;
 
-    @ApiModelProperty("用户关注了数量")
+    @Schema(name = "用户关注了数量")
     private final Integer followingCount;
 
-    @ApiModelProperty("用户关注者数量")
+    @Schema(name = "用户关注者数量")
     private final Integer followersCount;
 }

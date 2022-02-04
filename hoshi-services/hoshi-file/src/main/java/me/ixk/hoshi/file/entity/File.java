@@ -4,14 +4,14 @@
 
 package me.ixk.hoshi.file.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
-import javax.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.file.request.UpdateFile;
 import me.ixk.hoshi.file.response.FileView;
+
+import javax.persistence.*;
+import java.time.OffsetDateTime;
 
 /**
  * 文件
@@ -26,7 +26,7 @@ import me.ixk.hoshi.file.response.FileView;
 @Setter
 @ToString
 @Accessors(chain = true)
-@ApiModel("用户表")
+@Schema(name = "用户表")
 @Entity
 @Table(
     name = "file",
@@ -41,35 +41,35 @@ public class File {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ApiModelProperty("文件 ID")
+    @Schema(name = "文件 ID")
     private Long id;
 
     @Column(name = "user_id", nullable = false)
-    @ApiModelProperty("用户 ID")
+    @Schema(name = "用户 ID")
     private Long user;
 
     @Column(name = "disk", nullable = false, unique = true)
-    @ApiModelProperty("存储文件名")
+    @Schema(name = "存储文件名")
     private String disk;
 
     @Column(name = "name", nullable = false)
-    @ApiModelProperty("文件名称")
+    @Schema(name = "文件名称")
     private String name;
 
     @Column(name = "description", columnDefinition = "TEXT")
-    @ApiModelProperty("文件描述")
+    @Schema(name = "文件描述")
     private String description;
 
     @Column(name = "size", nullable = false)
-    @ApiModelProperty("文件大小")
+    @Schema(name = "文件大小")
     private Long size;
 
     @Column(name = "content_type")
-    @ApiModelProperty("文件类型")
+    @Schema(name = "文件类型")
     private String contentType;
 
     @Column(name = "uploaded_time", nullable = false)
-    @ApiModelProperty("上传时间")
+    @Schema(name = "上传时间")
     private OffsetDateTime uploadedTime;
 
     public static File ofUpdate(final UpdateFile file) {

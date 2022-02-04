@@ -2,11 +2,11 @@ package me.ixk.hoshi.ums.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.util.List;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author Otstar Lin
@@ -14,14 +14,14 @@ import lombok.Data;
  */
 @Data
 @Builder
-@ApiModel("Token 登录响应")
+@Schema(name = "Token 登录响应")
 public class TokenLoginView {
 
-    @ApiModelProperty("是否登录成功")
+    @Schema(name = "是否登录成功")
     private final boolean success;
 
     @JsonInclude(Include.NON_NULL)
-    @ApiModelProperty("用户描述信息")
+    @Schema(name = "用户描述信息")
     private final Details details;
 
     @Data

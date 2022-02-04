@@ -6,12 +6,8 @@ package me.ixk.hoshi.file.controller;
 
 import cn.hutool.core.io.file.FileNameUtil;
 import io.minio.GetObjectResponse;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.time.OffsetDateTime;
-import java.util.Optional;
-import java.util.UUID;
-import javax.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.ixk.hoshi.common.result.ApiResult;
@@ -34,6 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import java.time.OffsetDateTime;
+import java.util.Optional;
+import java.util.UUID;
+
 /**
  * 文件控制器
  *
@@ -42,7 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequiredArgsConstructor
-@Api("文件控制器")
+@Tag(name = "文件控制器")
 @RequestMapping("/files")
 @Slf4j
 public class FileController {
@@ -50,7 +51,7 @@ public class FileController {
     private final FileRepository fileRepository;
     private final MinioService minioService;
 
-    @ApiOperation("列出文件")
+    @Operation(summary = "列出文件")
     @GetMapping("")
     @PreAuthorize("hasAuthority('FILE')")
     public ApiResult<?> list(
@@ -62,19 +63,19 @@ public class FileController {
             search == null
                 ? cb.equal(root.get("user"), userId)
                 : cb.and(
-                    cb.equal(root.get("user"), userId),
-                    cb.or(
-                        cb.like(root.get("name"), String.format("%%%s%%", search)),
-                        cb.like(root.get("description"), String.format("%%%s%%", search))
-                    )
-                );
+                cb.equal(root.get("user"), userId),
+                cb.or(
+                    cb.like(root.get("name"), String.format("%%%s%%", search)),
+                    cb.like(root.get("description"), String.format("%%%s%%", search))
+                )
+            );
         return ApiResult.page(fileRepository.findAll(specification, page).map(File::toView), "获取文件列表成功");
     }
 
-    @ApiOperation("上传文件")
+    @Operation(summary = "上传文件")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('FILE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> upload(@UserId final Long userId, @RequestParam("file") final MultipartFile file) {
         final String filename = UUID.randomUUID().toString();
         final String extname = FileNameUtil.extName(file.getOriginalFilename());
@@ -99,10 +100,10 @@ public class FileController {
         }
     }
 
-    @ApiOperation("修改文件信息")
+    @Operation(summary = "修改文件信息")
     @PutMapping("/{fileId:\\d+}")
     @PreAuthorize("hasAuthority('FILE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> update(@UserId final Long userId, @JsonModel @Valid final UpdateFile file) {
         final Optional<File> optionalFile = fileRepository.findByUserAndId(userId, file.getFileId());
         if (optionalFile.isEmpty()) {
@@ -114,7 +115,7 @@ public class FileController {
         );
     }
 
-    @ApiOperation("查看文件")
+    @Operation(summary = "查看文件")
     @GetMapping("/{userId:\\d+}/{disk}")
     public ResponseEntity<?> get(@PathVariable("userId") final Long userId, @PathVariable("disk") final String disk) {
         final Optional<File> optionalFile = fileRepository.findByUserAndDisk(userId, disk);
@@ -137,7 +138,7 @@ public class FileController {
         }
     }
 
-    @ApiOperation("下载文件")
+    @Operation(summary = "下载文件")
     @GetMapping("/{userId:\\d+}/{disk}/download")
     public ResponseEntity<?> download(
         @PathVariable("userId") final Long userId,
@@ -163,10 +164,10 @@ public class FileController {
         }
     }
 
-    @ApiOperation("删除文件")
+    @Operation(summary = "删除文件")
     @DeleteMapping("/{id:\\d+}")
     @PreAuthorize("hasAuthority('FILE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> delete(@UserId final Long userId, @PathVariable("id") final Long id) {
         final Optional<File> optionalFile = fileRepository.findByUserAndId(userId, id);
         if (optionalFile.isEmpty()) {

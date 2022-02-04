@@ -5,15 +5,7 @@
 package me.ixk.hoshi.note.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
-import java.util.LinkedList;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.persistence.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import me.ixk.hoshi.mysql.generator.ObjectIdGenerator;
@@ -25,6 +17,14 @@ import me.ixk.hoshi.note.response.ListNoteView;
 import me.ixk.hoshi.note.response.NoteView;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.time.OffsetDateTime;
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 笔记
@@ -39,7 +39,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Setter
 @ToString
 @Accessors(chain = true)
-@ApiModel("笔记表")
+@Schema(name = "笔记表")
 @Table(
     name = "note",
     indexes = {
@@ -50,7 +50,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class Note {
 
     @Id
-    @ApiModelProperty("空间 ID")
+    @Schema(name = "空间 ID")
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(generator = "objectId")
     @GenericGenerator(name = "objectId", strategy = ObjectIdGenerator.STRATEGY_NAME)
@@ -58,58 +58,58 @@ public class Note {
 
     @JsonBackReference
     @ToString.Exclude
-    @ApiModelProperty("父笔记")
+    @Schema(name = "父笔记")
     @ManyToOne
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private Note parent;
 
     @JsonBackReference
     @ToString.Exclude
-    @ApiModelProperty("子笔记")
+    @Schema(name = "子笔记")
     @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
     private Set<Note> children;
 
     @JsonBackReference
     @ToString.Exclude
-    @ApiModelProperty("空间")
+    @Schema(name = "空间")
     @ManyToOne
     @JoinColumn(name = "workspace_id", referencedColumnName = "id", nullable = false)
     private Workspace workspace;
 
-    @ApiModelProperty("笔记名称")
+    @Schema(name = "笔记名称")
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ApiModelProperty("笔记内容")
+    @Schema(name = "笔记内容")
     @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
 
-    @ApiModelProperty("笔记图标")
+    @Schema(name = "笔记图标")
     @Column(name = "icon")
     private String icon;
 
-    @ApiModelProperty("属性")
+    @Schema(name = "属性")
     @Column(name = "attributes", columnDefinition = "TEXT")
     private String attributes;
 
-    @ApiModelProperty("笔记版本号")
+    @Schema(name = "笔记版本号")
     @Column(name = "version", nullable = false)
     private Long version;
 
-    @ApiModelProperty("笔记状态")
+    @Schema(name = "笔记状态")
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
 
-    @ApiModelProperty("创建时间")
+    @Schema(name = "创建时间")
     @Column(name = "created_time", nullable = false)
     private OffsetDateTime createdTime;
 
-    @ApiModelProperty("修改时间")
+    @Schema(name = "修改时间")
     @Column(name = "updated_time", nullable = false)
     private OffsetDateTime updatedTime;
 
-    @ApiModelProperty("分享")
+    @Schema(name = "分享")
     @Column(name = "share", nullable = false)
     private Boolean share;
 

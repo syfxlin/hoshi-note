@@ -6,10 +6,8 @@ package me.ixk.hoshi.file.controller;
 
 import cn.hutool.core.net.url.UrlBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.io.IOException;
-import java.util.Objects;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.file.properties.PexelsProperties;
@@ -23,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import java.io.IOException;
+import java.util.Objects;
+
 /**
  * Pexels 图片
  *
@@ -31,14 +32,14 @@ import org.springframework.web.context.request.async.DeferredResult;
  */
 @RestController
 @RequiredArgsConstructor
-@Api("Pexels 控制器")
+@Tag(name = "Pexels 控制器")
 @RequestMapping("/pexels")
 public class PexelsController {
 
     private final OkHttpClient client;
     private final PexelsProperties properties;
 
-    @ApiOperation("精选图片")
+    @Operation(summary = "精选图片")
     @GetMapping("/curated")
     @PreAuthorize("hasAuthority('PEXELS')")
     public DeferredResult<ApiResult<?>> curated(
@@ -76,7 +77,7 @@ public class PexelsController {
         return output;
     }
 
-    @ApiOperation("搜索图片")
+    @Operation(summary = "搜索图片")
     @GetMapping("/search")
     @PreAuthorize("hasAuthority('PEXELS')")
     public DeferredResult<ApiResult<?>> curated(

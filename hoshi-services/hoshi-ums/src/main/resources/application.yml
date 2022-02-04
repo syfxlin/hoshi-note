@@ -19,13 +19,26 @@ spring:
     port: ${REDIS_PORT}
     database: ${REDIS_DATABASE}
     password: ${REDIS_PASSWORD}
+  rabbitmq:
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
   servlet:
     multipart:
       enabled: true
-      max-file-size: ${SPRING_MAX_FILE_SIZE:20MB}
-      max-request-size: ${SPRING_MAX_FILE_SIZE:20MB}
+      max-file-size: ${MAX_FILE_SIZE:20MB}
+      max-request-size: ${MAX_FILE_SIZE:20MB}
 management:
+  security:
+    username: ${ACTUATOR_USERNAME}
+    password: ${ACTUATOR_PASSWORD}
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: info,health,prometheus,metrics
+springdoc:
+  swagger-ui:
+    path: /actuator/swagger-ui.html
+  api-docs:
+    path: /actuator/openapi

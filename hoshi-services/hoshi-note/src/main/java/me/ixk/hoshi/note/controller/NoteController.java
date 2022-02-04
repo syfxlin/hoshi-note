@@ -5,13 +5,8 @@
 package me.ixk.hoshi.note.controller;
 
 import cn.hutool.core.util.EnumUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.persistence.criteria.Predicate;
-import javax.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.mysql.util.Jpa;
@@ -31,6 +26,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.Predicate;
+import javax.validation.Valid;
+import java.time.OffsetDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * 笔记控制器
  *
@@ -39,7 +40,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@Api("笔记控制器")
+@Tag(name = "笔记控制器")
 @RequestMapping("/notes")
 public class NoteController {
 
@@ -47,8 +48,8 @@ public class NoteController {
     private final NoteRepository noteRepository;
     private final NoteHistoryRepository noteHistoryRepository;
 
-    @GetMapping(value = { "/tree/{workspaceId}", "/tree/{workspaceId}/{parentId}" })
-    @ApiOperation("获取笔记树")
+    @GetMapping(value = {"/tree/{workspaceId}", "/tree/{workspaceId}/{parentId}"})
+    @Operation(summary = "获取笔记树")
     @PreAuthorize("hasAuthority('NOTE')")
     public ApiResult<?> list(
         @UserId final Long userId,
@@ -73,7 +74,7 @@ public class NoteController {
     }
 
     @GetMapping("/search")
-    @ApiOperation("搜索")
+    @Operation(summary = "搜索")
     @PreAuthorize("hasAuthority('NOTE')")
     public ApiResult<?> search(
         @UserId final Long userId,
@@ -95,10 +96,10 @@ public class NoteController {
             Predicate predicate = onlyName
                 ? cb.like(root.get("name"), String.format("%%%s%%", search))
                 : cb.or(
-                    cb.like(root.get("name"), String.format("%%%s%%", search)),
-                    cb.like(root.get("content"), String.format("%%%s%%", search)),
-                    cb.like(root.get("attributes"), String.format("%%%s%%", search))
-                );
+                cb.like(root.get("name"), String.format("%%%s%%", search)),
+                cb.like(root.get("content"), String.format("%%%s%%", search)),
+                cb.like(root.get("attributes"), String.format("%%%s%%", search))
+            );
             // workspace filter
             final String fw = filterMap.get("workspace");
             if (fw == null) {
@@ -139,7 +140,7 @@ public class NoteController {
     }
 
     @GetMapping("/list/{workspaceId}")
-    @ApiOperation("获取工作区笔记列表")
+    @Operation(summary = "获取工作区笔记列表")
     @PreAuthorize("hasAuthority('NOTE')")
     public ApiResult<?> list(
         @UserId final Long userId,
@@ -178,7 +179,7 @@ public class NoteController {
     }
 
     @GetMapping("/archived")
-    @ApiOperation("获取归档笔记列表")
+    @Operation(summary = "获取归档笔记列表")
     @PreAuthorize("hasAuthority('NOTE')")
     public ApiResult<?> archived(
         @UserId final Long userId,
@@ -213,7 +214,7 @@ public class NoteController {
     }
 
     @GetMapping("/deleted")
-    @ApiOperation("获取已删除笔记列表")
+    @Operation(summary = "获取已删除笔记列表")
     @PreAuthorize("hasAuthority('NOTE')")
     public ApiResult<?> deleted(
         @UserId final Long userId,
@@ -247,10 +248,10 @@ public class NoteController {
         );
     }
 
-    @PostMapping(value = { "/{workspaceId}", "/{workspaceId}/{parentId}" })
-    @ApiOperation("添加笔记")
+    @PostMapping(value = {"/{workspaceId}", "/{workspaceId}/{parentId}"})
+    @Operation(summary = "添加笔记")
     @PreAuthorize("hasAuthority('NOTE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> add(@UserId final Long userId, @JsonModel @Valid final AddNoteView vo) {
         final Optional<Workspace> workspace = workspaceRepository.findByIdAndUser(vo.getWorkspaceId(), userId);
         if (workspace.isEmpty()) {
@@ -267,7 +268,7 @@ public class NoteController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation("获取笔记")
+    @Operation(summary = "获取笔记")
     @PreAuthorize("hasAuthority('NOTE')")
     public ApiResult<?> get(@UserId final Long userId, @PathVariable("id") final String id) {
         final Optional<Note> note = noteRepository.findById(id);
@@ -278,9 +279,9 @@ public class NoteController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation("修改笔记")
+    @Operation(summary = "修改笔记")
     @PreAuthorize("hasAuthority('NOTE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> update(@UserId final Long userId, @JsonModel @Valid final UpdateNoteView vo) {
         final Optional<Note> note = noteRepository.findById(vo.getId());
         if (note.isEmpty() || !userId.equals(note.get().getWorkspace().getUser())) {
@@ -327,9 +328,9 @@ public class NoteController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("删除笔记")
+    @Operation(summary = "删除笔记")
     @PreAuthorize("hasAuthority('NOTE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> delete(@UserId final Long userId, @PathVariable("id") final String id) {
         final Optional<Note> optional = noteRepository.findById(id);
         if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {
@@ -344,9 +345,9 @@ public class NoteController {
     }
 
     @DeleteMapping("/{id}/archive")
-    @ApiOperation("归档笔记")
+    @Operation(summary = "归档笔记")
     @PreAuthorize("hasAuthority('NOTE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> archive(@UserId final Long userId, @PathVariable("id") final String id) {
         final Optional<Note> optional = noteRepository.findById(id);
         if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {
@@ -361,9 +362,9 @@ public class NoteController {
     }
 
     @PutMapping("/{id}/restore")
-    @ApiOperation("还原笔记")
+    @Operation(summary = "还原笔记")
     @PreAuthorize("hasAuthority('NOTE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> restore(@UserId final Long userId, @PathVariable("id") final String id) {
         final Optional<Note> optional = noteRepository.findById(id);
         if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {
@@ -383,9 +384,9 @@ public class NoteController {
     }
 
     @DeleteMapping("/{id}/force")
-    @ApiOperation("删除笔记（物理删除）")
+    @Operation(summary = "删除笔记（物理删除）")
     @PreAuthorize("hasAuthority('NOTE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> deleteForce(@UserId final Long userId, @PathVariable("id") final String id) {
         final Optional<Note> note = noteRepository.findById(id);
         if (note.isEmpty() || !userId.equals(note.get().getWorkspace().getUser())) {
@@ -396,9 +397,9 @@ public class NoteController {
     }
 
     @PutMapping("/{id}/share")
-    @ApiOperation("分享笔记")
+    @Operation(summary = "分享笔记")
     @PreAuthorize("hasAuthority('NOTE')")
-    @Transactional(rollbackFor = { Exception.class, Error.class })
+    @Transactional(rollbackFor = {Exception.class, Error.class})
     public ApiResult<?> share(@UserId final Long userId, @PathVariable("id") final String id) {
         final Optional<Note> optional = noteRepository.findById(id);
         if (optional.isEmpty() || !userId.equals(optional.get().getWorkspace().getUser())) {

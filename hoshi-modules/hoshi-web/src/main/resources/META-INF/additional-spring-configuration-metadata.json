@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "management.security.username",
+      "type": "java.lang.String",
+      "description": "配置管理端点用户名."
+    },
+    {
+      "name": "management.security.password",
+      "type": "java.lang.String",
+      "description": "配置管理端点密码."
+    }
+  ]
+}

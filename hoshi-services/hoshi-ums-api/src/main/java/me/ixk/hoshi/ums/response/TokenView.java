@@ -4,8 +4,7 @@
 
 package me.ixk.hoshi.ums.response;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,15 +14,15 @@ import lombok.Data;
  */
 @Data
 @Builder
-@ApiModel("令牌")
+@Schema(name = "令牌")
 public class TokenView {
 
-    @ApiModelProperty("Token ID")
+    @Schema(name = "Token ID")
     private final Long id;
 
-    @ApiModelProperty("Token")
+    @Schema(name = "Token")
     private final String token;
 
-    @ApiModelProperty("名称")
+    @Schema(name = "名称")
     private final String name;
 }

@@ -1,10 +1,10 @@
 package me.ixk.hoshi.mail.view;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
+
 import java.io.Serializable;
 import java.util.List;
-import lombok.*;
 
 /**
  * 验证码邮件
@@ -16,28 +16,28 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("验证码邮件")
+@Schema(name = "验证码邮件")
 public class CodeMail implements Serializable {
 
-    @ApiModelProperty("回复邮箱")
+    @Schema(name = "回复邮箱")
     private String replyTo;
 
-    @ApiModelProperty("发到")
+    @Schema(name = "发到")
     @Singular("to")
     private List<String> to;
 
-    @ApiModelProperty("抄送")
+    @Schema(name = "抄送")
     @Singular("cc")
     private List<String> cc;
 
-    @ApiModelProperty("密送")
+    @Schema(name = "密送")
     @Singular("bcc")
     private List<String> bcc;
 
-    @ApiModelProperty("主题")
+    @Schema(name = "主题")
     private String subject;
 
-    @ApiModelProperty("验证码")
+    @Schema(name = "验证码")
     private String code;
 
     public Mail toMail(final String content) {

@@ -4,12 +4,8 @@
 
 package me.ixk.hoshi.note.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import javax.persistence.criteria.Predicate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
 import me.ixk.hoshi.note.entity.Note;
@@ -20,6 +16,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.Predicate;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * 分享控制器
  *
@@ -28,14 +29,14 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@Api("分享控制器")
+@Tag(name = "分享控制器")
 @RequestMapping("/shares")
 public class ShareController {
 
     private final WorkspaceRepository workspaceRepository;
     private final NoteRepository noteRepository;
 
-    @ApiOperation("获取已分享的笔记列表")
+    @Operation(summary = "获取已分享的笔记列表")
     @GetMapping("/list/{userId:\\d+}")
     public ApiResult<?> list(
         @PathVariable("userId") final Long userId,
@@ -71,7 +72,7 @@ public class ShareController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation("获取已分享笔记")
+    @Operation(summary = "获取已分享笔记")
     public ApiResult<?> get(@PathVariable("id") final String id) {
         final Optional<Note> note = noteRepository.findByIdAndShareIsTrue(id);
         if (note.isEmpty()) {
@@ -81,7 +82,7 @@ public class ShareController {
     }
 
     @GetMapping("/{id}/children")
-    @ApiOperation("获取已分享笔记的子笔记")
+    @Operation(summary = "获取已分享笔记的子笔记")
     public ApiResult<?> children(@PathVariable("id") final String id) {
         final Optional<Note> note = noteRepository.findByIdAndShareIsTrue(id);
         if (note.isEmpty()) {

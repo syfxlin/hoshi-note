@@ -4,14 +4,14 @@
 
 package me.ixk.hoshi.note.request;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @author Otstar Lin
@@ -21,37 +21,37 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ApiModel("修改笔记")
+@Schema(name = "修改笔记")
 public class UpdateNoteView {
 
     @NotNull(message = "修改笔记的时候必须设置笔记 ID")
-    @ApiModelProperty("笔记 ID")
+    @Schema(name = "笔记 ID")
     private String id;
 
-    @ApiModelProperty("父笔记 ID")
+    @Schema(name = "父笔记 ID")
     private String parent;
 
-    @ApiModelProperty("工作区 ID")
+    @Schema(name = "工作区 ID")
     private String workspace;
 
-    @ApiModelProperty("笔记状态")
+    @Schema(name = "笔记状态")
     private String status;
 
-    @ApiModelProperty("分享")
+    @Schema(name = "分享")
     private Boolean share;
 
     // ==== 以下四项修改会生成历史记录
 
     @Size(min = 1, max = 255, message = "笔记名称的长度应在（1-255）之间")
-    @ApiModelProperty("笔记名称")
+    @Schema(name = "笔记名称")
     private String name;
 
-    @ApiModelProperty("笔记类型")
+    @Schema(name = "笔记类型")
     private String content;
 
-    @ApiModelProperty("笔记图标")
+    @Schema(name = "笔记图标")
     private String icon;
 
-    @ApiModelProperty("属性")
+    @Schema(name = "属性")
     private String attributes;
 }

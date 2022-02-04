@@ -6,14 +6,14 @@ package me.ixk.hoshi.common.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.OffsetDateTime;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.util.Assert;
+
+import java.time.OffsetDateTime;
 
 /**
  * 统一响应实体
@@ -25,23 +25,23 @@ import org.springframework.util.Assert;
  */
 @Data
 @NoArgsConstructor
-@ApiModel("统一响应实体")
+@Schema(name = "统一响应实体")
 public class ApiEntity<T> {
 
-    @ApiModelProperty("响应码（与 Http 的响应码相同）")
+    @Schema(name = "响应码（与 Http 的响应码相同）")
     private Integer status;
 
-    @ApiModelProperty("响应信息（用于描述操作的成功信息或失败原因）")
+    @Schema(name = "响应信息（用于描述操作的成功信息或失败原因）")
     private String message;
 
-    @ApiModelProperty("时间（ISO 8601）")
+    @Schema(name = "时间（ISO 8601）")
     private OffsetDateTime timestamp;
 
-    @ApiModelProperty("实际的响应数据")
+    @Schema(name = "实际的响应数据")
     @JsonInclude(Include.NON_NULL)
     private T data;
 
-    @ApiModelProperty("响应码对应的信息")
+    @Schema(name = "响应码对应的信息")
     private String reason;
 
     public ApiEntity(@NotNull final Integer status, @NotNull final String message, @Nullable final T data) {

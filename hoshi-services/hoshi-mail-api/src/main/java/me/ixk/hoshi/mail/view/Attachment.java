@@ -1,13 +1,13 @@
 package me.ixk.hoshi.mail.view;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.io.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.core.io.InputStreamSource;
+
+import java.io.*;
 
 /**
  * 附件
@@ -19,21 +19,21 @@ import org.springframework.core.io.InputStreamSource;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("附件")
+@Schema(name = "附件")
 public class Attachment implements Serializable {
 
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
-    @ApiModelProperty("附件名称")
+    @Schema(name = "附件名称")
     private String name;
 
-    @ApiModelProperty("是否嵌入")
+    @Schema(name = "是否嵌入")
     private boolean inline;
 
-    @ApiModelProperty("内容类型")
+    @Schema(name = "内容类型")
     private String contentType;
 
-    @ApiModelProperty("内容")
+    @Schema(name = "内容")
     private InputStreamSource source;
 
     @Serial
@@ -46,9 +46,9 @@ public class Attachment implements Serializable {
         stream.read(bytes);
         final ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         this.setSource(() -> {
-                inputStream.reset();
-                return inputStream;
-            });
+            inputStream.reset();
+            return inputStream;
+        });
     }
 
     @Serial
