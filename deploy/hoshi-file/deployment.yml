@@ -24,16 +24,6 @@ spec:
             - -jar
             - /app/hoshi-file-1.0-SNAPSHOT.jar
           env:
-            - name: SPRING_REGISTRY_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: hoshi-file
-                  key: spring-registry-password
-            - name: SPRING_CONFIG_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: hoshi-file
-                  key: spring-config-password
             - name: MYSQL_URL
               valueFrom:
                 secretKeyRef:
@@ -92,6 +82,7 @@ spec:
           ports:
             - name: hoshi-file
               containerPort: 8002
+              # TODO: 开发环境使用
               hostPort: 8002
       restartPolicy: Always
 ---
