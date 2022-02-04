@@ -1,18 +1,36 @@
+server:
+  port: ${PORT:8000}
 spring:
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    database: ${REDIS_DATABASE}
+    password: ${REDIS_PASSWORD}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: ${SPRING_MAX_FILE_SIZE:20MB}
+      max-request-size: ${SPRING_MAX_FILE_SIZE:20MB}
   mail:
-    host: smtp.zoho.com.cn
-    port: 587
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
     protocol: smtp
-    username: no-reply@ixk.me
-    password: ***REMOVED***
+    from: ${MAIL_FROM}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
-      mail.tls: true
-      mail.smtp.starttls.enable: true
+      mail.tls: ${MAIL_TLS}
+      mail.smtp.starttls.enable: ${MAIL_STARTTLS}
   rabbitmq:
-    username: guest
-    password: guest
-    host: localhost
-    port: 5672
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
   output:
     ansi:
       enabled: always
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

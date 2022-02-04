@@ -7,4 +7,4 @@ spring:
   cloud:
     kubernetes:
       client:
-        namespace: default
+        namespace: ${KUBERNETES_NAMESPACE:default}

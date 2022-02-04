@@ -2,11 +2,6 @@ package me.ixk.hoshi.mail.service;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.mail.exception.SendException;
 import me.ixk.hoshi.mail.view.Attachment;
@@ -18,6 +13,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 邮箱服务
@@ -32,7 +33,7 @@ public class MailService {
     private final JavaMailSender mailSender;
     private final Configuration configuration;
 
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.from}")
     private String from;
 
     public void send(final Mail mail) {

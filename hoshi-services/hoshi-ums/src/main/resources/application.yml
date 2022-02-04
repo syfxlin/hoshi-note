@@ -1,8 +1,10 @@
+server:
+  port: ${PORT:8000}
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/hoshi_note?serverTimezone=GMT%2B8
-    username: root
-    password: 123456
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -12,3 +14,18 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
     show-sql: true
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    database: ${REDIS_DATABASE}
+    password: ${REDIS_PASSWORD}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: ${SPRING_MAX_FILE_SIZE:20MB}
+      max-request-size: ${SPRING_MAX_FILE_SIZE:20MB}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

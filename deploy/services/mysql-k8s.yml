@@ -23,8 +23,8 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
-                  key: mysql-root-password
+                  name: hoshi-services
+                  key: MYSQL_PASSWORD
           ports:
             - name: mysql
               containerPort: 3306

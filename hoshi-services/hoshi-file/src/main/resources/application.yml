@@ -1,5 +1,5 @@
 server:
-  port: 8002
+  port: ${PORT:8000}
 spring:
   datasource:
     url: ${MYSQL_URL}
@@ -17,12 +17,13 @@ spring:
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
+    database: ${REDIS_DATABASE}
     password: ${REDIS_PASSWORD}
   servlet:
     multipart:
       enabled: true
-      max-file-size: 20MB
-      max-request-size: 20MB
+      max-file-size: ${SPRING_MAX_FILE_SIZE:20MB}
+      max-request-size: ${SPRING_MAX_FILE_SIZE:20MB}
 minio:
   url: ${MINIO_URL}
   bucket: ${MINIO_BUCKET}

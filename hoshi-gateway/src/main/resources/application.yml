@@ -1,5 +1,5 @@
 server:
-  port: 7000
+  port: ${PORT:7000}
 spring:
   cloud:
     gateway:
@@ -39,7 +39,7 @@ resilience4j:
   timelimiter:
     configs:
       default:
-        timeoutDuration: 3s
+        timeoutDuration: 5s
 management:
   endpoints:
     web:

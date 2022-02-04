@@ -26,8 +26,6 @@ spec:
           ports:
             - name: hoshi-gateway
               containerPort: 7000
-              # TODO: 开发环境使用
-              hostPort: 7000
       restartPolicy: Always
 ---
 apiVersion: v1
@@ -40,4 +38,5 @@ spec:
   ports:
     - name: hoshi-gateway
       port: 7000
-  type: ClusterIP
+      nodePort: 37000
+  type: NodePort

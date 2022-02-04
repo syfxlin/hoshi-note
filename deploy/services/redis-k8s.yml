@@ -27,8 +27,8 @@ spec:
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: redis-secret
-                  key: redis-password
+                  name: hoshi-services
+                  key: REDIS_PASSWORD
           ports:
             - name: redis
               containerPort: 6379

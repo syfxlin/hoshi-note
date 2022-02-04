@@ -29,13 +29,13 @@ spec:
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: minio-secret
-                  key: access-key
+                  name: hoshi-services
+                  key: MINIO_ACCESS_KEY
             - name: MINIO_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: minio-secret
-                  key: secret-key
+                  name: hoshi-services
+                  key: MINIO_SECRET_KEY
           ports:
             - name: minio
               containerPort: 9000
