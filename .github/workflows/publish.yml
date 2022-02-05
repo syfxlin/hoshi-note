@@ -1,27 +1,13 @@
 name: Publish Hoshi-Note
 on:
   workflow_dispatch:
-    inputs:
-      service:
-        description: "Publish service name"
-        type: choice
-        required: true
-        options:
-          - hoshi-gateway
-          - hoshi-file
-          - hoshi-mail
-          - hoshi-note
-          - hoshi-ums
 jobs:
-  publish-docker:
-    name: Publish image
+  publish-images:
+    name: Publish images
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Prepare
-        run: |
-          cp deploy/${{ github.event.inputs.service }}/Dockerfile .
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
         with:
@@ -38,7 +24,7 @@ jobs:
         with:
           images: ghcr.io/syfxlin/hoshi-note
           tags: |
-            type=raw,value=${{ github.event.inputs.service }}
+            type=raw,value=latest
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:

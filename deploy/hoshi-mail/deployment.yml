@@ -24,7 +24,7 @@ spec:
       serviceAccountName: hoshi-note
       containers:
         - name: hoshi-mail
-          image: ghcr.io/syfxlin/hoshi-note:hoshi-mail
+          image: ghcr.io/syfxlin/hoshi-note:latest
           imagePullPolicy: IfNotPresent
           command:
             - java

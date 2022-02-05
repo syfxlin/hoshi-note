@@ -23,7 +23,7 @@ spec:
       serviceAccountName: hoshi-note
       containers:
         - name: hoshi-file
-          image: ghcr.io/syfxlin/hoshi-note:hoshi-file
+          image: ghcr.io/syfxlin/hoshi-note:latest
           imagePullPolicy: IfNotPresent
           command:
             - java
