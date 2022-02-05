@@ -1,4 +1,0 @@
-- install helm
-- helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-- 安装：helm install -n hoshi-note prometheus prometheus-community/prometheus -f values.yml
-- 卸载：helm uninstall -n hoshi-note prometheus

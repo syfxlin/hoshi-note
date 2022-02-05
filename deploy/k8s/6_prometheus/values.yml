@@ -1,32 +1,28 @@
-server:
+grafana:
   enabled: true
-  name: server
-  global:
-    scrape_interval: 15s
-    scrape_timeout: 10s
-    evaluation_interval: 15s
-  persistentVolume:
-    enabled: true
-    accessModes:
-      - ReadWriteOnce
-    size: 8Gi
-    storageClass: "prometheus-volume"
-    subPath: "prometheus"
-  replicaCount: 1
+  adminPassword: password
   service:
-    nodePort: 30090
     type: NodePort
-alertmanager:
+    nodePort: 30080
+promtail:
   enabled: true
-  name: alertmanager
-  replicaCount: 1
-  service:
-    nodePort: 30091
-    type: NodePort
-pushgateway:
+loki:
   enabled: true
-  name: pushgateway
-  replicaCount: 1
   service:
-    nodePort: 30092
     type: NodePort
+    nodePort: 30081
+prometheus:
+  enabled: true
+  server:
+    global:
+      scrape_interval: 15s
+      scrape_timeout: 10s
+      evaluation_interval: 15s
+    service:
+      type: NodePort
+      nodePort: 30082
+    persistentVolume:
+      enabled: false
+  alertmanager:
+    persistentVolume:
+      enabled: false
