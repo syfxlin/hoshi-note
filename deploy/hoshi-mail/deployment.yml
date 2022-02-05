@@ -16,6 +16,10 @@ spec:
       namespace: hoshi-note
       labels:
         app: hoshi-mail
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8000"
     spec:
       serviceAccountName: hoshi-note
       containers:

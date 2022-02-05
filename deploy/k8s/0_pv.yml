@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-volume
+  namespace: hoshi-note
+spec:
+  storageClassName: data-volume
+  capacity:
+    storage: 30Gi
+  accessModes:
+    - ReadWriteOnce
+  # TODO: 单节点测试，多节点需要更换存储方式
+  hostPath:
+    path: /mnt/data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-volume
+  namespace: hoshi-note
+spec:
+  storageClassName: data-volume
+  resources:
+    requests:
+      storage: 30Gi
+  accessModes:
+    - ReadWriteOnce

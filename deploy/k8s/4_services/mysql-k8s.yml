@@ -29,12 +29,26 @@ spec:
           ports:
             - name: mysql
               containerPort: 3306
-              hostPort: 3306
           volumeMounts:
             - name: mysql-data
               mountPath: /var/lib/mysql
+              subPath: mysql
       restartPolicy: Always
       volumes:
         - name: mysql-data
-          hostPath:
-            path: /mnt/data/mysql
+          persistentVolumeClaim:
+            claimName: data-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: hoshi-note
+spec:
+  selector:
+    app: mysql
+  ports:
+    - name: mysql
+      port: 3306
+      nodePort: 30306
+  type: NodePort

@@ -34,15 +34,31 @@ spec:
           ports:
             - name: rabbitmq
               containerPort: 5672
-              hostPort: 5672
             - name: rabbitmq-manage
               containerPort: 15672
-              hostPort: 15672
           volumeMounts:
             - name: rabbitmq-data
               mountPath: /var/lib/rabbitmq
+              subPath: rabbitmq
       restartPolicy: Always
       volumes:
         - name: rabbitmq-data
-          hostPath:
-            path: /mnt/data/rabbitmq
+          persistentVolumeClaim:
+            claimName: data-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: hoshi-note
+spec:
+  selector:
+    app: rabbitmq
+  ports:
+    - name: rabbitmq
+      port: 5672
+      nodePort: 30672
+    - name: rabbitmq-manage
+      port: 15672
+      nodePort: 30673
+  type: NodePort

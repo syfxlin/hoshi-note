@@ -33,12 +33,26 @@ spec:
           ports:
             - name: redis
               containerPort: 6379
-              hostPort: 6379
           volumeMounts:
             - name: redis-data
               mountPath: /data
+              subPath: redis
       restartPolicy: Always
       volumes:
         - name: redis-data
-          hostPath:
-            path: /mnt/data/redis
+          persistentVolumeClaim:
+            claimName: data-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: hoshi-note
+spec:
+  selector:
+    app: redis
+  ports:
+    - name: redis
+      port: 6379
+      nodePort: 30379
+  type: NodePort

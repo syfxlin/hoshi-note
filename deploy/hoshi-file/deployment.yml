@@ -15,6 +15,10 @@ spec:
       name: hoshi-file
       labels:
         app: hoshi-file
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8000"
     spec:
       serviceAccountName: hoshi-note
       containers:
