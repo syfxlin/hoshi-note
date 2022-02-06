@@ -32,12 +32,11 @@ spec:
           volumeMounts:
             - name: mysql-data
               mountPath: /var/lib/mysql
-              subPath: mysql
       restartPolicy: Always
       volumes:
         - name: mysql-data
           persistentVolumeClaim:
-            claimName: data-volume
+            claimName: mysql-data
 ---
 apiVersion: v1
 kind: Service
@@ -50,5 +49,5 @@ spec:
   ports:
     - name: mysql
       port: 3306
-      nodePort: 30306
+      nodePort: 30920
   type: NodePort

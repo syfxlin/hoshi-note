@@ -1,4 +1,0 @@
-- install helm
-- helm repo add grafana https://grafana.github.io/helm-charts
-- 安装：helm install -n hoshi-note loki grafana/loki-stack -f /mnt/e/workspace/hoshi-note/deploy/loki.yml
-- 卸载：helm uninstall -n hoshi-note loki

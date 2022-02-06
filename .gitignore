@@ -68,4 +68,4 @@ application-dev.yml
 application-k8s.yml
 bootstrap-dev.yml
 bootstrap-k8s.yml
-*-secret.yml
+*.private.yml

@@ -1,0 +1,4 @@
+- install helm
+- helm repo add grafana https://grafana.github.io/helm-charts
+- 安装：helm install -n monitoring loki grafana/loki-stack -f values.yml
+- 卸载：helm uninstall -n monitoring loki

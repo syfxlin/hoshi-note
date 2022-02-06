@@ -45,12 +45,11 @@ spec:
           volumeMounts:
             - name: minio-data
               mountPath: /data
-              subPath: minio
       restartPolicy: Always
       volumes:
         - name: minio-data
           persistentVolumeClaim:
-            claimName: data-volume
+            claimName: minio-data
 ---
 apiVersion: v1
 kind: Service
@@ -63,8 +62,8 @@ spec:
   ports:
     - name: minio
       port: 9000
-      nodePort: 30900
+      nodePort: 30910
     - name: minio-console
       port: 9001
-      nodePort: 30901
+      nodePort: 30911
   type: NodePort

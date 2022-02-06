@@ -3,7 +3,7 @@ grafana:
   adminPassword: password
   service:
     type: NodePort
-    nodePort: 30080
+    nodePort: 30990
 promtail:
   enabled: true
 loki:
@@ -20,7 +20,7 @@ prometheus:
       evaluation_interval: 15s
     service:
       type: NodePort
-      nodePort: 30082
+      nodePort: 30991
     persistentVolume:
       enabled: false
   alertmanager:

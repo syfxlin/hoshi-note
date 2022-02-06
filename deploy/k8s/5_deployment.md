@@ -1,5 +1,0 @@
-- deploy/hoshi-file/deployment.yml
-- deploy/hoshi-mail/deployment.yml
-- deploy/hoshi-note/deployment.yml
-- deploy/hoshi-ums/deployment.yml
-- deploy/hoshi-gateway/deployment.yml

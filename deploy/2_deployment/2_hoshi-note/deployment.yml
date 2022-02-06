@@ -1,21 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hoshi-mail
+  name: hoshi-note
   namespace: hoshi-note
   labels:
-    app: hoshi-mail
+    app: hoshi-note
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hoshi-mail
+      app: hoshi-note
   template:
     metadata:
-      name: hoshi-mail
-      namespace: hoshi-note
+      name: hoshi-note
       labels:
-        app: hoshi-mail
+        app: hoshi-note
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/path: "/actuator/prometheus"
@@ -23,24 +22,24 @@ spec:
     spec:
       serviceAccountName: hoshi-note
       containers:
-        - name: hoshi-mail
+        - name: hoshi-note
           image: ghcr.io/syfxlin/hoshi-note:latest
           imagePullPolicy: IfNotPresent
           command:
             - java
             - -jar
-            - /app/hoshi-mail-1.0-SNAPSHOT.jar
+            - /app/hoshi-note-1.0-SNAPSHOT.jar
           envFrom:
             - secretRef:
                 name: hoshi-services
           ports:
-            - name: hoshi-mail
+            - name: hoshi-note
               containerPort: 8000
           livenessProbe:
             httpGet:
               port: 8000
               path: /actuator/health/liveness
-            initialDelaySeconds: 30
+            initialDelaySeconds: 120
             periodSeconds: 10
             timeoutSeconds: 3
             successThreshold: 1
@@ -49,7 +48,7 @@ spec:
             httpGet:
               port: 8000
               path: /actuator/health/readiness
-            initialDelaySeconds: 30
+            initialDelaySeconds: 120
             periodSeconds: 10
             timeoutSeconds: 3
             successThreshold: 1
@@ -59,12 +58,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hoshi-mail
+  name: hoshi-note
   namespace: hoshi-note
 spec:
   selector:
-    app: hoshi-mail
+    app: hoshi-note
   ports:
-    - name: hoshi-mail
+    - name: hoshi-note
       port: 8000
   type: ClusterIP

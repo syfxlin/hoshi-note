@@ -1,3 +1,5 @@
+# spring k8s 需要分配 ServiceAccount 才能正常进行服务发现和配置
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:

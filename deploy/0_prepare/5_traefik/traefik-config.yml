@@ -1,0 +1,28 @@
+# nonk8s
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    logs:
+      general:
+        level: INFO
+      access:
+        enabled: true
+    ports:
+      web:
+        redirectTo: websecure
+    ingressRoute:
+      dashboard:
+        enabled: false
+    additionalArguments:
+      - --certificatesresolvers.le.acme.email=example@example.com
+      - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.le.acme.storage=/certs/acme.json
+      - --entrypoints.websecure.http.tls.certresolver=le
+    persistence:
+      enabled: true
+      path: /certs
+      size: 128Mi

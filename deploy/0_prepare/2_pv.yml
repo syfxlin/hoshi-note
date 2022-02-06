@@ -1,0 +1,57 @@
+# 存储卷声明，默认使用 nfs 驱动，创建后非必要不删除，删除后 provisioner 会删除实际的存储
+---
+# minio
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-data
+  namespace: hoshi-note
+spec:
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 3Gi
+  accessModes:
+    - ReadWriteOnce
+---
+# mysql
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-data
+  namespace: hoshi-note
+spec:
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 3Gi
+  accessModes:
+    - ReadWriteOnce
+---
+# rabbitmq
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rabbitmq-data
+  namespace: hoshi-note
+spec:
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 3Gi
+  accessModes:
+    - ReadWriteOnce
+---
+# redis
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data
+  namespace: hoshi-note
+spec:
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 3Gi
+  accessModes:
+    - ReadWriteOnce

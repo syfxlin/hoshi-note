@@ -39,12 +39,11 @@ spec:
           volumeMounts:
             - name: rabbitmq-data
               mountPath: /var/lib/rabbitmq
-              subPath: rabbitmq
       restartPolicy: Always
       volumes:
         - name: rabbitmq-data
           persistentVolumeClaim:
-            claimName: data-volume
+            claimName: rabbitmq-data
 ---
 apiVersion: v1
 kind: Service
@@ -57,8 +56,8 @@ spec:
   ports:
     - name: rabbitmq
       port: 5672
-      nodePort: 30672
+      nodePort: 30930
     - name: rabbitmq-manage
       port: 15672
-      nodePort: 30673
+      nodePort: 30931
   type: NodePort
