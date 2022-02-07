@@ -2,7 +2,7 @@ name: Deploy to Kubernetes
 on:
   workflow_run:
     workflows:
-      - "Publish Hoshi-UI"
+      - "Publish Hoshi-Note"
     types:
       - completed
 jobs:
