@@ -1,0 +1,28 @@
+name: Deploy to Kubernetes
+on:
+  workflow_run:
+    workflows:
+      - "Publish Hoshi-UI"
+    types:
+      - completed
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v2.0
+      - name: Set k8s context
+        uses: azure/k8s-set-context@v1
+        with:
+          method: kubeconfig
+          kubeconfig: "${{ secrets.KUBE_CONFIG }}"
+      - name: Update deployment
+        run: |
+          kubectl -n hoshi-note set image deployment/hoshi-file hoshi-file=ghcr.io/syfxlin/hoshi-note:api-${GITHUB_SHA::7} --record
+          kubectl -n hoshi-note set image deployment/hoshi-mail hoshi-mail=ghcr.io/syfxlin/hoshi-note:api-${GITHUB_SHA::7} --record
+          kubectl -n hoshi-note set image deployment/hoshi-note hoshi-note=ghcr.io/syfxlin/hoshi-note:api-${GITHUB_SHA::7} --record
+          kubectl -n hoshi-note set image deployment/hoshi-ums hoshi-ums=ghcr.io/syfxlin/hoshi-note:api-${GITHUB_SHA::7} --record
+          kubectl -n hoshi-note set image deployment/hoshi-gateway hoshi-gateway=ghcr.io/syfxlin/hoshi-note:api-${GITHUB_SHA::7} --record
