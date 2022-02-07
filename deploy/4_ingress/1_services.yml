@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: minio
+  namespace: hoshi-note
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`minio.hoshi-note.ixk.me`)
+      services:
+        - name: minio
+          namespace: hoshi-note
+          port: 9001

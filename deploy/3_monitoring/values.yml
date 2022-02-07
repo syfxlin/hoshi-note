@@ -2,15 +2,13 @@ grafana:
   enabled: true
   adminPassword: password
   service:
-    type: NodePort
-    nodePort: 30990
+    type: ClusterIP
 promtail:
   enabled: true
 loki:
   enabled: true
   service:
-    type: NodePort
-    nodePort: 30081
+    type: ClusterIP
 prometheus:
   enabled: true
   server:
@@ -19,8 +17,7 @@ prometheus:
       scrape_timeout: 10s
       evaluation_interval: 15s
     service:
-      type: NodePort
-      nodePort: 30991
+      type: ClusterIP
     persistentVolume:
       enabled: false
   alertmanager:

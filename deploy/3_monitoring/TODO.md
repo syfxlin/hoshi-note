@@ -1,3 +1,0 @@
-- 监控持久卷配置
-- 监控 IngressRoute 配置
-- 取消 NodePort 配置

@@ -66,22 +66,4 @@ spec:
   ports:
     - name: hoshi-gateway
       port: 8000
-      nodePort: 30900
-  type: NodePort
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: hoshi-gateway
-  namespace: hoshi-note
-spec:
-  entryPoints:
-    - web
-    - websecure
-  routes:
-    - kind: Rule
-      match: Host(`api.hoshi-note.ixk.me`)
-      services:
-        - name: hoshi-gateway
-          namespace: hoshi-note
-          port: 8000
+  type: ClusterIP
