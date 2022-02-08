@@ -1,0 +1,33 @@
+grafana:
+  enabled: true
+  adminPassword: password
+  persistence:
+    enabled: true
+    storageClassName: nfs
+    accessModes:
+      - ReadWriteMany
+loki:
+  enabled: true
+  persistence:
+    enabled: true
+    storageClassName: nfs
+    accessModes:
+      - ReadWriteMany
+prometheus:
+  enabled: true
+  server:
+    global:
+      scrape_interval: 15s
+      scrape_timeout: 10s
+      evaluation_interval: 15s
+    persistentVolume:
+      enabled: true
+      storageClass: nfs
+      accessModes:
+        - ReadWriteMany
+  alertmanager:
+    persistentVolume:
+      enabled: true
+      storageClass: nfs
+      accessModes:
+        - ReadWriteMany

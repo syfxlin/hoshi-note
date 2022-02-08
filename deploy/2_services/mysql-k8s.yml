@@ -1,3 +1,4 @@
+# 可选，如果选择 tidb 可以不部署
 apiVersion: apps/v1
 kind: Deployment
 metadata:
