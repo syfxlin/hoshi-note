@@ -200,5 +200,15 @@ apiVersion: storage.k8s.io/v1
 metadata:
   name: nfs
 provisioner: cluster.local/nfs
+reclaimPolicy: Retain
+mountOptions:
+  - vers=4.1
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: nfs-delete
+provisioner: cluster.local/nfs
+reclaimPolicy: Delete
 mountOptions:
   - vers=4.1
