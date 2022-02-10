@@ -19,7 +19,9 @@ spec:
     storageClassName: nfs
     requests:
       storage: "1Gi"
-    config: { }
+    config:
+      dashboard:
+        internal-proxy: true
   tikv:
     baseImage: pingcap/tikv
     maxFailoverCount: 0
@@ -41,6 +43,8 @@ spec:
     replicas: 1
     service:
       type: NodePort
-      mysqlNodePort: 30920
-      statusNodePort: 30921
-    config: { }
+      mysqlNodePort: 30950
+      statusNodePort: 30951
+    config:
+      performance:
+        tcp-keep-alive: true

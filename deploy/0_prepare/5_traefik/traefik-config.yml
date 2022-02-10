@@ -20,9 +20,9 @@ spec:
     additionalArguments:
       - --certificatesresolvers.le.acme.email=example@example.com
       - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
-      - --certificatesresolvers.le.acme.storage=/certs/acme.json
+      - --certificatesresolvers.le.acme.storage=/data/acme.json
       - --entrypoints.websecure.http.tls.certresolver=le
     persistence:
       enabled: true
-      path: /certs
+      path: /data
       size: 128Mi
