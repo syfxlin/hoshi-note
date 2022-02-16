@@ -27,6 +27,8 @@ spec:
           imagePullPolicy: IfNotPresent
           command:
             - java
+            - -Dreactor.netty.pool.maxConnections=1000
+            - -Dreactor.netty.ioWorkerCount=32
             - -jar
             - /app/hoshi-gateway-1.0-SNAPSHOT.jar
           envFrom:
