@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hoshi-ums
+  namespace: hoshi-note
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+spec:
+  tls:
+    - hosts:
+        - api.hoshi-note.ixk.me
+      secretName: api-hoshi-note-tls
+  rules:
+    - host: api.hoshi-note.ixk.me
+      http:
+        paths:
+          - path: /hoshi-ums(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: hoshi-ums
+                port:
+                  number: 8000
