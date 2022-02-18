@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rabbitmq-system
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: rabbitmq-operator
+  namespace: helm
+spec:
+  repo: https://charts.bitnami.com/bitnami
+  chart: rabbitmq-cluster-operator
+  targetNamespace: rabbitmq-system

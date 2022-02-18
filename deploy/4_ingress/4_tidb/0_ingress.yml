@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tidb
+  namespace: services
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - tidb.hoshi-note.ixk.me
+      secretName: tidb-hoshi-note-tls
+  rules:
+    - host: tidb.hoshi-note.ixk.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tidb-pd
+                port:
+                  number: 2379

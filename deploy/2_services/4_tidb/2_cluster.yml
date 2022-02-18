@@ -1,0 +1,48 @@
+apiVersion: pingcap.com/v1alpha1
+kind: TidbCluster
+metadata:
+  name: tidb
+  namespace: services
+spec:
+  version: v5.3.0
+  timezone: UTC
+  pvReclaimPolicy: Retain
+  enableDynamicConfiguration: true
+  configUpdateStrategy: RollingUpdate
+  discovery: { }
+  helper:
+    image: busybox:1.34.1
+  pd:
+    baseImage: pingcap/pd
+    maxFailoverCount: 0
+    replicas: 1
+    storageClassName: longhorn
+    requests:
+      storage: "1Gi"
+    config:
+      dashboard:
+        internal-proxy: true
+  tikv:
+    baseImage: pingcap/tikv
+    maxFailoverCount: 0
+    evictLeaderTimeout: 1m
+    replicas: 1
+    storageClassName: longhorn
+    requests:
+      storage: "10Gi"
+    config:
+      storage:
+        reserve-space: "0MB"
+      rocksdb:
+        max-open-files: 256
+      raftdb:
+        max-open-files: 256
+  tidb:
+    baseImage: pingcap/tidb
+    maxFailoverCount: 0
+    replicas: 1
+    service:
+      type: ClusterIP
+    config:
+      performance:
+        tcp-keep-alive: true

@@ -15,10 +15,11 @@ spring:
         format_sql: true
     show-sql: true
   redis:
-    host: ${REDIS_HOST}
-    port: ${REDIS_PORT}
     database: ${REDIS_DATABASE}
     password: ${REDIS_PASSWORD}
+    sentinel:
+      master: mymaster
+      nodes: ${REDIS_SENTINEL}
   rabbitmq:
     username: ${RABBITMQ_USERNAME}
     password: ${RABBITMQ_PASSWORD}

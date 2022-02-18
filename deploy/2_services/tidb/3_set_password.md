@@ -1,4 +1,0 @@
-- mysql -h 127.0.0.1 -P 30950 -u root
-- SET PASSWORD FOR 'root'@'%' = 'password';
-- FLUSH PRIVILEGES;
-- 测试: mysql -h 127.0.0.1 -P 30950 -u root -p

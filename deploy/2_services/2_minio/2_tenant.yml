@@ -1,0 +1,49 @@
+apiVersion: minio.min.io/v2
+kind: Tenant
+metadata:
+  name: minio
+  namespace: services
+  annotations:
+    prometheus.io/path: "/minio/v2/metrics/cluster"
+    prometheus.io/port: "9000"
+    prometheus.io/scrape: "true"
+spec:
+  credsSecret:
+    name: minio-auth
+  requestAutoCert: false
+  env:
+    - name: MINIO_PROMETHEUS_AUTH_TYPE
+      value: public
+    - name: MINIO_PROMETHEUS_URL
+      value: http://monitoring-prometheus-server.monitoring
+  pools:
+    - servers: 1
+      volumesPerServer: 4
+      volumeClaimTemplate:
+        metadata:
+          name: data
+        spec:
+          storageClassName: longhorn
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 5Gi
+  liveness:
+    httpGet:
+      path: /minio/health/live
+      port: 9000
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 5
+  readiness:
+    httpGet:
+      path: /minio/health/ready
+      port: 9000
+    initialDelaySeconds: 60
+    periodSeconds: 15
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 5

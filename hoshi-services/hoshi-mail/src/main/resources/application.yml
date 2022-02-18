@@ -2,10 +2,11 @@ server:
   port: ${PORT:8000}
 spring:
   redis:
-    host: ${REDIS_HOST}
-    port: ${REDIS_PORT}
     database: ${REDIS_DATABASE}
     password: ${REDIS_PASSWORD}
+    sentinel:
+      master: mymaster
+      nodes: ${REDIS_SENTINEL}
   servlet:
     multipart:
       enabled: true

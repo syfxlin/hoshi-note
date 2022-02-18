@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helm-controller
+  namespace: helm
+  labels:
+    app: helm-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helm-controller
+  template:
+    metadata:
+      namespace: helm
+      labels:
+        app: helm-controller
+    spec:
+      containers:
+        - name: helm-controller
+          image: rancher/helm-controller:v0.11.9
+          command: [ "helm-controller" ]

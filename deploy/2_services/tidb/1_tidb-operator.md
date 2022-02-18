@@ -1,3 +1,0 @@
-- kubectl create -f https://raw.githubusercontent.com/pingcap/tidb-operator/master/manifests/crd.yaml
-- helm repo add pingcap https://charts.pingcap.org/
-- helm install --namespace tidb tidb-operator pingcap/tidb-operator --version v1.3.0-beta.1

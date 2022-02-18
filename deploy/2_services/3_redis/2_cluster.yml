@@ -1,0 +1,39 @@
+apiVersion: databases.spotahome.com/v1
+kind: RedisFailover
+metadata:
+  name: redis
+  namespace: services
+spec:
+  auth:
+    secretPath: redis-auth
+  sentinel:
+    replicas: 1
+    image: redis:alpine
+    exporter:
+      enabled: true
+      image: leominov/redis_sentinel_exporter
+    podAnnotations:
+      prometheus.io/path: "/metrics"
+      prometheus.io/port: "9355"
+      prometheus.io/scrape: "true"
+  redis:
+    replicas: 1
+    image: redis:alpine
+    storage:
+      persistentVolumeClaim:
+        metadata:
+          name: redisfailover-persistent-data
+        spec:
+          storageClassName: longhorn
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 3Gi
+    exporter:
+      enabled: true
+      image: oliver006/redis_exporter
+    podAnnotations:
+      prometheus.io/path: "/metrics"
+      prometheus.io/port: "9121"
+      prometheus.io/scrape: "true"

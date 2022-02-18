@@ -1,0 +1,1 @@
+- kubectl get secrets -n minio-system console-sa-token-rb46n -o jsonpath='{.data.token}' | base64 --decode

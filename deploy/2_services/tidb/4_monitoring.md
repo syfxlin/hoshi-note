@@ -1,1 +1,0 @@
-- https://docs.pingcap.com/zh/tidb/stable/deploy-monitoring-services/#%E7%AC%AC-2-%E6%AD%A5%E5%AF%BC%E5%85%A5-grafana-%E9%9D%A2%E6%9D%BF

@@ -1,0 +1,13 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: cert-manager
+  namespace: helm
+spec:
+  repo: https://charts.jetstack.io
+  chart: cert-manager
+  targetNamespace: kube-system
+  valuesContent: |-
+    installCRDs: true
+    prometheus:
+      enabled: true

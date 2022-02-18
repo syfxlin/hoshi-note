@@ -1,0 +1,27 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: rabbitmq
+  namespace: services
+spec:
+  persistence:
+    storageClassName: longhorn
+    storage: 3Gi
+  replicas: 1
+  service:
+    type: ClusterIP
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  rabbitmq:
+    additionalPlugins:
+      - rabbitmq_management
+      - rabbitmq_prometheus
+      - rabbitmq_peer_discovery_k8s
+      - rabbitmq_tracing
+      - rabbitmq_federation
+      - rabbitmq_federation_management

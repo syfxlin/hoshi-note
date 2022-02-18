@@ -1,0 +1,3 @@
+- kubectl get secrets -n services rabbitmq-default-user -o jsonpath="{.data.username}" | base64 --decode
+- kubectl get secrets -n services rabbitmq-default-user -o jsonpath="{.data.password}" | base64 --decode
+- kubectl port-forward -n services rabbitmq-server-0 15672:15672 --address 0.0.0.0

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tidb-system
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: tidb-operator
+  namespace: helm
+spec:
+  repo: https://charts.pingcap.org/
+  chart: tidb-operator
+  version: v1.3.0
+  targetNamespace: tidb-system

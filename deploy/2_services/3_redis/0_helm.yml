@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: redis-system
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: redis-operator
+  namespace: helm
+spec:
+  repo: https://spotahome.github.io/redis-operator
+  chart: redis-operator
+  targetNamespace: redis-system
