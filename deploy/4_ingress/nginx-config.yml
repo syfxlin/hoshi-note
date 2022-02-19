@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-ingress-nginx-controller
+  namespace: kube-system
+data:
+  allow-snippet-annotations: "true"
+  keep-alive-requests: "10000"
+  upstream-keepalive-connections: "400"
+  max-worker-connections: "65536"
