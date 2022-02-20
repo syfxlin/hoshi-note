@@ -19,7 +19,7 @@ import java.io.Serializable;
  */
 public class ObjectIdGenerator implements IdentifierGenerator {
 
-    public static final String STRATEGY_NAME = "me.ixk.hoshi.mysql.generator.ObjectIdGenerator";
+    public static final String STRATEGY_NAME = "me.ixk.hoshi.db.generator.ObjectIdGenerator";
 
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
