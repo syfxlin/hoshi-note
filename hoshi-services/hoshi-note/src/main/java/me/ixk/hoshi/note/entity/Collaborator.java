@@ -37,7 +37,7 @@ public class Collaborator {
     private Long id;
 
     @Schema(name = "协作者 ID")
-    @Column(name = "user")
+    @Column(name = "\"user\"")
     private Long user;
 
     @Schema(name = "权限 ID")

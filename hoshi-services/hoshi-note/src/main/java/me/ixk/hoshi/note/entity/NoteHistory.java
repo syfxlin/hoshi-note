@@ -63,7 +63,7 @@ public class NoteHistory {
     private String name;
 
     @Schema(name = "笔记内容")
-    @Column(name = "content", columnDefinition = "LONGTEXT")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Schema(name = "笔记图标")
