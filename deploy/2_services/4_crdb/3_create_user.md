@@ -1,3 +1,3 @@
 - ./cockroach sql --certs-dir=/cockroach/cockroach-certs --host=cockroachdb-public
-- CREATE USER root WITH PASSWORD 'password';
-- GRANT admin TO root;
+- CREATE USER hoshi_note WITH PASSWORD 'password';
+- GRANT admin TO hoshi_note;

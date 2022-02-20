@@ -2,10 +2,12 @@ apiVersion: crdb.cockroachlabs.com/v1alpha1
 kind: CrdbCluster
 metadata:
   name: cockroachdb
+  namespace: services
 spec:
   dataStore:
     pvc:
       spec:
+        storageClassName: longhorn
         accessModes:
           - ReadWriteOnce
         resources:
