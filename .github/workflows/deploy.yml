@@ -25,4 +25,3 @@ jobs:
           kubectl -n hoshi-note set image deployment/hoshi-mail hoshi-mail=ghcr.io/syfxlin/hoshi-note:api-${GITHUB_SHA::7} --record
           kubectl -n hoshi-note set image deployment/hoshi-note hoshi-note=ghcr.io/syfxlin/hoshi-note:api-${GITHUB_SHA::7} --record
           kubectl -n hoshi-note set image deployment/hoshi-ums hoshi-ums=ghcr.io/syfxlin/hoshi-note:api-${GITHUB_SHA::7} --record
-          kubectl -n hoshi-note set image deployment/hoshi-gateway hoshi-gateway=ghcr.io/syfxlin/hoshi-note:api-${GITHUB_SHA::7} --record

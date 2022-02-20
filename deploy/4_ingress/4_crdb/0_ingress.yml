@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: crdb
+  namespace: services
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  tls:
+    - hosts:
+        - crdb.hoshi-note.ixk.me
+      secretName: crdb-hoshi-note-tls
+  rules:
+    - host: crdb.hoshi-note.ixk.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cockroachdb-public
+                port:
+                  number: 8080
