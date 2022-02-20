@@ -31,9 +31,9 @@ import java.time.OffsetDateTime;
 @Table(
     name = "file",
     indexes = {
-        @Index(name = "idx_file_user_id_unq", columnList = "user_id", unique = true),
-        @Index(name = "idx_file_disk_unq", columnList = "disk", unique = true),
-        @Index(name = "idx_file_name_unq", columnList = "name", unique = true),
+        @Index(name = "idx_file_user_id_unq", columnList = "user_id"),
+        @Index(name = "idx_file_disk_unq", columnList = "disk"),
+        @Index(name = "idx_file_name_unq", columnList = "name"),
     }
 )
 public class File {
