@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @Schema(name = "用户表")
 @Entity
 @Table(
-    name = "user",
+    name = "\"user\"",
     indexes = {
         @Index(name = "idx_user_username_unq", columnList = "username", unique = true),
         @Index(name = "idx_user_email_unq", columnList = "email", unique = true),

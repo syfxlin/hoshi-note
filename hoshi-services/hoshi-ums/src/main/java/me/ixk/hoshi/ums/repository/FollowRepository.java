@@ -4,12 +4,13 @@
 
 package me.ixk.hoshi.ums.repository;
 
-import java.util.Optional;
-import me.ixk.hoshi.mysql.repository.UpdatingRepository;
+import me.ixk.hoshi.db.repository.UpdatingRepository;
 import me.ixk.hoshi.ums.entity.Follow;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.Optional;
 
 /**
  * @author Otstar Lin

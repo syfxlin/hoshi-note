@@ -17,7 +17,7 @@
 
   <modules>
     <module>hoshi-common</module>
-    <module>hoshi-mysql</module>
+    <module>hoshi-db</module>
     <module>hoshi-web</module>
     <module>hoshi-swagger</module>
     <module>hoshi-rabbit</module>

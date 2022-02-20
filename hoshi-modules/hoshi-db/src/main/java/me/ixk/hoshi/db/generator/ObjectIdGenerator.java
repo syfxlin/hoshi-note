@@ -2,13 +2,14 @@
  * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
  */
 
-package me.ixk.hoshi.mysql.generator;
+package me.ixk.hoshi.db.generator;
 
 import cn.hutool.core.lang.ObjectId;
-import java.io.Serializable;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
+
+import java.io.Serializable;
 
 /**
  * ObjectId 主键生成器

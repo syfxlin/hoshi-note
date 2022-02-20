@@ -4,10 +4,11 @@
 
 package me.ixk.hoshi.file.repository;
 
-import java.util.Optional;
+import me.ixk.hoshi.db.repository.UpdatingRepository;
 import me.ixk.hoshi.file.entity.File;
-import me.ixk.hoshi.mysql.repository.UpdatingRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.Optional;
 
 /**
  * @author Otstar Lin

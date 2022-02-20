@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.ixk.hoshi.common.result.ApiResult;
-import me.ixk.hoshi.mysql.util.Jpa;
+import me.ixk.hoshi.db.util.Jpa;
 import me.ixk.hoshi.note.entity.Note;
 import me.ixk.hoshi.note.entity.NoteHistory;
 import me.ixk.hoshi.note.entity.Workspace;

@@ -4,7 +4,7 @@
 
 package me.ixk.hoshi.note.repository;
 
-import me.ixk.hoshi.mysql.repository.UpdatingRepository;
+import me.ixk.hoshi.db.repository.UpdatingRepository;
 import me.ixk.hoshi.note.entity.NoteHistory;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -13,4 +13,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @date 2021/11/18 15:04
  */
 public interface NoteHistoryRepository
-    extends UpdatingRepository<NoteHistory, String>, JpaSpecificationExecutor<NoteHistory> {}
+    extends UpdatingRepository<NoteHistory, String>, JpaSpecificationExecutor<NoteHistory> {
+}

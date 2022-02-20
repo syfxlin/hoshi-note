@@ -2,14 +2,15 @@
  * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
  */
 
-package me.ixk.hoshi.mysql.util;
+package me.ixk.hoshi.db.util;
 
-import java.beans.PropertyDescriptor;
-import java.util.Arrays;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.Assert;
+
+import java.beans.PropertyDescriptor;
+import java.util.Arrays;
 
 /**
  * JPA 工具类
@@ -19,7 +20,8 @@ import org.springframework.util.Assert;
  */
 public final class Jpa {
 
-    private Jpa() {}
+    private Jpa() {
+    }
 
     public static String[] getNullPropertyNames(final Object instance) {
         final BeanWrapper src = new BeanWrapperImpl(instance);

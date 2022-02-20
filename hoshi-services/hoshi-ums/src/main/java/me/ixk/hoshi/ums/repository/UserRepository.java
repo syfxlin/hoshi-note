@@ -4,10 +4,11 @@
 
 package me.ixk.hoshi.ums.repository;
 
-import java.util.Optional;
-import me.ixk.hoshi.mysql.repository.UpdatingRepository;
+import me.ixk.hoshi.db.repository.UpdatingRepository;
 import me.ixk.hoshi.ums.entity.User;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.Optional;
 
 /**
  * UserRepository

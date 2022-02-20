@@ -2,14 +2,15 @@
  * Copyright (c) 2021, Otstar Lin (syfxlin@gmail.com). All Rights Reserved.
  */
 
-package me.ixk.hoshi.mysql.repository;
+package me.ixk.hoshi.db.repository;
 
-import java.util.Optional;
-import java.util.function.Function;
-import me.ixk.hoshi.mysql.util.Jpa;
+import me.ixk.hoshi.db.util.Jpa;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.Repository;
 import org.springframework.util.Assert;
+
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * 更新功能的 {@link Repository}

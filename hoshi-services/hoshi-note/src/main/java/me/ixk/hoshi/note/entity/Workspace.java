@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
-import me.ixk.hoshi.mysql.generator.ObjectIdGenerator;
+import me.ixk.hoshi.db.generator.ObjectIdGenerator;
 import me.ixk.hoshi.note.request.AddWorkspaceView;
 import me.ixk.hoshi.note.request.UpdateWorkspaceView;
 import me.ixk.hoshi.note.response.WorkspaceView;

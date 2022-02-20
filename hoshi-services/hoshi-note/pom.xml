@@ -29,7 +29,7 @@
     <!-- MySQL -->
     <dependency>
       <groupId>me.ixk.hoshi</groupId>
-      <artifactId>hoshi-mysql</artifactId>
+      <artifactId>hoshi-db</artifactId>
     </dependency>
   </dependencies>
 

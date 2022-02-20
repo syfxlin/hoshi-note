@@ -4,7 +4,7 @@
 
 package me.ixk.hoshi.ums.repository;
 
-import me.ixk.hoshi.mysql.repository.UpdatingRepository;
+import me.ixk.hoshi.db.repository.UpdatingRepository;
 import me.ixk.hoshi.ums.entity.Role;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

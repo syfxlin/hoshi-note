@@ -4,11 +4,12 @@
 
 package me.ixk.hoshi.note.repository;
 
-import me.ixk.hoshi.mysql.repository.UpdatingRepository;
+import me.ixk.hoshi.db.repository.UpdatingRepository;
 import me.ixk.hoshi.note.entity.Collaborator;
 
 /**
  * @author Otstar Lin
  * @date 2021/11/18 15:05
  */
-public interface CollaboratorRepository extends UpdatingRepository<Collaborator, Long> {}
+public interface CollaboratorRepository extends UpdatingRepository<Collaborator, Long> {
+}

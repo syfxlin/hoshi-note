@@ -4,10 +4,11 @@
 
 package me.ixk.hoshi.ums.repository;
 
+import me.ixk.hoshi.db.repository.UpdatingRepository;
+import me.ixk.hoshi.ums.entity.Token;
+
 import java.util.List;
 import java.util.Optional;
-import me.ixk.hoshi.mysql.repository.UpdatingRepository;
-import me.ixk.hoshi.ums.entity.Token;
 
 /**
  * @author Otstar Lin
