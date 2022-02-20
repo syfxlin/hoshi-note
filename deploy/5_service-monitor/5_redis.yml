@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: redis
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  endpoints:
+    - targetPort: 9355
+      path: /metrics
+      interval: 15s
+    - port: http-metrics
+      path: /metrics
+      interval: 15s
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+  namespaceSelector:
+    any: true

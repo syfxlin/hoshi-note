@@ -15,10 +15,6 @@ spec:
         externalTrafficPolicy: Local
       metrics:
         enabled: true
-        service:
-          annotations:
-            prometheus.io/port: "10254"
-            prometheus.io/scrape: "true"
       config:
         keep-alive-requests: "10000"
         upstream-keepalive-connections: "400"

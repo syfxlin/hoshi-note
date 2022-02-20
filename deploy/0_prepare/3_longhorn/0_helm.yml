@@ -16,7 +16,3 @@ spec:
     persistence:
       reclaimPolicy: Retain
       defaultClassReplicaCount: 1
-    annotations:
-        prometheus.io/path: "/metrics"
-        prometheus.io/port: "9500"
-        prometheus.io/scrape: "true"

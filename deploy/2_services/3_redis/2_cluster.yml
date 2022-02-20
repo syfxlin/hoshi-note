@@ -12,10 +12,6 @@ spec:
     exporter:
       enabled: true
       image: leominov/redis_sentinel_exporter
-    podAnnotations:
-      prometheus.io/path: "/metrics"
-      prometheus.io/port: "9355"
-      prometheus.io/scrape: "true"
   redis:
     replicas: 1
     image: redis:alpine
@@ -33,7 +29,3 @@ spec:
     exporter:
       enabled: true
       image: oliver006/redis_exporter
-    podAnnotations:
-      prometheus.io/path: "/metrics"
-      prometheus.io/port: "9121"
-      prometheus.io/scrape: "true"

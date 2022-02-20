@@ -3,10 +3,6 @@ kind: Tenant
 metadata:
   name: minio
   namespace: services
-  annotations:
-    prometheus.io/path: "/minio/v2/metrics/cluster"
-    prometheus.io/port: "9000"
-    prometheus.io/scrape: "true"
 spec:
   credsSecret:
     name: minio-auth

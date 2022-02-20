@@ -5,6 +5,7 @@ metadata:
   namespace: hoshi-note
   labels:
     app: hoshi-note
+    prometheus: hoshi-note
 spec:
   replicas: 1
   selector:
@@ -15,10 +16,7 @@ spec:
       name: hoshi-note
       labels:
         app: hoshi-note
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/path: "/actuator/prometheus"
-        prometheus.io/port: "8000"
+        prometheus: hoshi-note
     spec:
       serviceAccountName: hoshi-note
       containers:
@@ -33,7 +31,7 @@ spec:
             - secretRef:
                 name: hoshi-services
           ports:
-            - name: hoshi-note
+            - name: http
               containerPort: 8000
           livenessProbe:
             httpGet:
@@ -64,6 +62,6 @@ spec:
   selector:
     app: hoshi-note
   ports:
-    - name: hoshi-note
+    - name: http
       port: 8000
   type: ClusterIP
