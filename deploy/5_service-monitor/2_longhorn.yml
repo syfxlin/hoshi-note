@@ -6,6 +6,7 @@ metadata:
   labels:
     release: monitoring
 spec:
+  jobLabel: app.kubernetes.io/instance
   endpoints:
     - port: manager
       path: /metrics

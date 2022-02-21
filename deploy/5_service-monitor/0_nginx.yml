@@ -1,11 +1,12 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: nginx-ingress-nginx-controller
+  name: ingress-nginx
   namespace: monitoring
   labels:
     release: monitoring
 spec:
+  jobLabel: app.kubernetes.io/instance
   endpoints:
     - port: metrics
       path: /metrics

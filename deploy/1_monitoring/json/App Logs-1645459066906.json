@@ -15,7 +15,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "8.3.4"
+      "version": "8.3.5"
     },
     {
       "type": "panel",
@@ -62,7 +62,7 @@
   "gnetId": 13639,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1645028787578,
+  "iteration": 1645459036211,
   "links": [
     {
       "$$hashKey": "object:59",
@@ -128,7 +128,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.4",
+      "pluginVersion": "8.3.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -199,7 +199,11 @@
       },
       "targets": [
         {
-          "expr": "{job=\"$app\"} |= \"$search\" | logfmt",
+          "datasource": {
+            "type": "loki",
+            "uid": "${DS_LOKI}"
+          },
+          "expr": "{job=\"$app\"} |= \"$search\"",
           "hide": false,
           "legendFormat": "",
           "refId": "A"
@@ -281,6 +285,6 @@
   "timezone": "",
   "title": "App Logs",
   "uid": "sadlil-loki-apps-dashboard",
-  "version": 4,
+  "version": 3,
   "weekStart": ""
 }

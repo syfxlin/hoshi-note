@@ -1,12 +1,12 @@
 apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
+kind: ServiceMonitor
 metadata:
   name: hoshi-note
   namespace: monitoring
   labels:
     release: monitoring
 spec:
-  podMetricsEndpoints:
+  endpoints:
     - port: http
       path: /actuator/prometheus
       interval: 15s

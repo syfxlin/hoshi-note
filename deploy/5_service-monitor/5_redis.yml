@@ -6,11 +6,9 @@ metadata:
   labels:
     release: monitoring
 spec:
+  jobLabel: app.kubernetes.io/instance
   endpoints:
-    - targetPort: 9355
-      path: /metrics
-      interval: 15s
-    - port: http-metrics
+    - targetPort: metrics
       path: /metrics
       interval: 15s
   selector:

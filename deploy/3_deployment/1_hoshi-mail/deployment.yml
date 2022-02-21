@@ -17,7 +17,6 @@ spec:
       namespace: hoshi-note
       labels:
         app: hoshi-mail
-        prometheus: hoshi-note
     spec:
       serviceAccountName: hoshi-note
       containers:
@@ -59,6 +58,8 @@ kind: Service
 metadata:
   name: hoshi-mail
   namespace: hoshi-note
+  labels:
+    prometheus: hoshi-note
 spec:
   selector:
     app: hoshi-mail

@@ -55,13 +55,12 @@
       }
     ]
   },
-  "description": "Monitors Kubernetes deployments in cluster using Prometheus. Shows overall cluster CPU / Memory of deployments, replicas in each deployment. Uses Kube state metrics and cAdvisor metrics (741)",
-  "editable": true,
+  "description": "Dashboard for Cert Manager",
+  "editable": false,
   "fiscalYearStartMonth": 0,
   "gnetId": 11001,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1645259768328,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -79,10 +78,6 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -226,7 +221,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sort_desc(sum(certmanager_certificate_expiration_timestamp_seconds{exported_namespace=~\"$namespace\"} - time()) by (name, exported_namespace))",
+          "expr": "sort_desc(sum(certmanager_certificate_expiration_timestamp_seconds - time()) by (name, exported_namespace))",
           "instant": false,
           "interval": "",
           "legendFormat": "{{exported_namespace}} / {{name}}",
@@ -372,62 +367,11 @@
   "refresh": false,
   "schemaVersion": 34,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "cert-manager"
+  ],
   "templating": {
-    "list": [
-      {
-        "allValue": ".*",
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "label_values(certmanager_certificate_ready_status, exported_namespace)",
-        "hide": 0,
-        "includeAll": true,
-        "multi": false,
-        "name": "namespace",
-        "options": [],
-        "query": {
-          "query": "label_values(certmanager_certificate_ready_status, exported_namespace)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "allValue": ".*",
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "label_values(certmanager_certificate_expiration_timestamp_seconds{exported_namespace=~\"$namespace\"}, name) ",
-        "hide": 0,
-        "includeAll": true,
-        "multi": false,
-        "name": "certificate",
-        "options": [],
-        "query": {
-          "query": "label_values(certmanager_certificate_expiration_timestamp_seconds{exported_namespace=~\"$namespace\"}, name) ",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      }
-    ]
+    "list": []
   },
   "time": {
     "from": "now-24h",
@@ -461,6 +405,6 @@
   "timezone": "browser",
   "title": "Cert Manager",
   "uid": "u6M5igpWk",
-  "version": 2,
+  "version": 4,
   "weekStart": ""
 }

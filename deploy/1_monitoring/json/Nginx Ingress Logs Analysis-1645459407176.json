@@ -73,8 +73,8 @@
       }
     ]
   },
-  "description": "Loki v2+ showcase using JSON NGINX access logs.",
-  "editable": true,
+  "description": "Dashboard for Nginx Ingress (Loki)",
+  "editable": false,
   "fiscalYearStartMonth": 0,
   "gnetId": 12559,
   "graphTooltip": 0,
@@ -1875,7 +1875,7 @@
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {
@@ -1894,6 +1894,6 @@
   "timezone": "",
   "title": "Nginx Ingress Logs Analysis",
   "uid": "Nz6kKgtGj",
-  "version": 12,
+  "version": 5,
   "weekStart": ""
 }

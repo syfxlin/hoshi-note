@@ -6,13 +6,24 @@ metadata:
   labels:
     release: monitoring
 spec:
+  jobLabel: v1.min.io/tenant
   endpoints:
     - port: http-minio
       path: /minio/v2/metrics/node
       interval: 15s
+      relabelings:
+        - action: keep
+          sourceLabels:
+            - __meta_kubernetes_endpoints_labelpresent_service_kubernetes_io_headless
+          regex: "true"
     - port: http-minio
       path: /minio/v2/metrics/cluster
       interval: 15s
+      relabelings:
+        - action: keep
+          sourceLabels:
+            - __meta_kubernetes_endpoints_labelpresent_service_kubernetes_io_headless
+          regex: "true"
   selector:
     matchLabels:
       v1.min.io/tenant: minio

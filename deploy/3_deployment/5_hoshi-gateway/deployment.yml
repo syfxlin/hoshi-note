@@ -59,6 +59,8 @@ kind: Service
 metadata:
   name: hoshi-gateway
   namespace: hoshi-note
+  labels:
+    prometheus: hoshi-note
 spec:
   selector:
     app: hoshi-gateway

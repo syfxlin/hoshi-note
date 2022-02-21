@@ -6,12 +6,18 @@ metadata:
   labels:
     release: monitoring
 spec:
+  jobLabel: app.kubernetes.io/instance
   endpoints:
     - port: http
       path: /_status/vars
       interval: 15s
       tlsConfig:
         insecureSkipVerify: true
+      relabelings:
+        - action: keep
+          sourceLabels:
+          - __meta_kubernetes_endpoints_labelpresent_service_kubernetes_io_headless
+          regex: "true"
   selector:
     matchLabels:
       app.kubernetes.io/name: cockroachdb
