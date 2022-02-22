@@ -5,6 +5,8 @@ metadata:
   namespace: hoshi-note
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-expose-headers: "*"
 spec:
   tls:
     - hosts:
