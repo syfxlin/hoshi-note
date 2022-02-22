@@ -5,6 +5,7 @@ metadata:
   namespace: services
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/enable-access-log: "false"
 spec:
   tls:
     - hosts:
