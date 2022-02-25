@@ -14,5 +14,5 @@ spec:
   targetNamespace: longhorn-system
   valuesContent: |-
     persistence:
-      reclaimPolicy: Retain
+      # reclaimPolicy: Retain
       defaultClassReplicaCount: 1
