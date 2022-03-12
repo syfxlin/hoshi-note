@@ -14,6 +14,7 @@ import me.ixk.hoshi.note.repository.NoteRepository;
 import me.ixk.hoshi.note.repository.WorkspaceRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.Predicate;
@@ -81,6 +82,7 @@ public class ShareController {
 
     @GetMapping("/{id}/children")
     @Operation(summary = "获取已分享笔记的子笔记")
+    @Transactional(rollbackFor = { Exception.class, Error.class })
     public ApiResult<?> children(@PathVariable("id") final String id) {
         final Optional<Note> note = noteRepository.findByIdAndShareIsTrue(id);
         if (note.isEmpty()) {
