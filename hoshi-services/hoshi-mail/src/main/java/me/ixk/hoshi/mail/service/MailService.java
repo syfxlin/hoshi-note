@@ -55,7 +55,6 @@ public class MailService {
 
     private Map<String, Object> createModel() {
         final Map<String, Object> map = new HashMap<>(16);
-        map.put("logoUrl", "https://note.ixk.me/logo.png");
         map.put("helpUrl", "https://github.com/syfxlin/hoshi-note");
         return map;
     }

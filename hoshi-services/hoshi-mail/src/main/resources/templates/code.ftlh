@@ -102,35 +102,6 @@
                                 "
                             >
                                 <div
-                                    class="e-logo"
-                                    style="
-                                        border: 0;
-                                        font: inherit;
-                                        font-size: 100%;
-                                        margin: 0;
-                                        outline: 0;
-                                        padding: 12px 0;
-                                        vertical-align: middle;
-                                        width: 100%;
-                                    "
-                                >
-                                    <img
-                                        src="${logoUrl}"
-                                        alt="Hoshi-Note logo"
-                                        width="36px"
-                                        style="
-                                            border: 0;
-                                            display: block;
-                                            font: inherit;
-                                            font-size: 100%;
-                                            margin: 0 auto;
-                                            outline: 0;
-                                            padding: 0;
-                                            vertical-align: middle;
-                                        "
-                                    />
-                                </div>
-                                <div
                                     class="e-title"
                                     style="
                                         border: 0;
