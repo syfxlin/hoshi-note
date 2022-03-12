@@ -1,5 +1,13 @@
 name: Publish Hoshi-Note
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - hoshi-gateway
+      - hoshi-modules
+      - hoshi-services
+      - pom.xml
   workflow_dispatch:
 jobs:
   publish-images:
