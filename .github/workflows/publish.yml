@@ -4,9 +4,9 @@ on:
     branches:
       - master
     paths:
-      - hoshi-gateway
-      - hoshi-modules
-      - hoshi-services
+      - hoshi-gateway/**
+      - hoshi-modules/**
+      - hoshi-services/**
       - pom.xml
   workflow_dispatch:
 jobs:
