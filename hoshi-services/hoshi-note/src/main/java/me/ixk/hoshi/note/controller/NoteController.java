@@ -163,9 +163,7 @@ public class NoteController {
                     cb.or(
                         cb.like(root.get("name"), String.format("%%%s%%", search)),
                         cb.like(root.get("content"), String.format("%%%s%%", search)),
-                        cb.like(root.get("attributes"), String.format("%%%s%%", search)),
-                        cb.like(root.get("createdTime"), String.format("%%%s%%", search)),
-                        cb.like(root.get("updatedTime"), String.format("%%%s%%", search))
+                        cb.like(root.get("attributes"), String.format("%%%s%%", search))
                     )
                 );
             } else {
@@ -198,9 +196,7 @@ public class NoteController {
                     cb.or(
                         cb.like(root.get("name"), String.format("%%%s%%", search)),
                         cb.like(root.get("content"), String.format("%%%s%%", search)),
-                        cb.like(root.get("attributes"), String.format("%%%s%%", search)),
-                        cb.like(root.get("createdTime"), String.format("%%%s%%", search)),
-                        cb.like(root.get("updatedTime"), String.format("%%%s%%", search))
+                        cb.like(root.get("attributes"), String.format("%%%s%%", search))
                     )
                 );
             } else {
@@ -233,9 +229,7 @@ public class NoteController {
                     cb.or(
                         cb.like(root.get("name"), String.format("%%%s%%", search)),
                         cb.like(root.get("content"), String.format("%%%s%%", search)),
-                        cb.like(root.get("attributes"), String.format("%%%s%%", search)),
-                        cb.like(root.get("createdTime"), String.format("%%%s%%", search)),
-                        cb.like(root.get("updatedTime"), String.format("%%%s%%", search))
+                        cb.like(root.get("attributes"), String.format("%%%s%%", search))
                     )
                 );
             } else {
