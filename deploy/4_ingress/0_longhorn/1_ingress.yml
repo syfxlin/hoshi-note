@@ -11,10 +11,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - longhorn.hoshi-note.ixk.me
+        - longhorn.hoshi.ixk.me
       secretName: longhorn-hoshi-note-tls
   rules:
-    - host: longhorn.hoshi-note.ixk.me
+    - host: longhorn.hoshi.ixk.me
       http:
         paths:
           - path: /

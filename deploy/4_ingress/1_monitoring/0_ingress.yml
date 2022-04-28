@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - grafana.hoshi-note.ixk.me
+        - grafana.hoshi.ixk.me
       secretName: grafana-hoshi-note-tls
   rules:
-    - host: grafana.hoshi-note.ixk.me
+    - host: grafana.hoshi.ixk.me
       http:
         paths:
           - path: /

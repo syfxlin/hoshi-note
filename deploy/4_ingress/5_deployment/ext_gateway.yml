@@ -10,10 +10,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - api.hoshi-note.ixk.me
+        - api.hoshi.ixk.me
       secretName: api-hoshi-note-tls
   rules:
-    - host: api.hoshi-note.ixk.me
+    - host: api.hoshi.ixk.me
       http:
         paths:
           - path: /

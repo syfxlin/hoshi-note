@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - minio.hoshi-note.ixk.me
+        - minio.hoshi.ixk.me
       secretName: minio-hoshi-note-tls
   rules:
-    - host: minio.hoshi-note.ixk.me
+    - host: minio.hoshi.ixk.me
       http:
         paths:
           - path: /

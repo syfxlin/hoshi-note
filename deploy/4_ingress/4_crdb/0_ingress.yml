@@ -10,10 +10,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - crdb.hoshi-note.ixk.me
+        - crdb.hoshi.ixk.me
       secretName: crdb-hoshi-note-tls
   rules:
-    - host: crdb.hoshi-note.ixk.me
+    - host: crdb.hoshi.ixk.me
       http:
         paths:
           - path: /

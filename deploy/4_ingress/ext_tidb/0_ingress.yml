@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - tidb.hoshi-note.ixk.me
+        - tidb.hoshi.ixk.me
       secretName: tidb-hoshi-note-tls
   rules:
-    - host: tidb.hoshi-note.ixk.me
+    - host: tidb.hoshi.ixk.me
       http:
         paths:
           - path: /

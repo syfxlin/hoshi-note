@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - rabbitmq.hoshi-note.ixk.me
+        - rabbitmq.hoshi.ixk.me
       secretName: rabbitmq-hoshi-note-tls
   rules:
-    - host: rabbitmq.hoshi-note.ixk.me
+    - host: rabbitmq.hoshi.ixk.me
       http:
         paths:
           - path: /

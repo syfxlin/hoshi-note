@@ -6,7 +6,7 @@ metadata:
 spec:
   persistence:
     storageClassName: longhorn
-    storage: 3Gi
+    storage: 8Gi
   replicas: 1
   service:
     type: ClusterIP

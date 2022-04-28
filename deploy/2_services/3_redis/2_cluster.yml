@@ -25,7 +25,7 @@ spec:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 3Gi
+              storage: 5Gi
     exporter:
       enabled: true
       image: oliver006/redis_exporter

@@ -24,7 +24,7 @@ spec:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 5Gi
+              storage: 8Gi
   liveness:
     httpGet:
       path: /minio/health/live
